@@ -1,0 +1,5 @@
+ID,tenantId,supplierId,name,country,active,riskScore,riskLevel,onTimeRate,disputeCount,totalSpend
+s-abc,tenant-a,SUP-001,ABC Industrial Supplies,IN,true,15,LOW,96.5,0,1250000
+s-gc,tenant-a,SUP-002,Global Components,IN,true,35,MEDIUM,89.0,2,3400000
+s-ts,tenant-a,SUP-003,TechSource India,IN,true,70,HIGH,72.0,5,800000
+s-pl,tenant-a,SUP-004,Prime Logistics,IN,true,10,LOW,98.0,0,450000

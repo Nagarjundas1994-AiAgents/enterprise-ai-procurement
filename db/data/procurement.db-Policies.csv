@@ -1,0 +1,6 @@
+ID,tenantId,code,name,description,conditions,action,priority,active
+pol-auto,tenant-a,PO_AUTO,Auto-approve small orders,Orders under 50000 auto-approvable,"{""maxAmount"":50000}",AUTO_APPROVE,10,true
+pol-mgr,tenant-a,PO_MANAGER,Manager approval band,50000-500000 needs manager,"{""minAmount"":50000,""maxAmount"":500000}",REQUIRE_MANAGER,20,true
+pol-senior,tenant-a,PO_SENIOR,Senior approval band,500000-1000000 needs senior human,"{""minAmount"":500000,""maxAmount"":1000000}",REQUIRE_HUMAN,30,true
+pol-exec,tenant-a,PO_EXEC,Executive human approval,Above 1000000 mandatory human,"{""minAmount"":1000000}",REQUIRE_HUMAN,40,true
+pol-risk,tenant-a,PO_HIGH_RISK,High risk gate,High/critical risk always human,"{""riskLevels"":[""HIGH"",""CRITICAL""]}",REQUIRE_HUMAN,5,true

@@ -1,0 +1,3 @@
+# Excluded from the MTA archive — Cloud Foundry rebuilds these per module at staging.
+node_modules/
+.mtaignore

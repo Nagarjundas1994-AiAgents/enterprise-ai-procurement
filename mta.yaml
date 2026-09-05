@@ -1,0 +1,69 @@
+_schema-version: '3.1'
+ID: enterprise-ai-procurement
+version: 1.0.0
+description: Enterprise AI Procurement backend — CAP + PostgreSQL + MCP + A2A agents on SAP BTP Cloud Foundry
+parameters:
+  enable-parallel-deployments: true
+
+modules:
+  # --- CAP backend (TypeScript via tsx; tsx is a production dependency) ---
+  - name: procurement-backend
+    type: nodejs
+    path: .
+    parameters:
+      memory: 512M
+      disk-quota: 512M
+      buildpack: nodejs_buildpack
+      health-check-type: http
+      health-check-http-endpoint: /health
+    properties:
+      # Cloud Foundry injects PORT automatically; the app reads it via cds server config.
+      # Secrets are NOT stored here — set them after deploy (see README § BTP):
+      #   cf set-env procurement-backend ALLOW_MOCK_AUTH false
+      #   cf set-env procurement-backend JWT_SECRET <random-secret>
+      #   cf restage procurement-backend
+      ALLOW_MOCK_AUTH: false
+    requires:
+      - name: procurement-xsuaa
+      - name: procurement-postgres
+
+  # --- Application router (XSUAA login + route protection, see approuter/xs-app.json) ---
+  - name: procurement-approuter
+    type: approuter.nodejs
+    path: approuter
+    parameters:
+      memory: 256M
+      disk-quota: 256M
+      health-check-type: http
+      health-check-http-endpoint: /health
+    requires:
+      - name: procurement-xsuaa
+      - name: procurement-backend
+        group: destinations
+        properties:
+          name: procurement-backend
+          url: ~{url}
+          forwardAuthToken: true
+
+resources:
+  # --- XSUAA (roles/scopes mirror lib/auth/rbac.ts; see xs-security.json) ---
+  - name: procurement-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: enterprise-ai-procurement
+        tenant-mode: dedicated
+        oauth2-configuration:
+          token-validity: 7200
+
+  # --- PostgreSQL (hyperscaler). Adjust service plan to your entitlements. ---
+  # The app connects via DATABASE_URL (preferred) or DB_HOST/DB_PORT/DB_NAME/DB_USER/DB_PASSWORD.
+  # Deploy the schema after first deploy: cf run-task procurement-backend "npm run db:deploy:prod"
+  - name: procurement-postgres
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: postgresql
+      service-plan: trial

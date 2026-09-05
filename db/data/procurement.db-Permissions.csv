@@ -1,0 +1,22 @@
+ID,name,description,category
+p-read-pr,READ_PURCHASE_REQUISITION,Read requisitions,PROCUREMENT
+p-create-pr,CREATE_PURCHASE_REQUISITION,Create requisitions,PROCUREMENT
+p-update-pr,UPDATE_PURCHASE_REQUISITION,Update requisitions,PROCUREMENT
+p-delete-pr,DELETE_PURCHASE_REQUISITION,Delete requisitions,PROCUREMENT
+p-approve-pr,APPROVE_PURCHASE_REQUISITION,Approve requisitions,APPROVAL
+p-reject-pr,REJECT_PURCHASE_REQUISITION,Reject requisitions,APPROVAL
+p-create-po,CREATE_PURCHASE_ORDER,Create purchase orders,PROCUREMENT
+p-update-po,UPDATE_PURCHASE_ORDER,Update purchase orders,PROCUREMENT
+p-cancel-po,CANCEL_PURCHASE_ORDER,Cancel purchase orders,PROCUREMENT
+p-read-sup,READ_SUPPLIER,Read suppliers,SUPPLIER
+p-create-sup,CREATE_SUPPLIER,Create suppliers,SUPPLIER
+p-update-sup,UPDATE_SUPPLIER,Update suppliers,SUPPLIER
+p-create-inv,CREATE_INVOICE,Create invoices,FINANCE
+p-read-inv,READ_INVOICE,Read invoices,FINANCE
+p-approve-inv,APPROVE_INVOICE,Approve invoices,FINANCE
+p-read-bud,READ_BUDGET,Read budgets,FINANCE
+p-update-bud,UPDATE_BUDGET,Update budgets,FINANCE
+p-exec-agent,EXECUTE_AGENT,Execute agents,AI
+p-exec-mcp,EXECUTE_MCP_TOOL,Execute MCP tools,AI
+p-audit,VIEW_AUDIT_LOG,View audit log,GOVERNANCE
+p-admin,ADMIN_SYSTEM,System admin,GOVERNANCE

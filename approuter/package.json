@@ -1,0 +1,12 @@
+{
+  "name": "procurement-approuter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Application router for Enterprise AI Procurement (XSUAA login + routing to backend)",
+  "scripts": {
+    "start": "node node_modules/@sap/approuter/approuter.js"
+  },
+  "dependencies": {
+    "@sap/approuter": "^23.0.0"
+  }
+}

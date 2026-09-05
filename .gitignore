@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+default-env.json
+node_modules/
+dist/
+@cds-models/
+coverage/
+*.log
+.vscode/settings.json

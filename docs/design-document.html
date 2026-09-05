@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise AI Procurement — Full Design Document</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#0f1420; --panel:#171e2e; --panel2:#1e2740; --text:#e8ecf4; --muted:#9aa6bd;
+    --accent:#4da3ff; --accent2:#7ee0b8; --warn:#ffb454; --danger:#ff7a90; --border:#2a3550;
+    --code:#0b101c; --link:#6db3ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+  a{color:var(--link)}
+  .layout{display:flex;min-height:100vh}
+  nav{width:290px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);padding:20px 16px;position:sticky;top:0;height:100vh;overflow:auto}
+  nav h3{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:18px 0 8px}
+  nav a{display:block;color:var(--text);text-decoration:none;padding:5px 10px;border-radius:6px;font-size:14px}
+  nav a:hover{background:var(--panel2);color:var(--accent)}
+  nav .brand{font-weight:700;font-size:16px;color:var(--accent2)}
+  nav .sub{font-size:12px;color:var(--muted);margin-bottom:10px}
+  main{flex:1;max-width:1080px;padding:36px 44px;margin:0 auto}
+  section{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px;margin-bottom:28px}
+  h1{font-size:32px;margin:0 0 6px}
+  h2{font-size:24px;border-bottom:2px solid var(--accent);padding-bottom:8px;margin-top:0}
+  h3{font-size:18px;color:var(--accent2);margin-top:26px}
+  h4{font-size:15px;color:var(--warn);margin-top:20px}
+  .subtitle{color:var(--muted);font-size:15px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:14px 0}
+  th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent2)}
+  td code, p code, li code{font-size:12.5px}
+  code{font-family:Consolas,"Cascadia Code",monospace;background:#0b101c;padding:2px 6px;border-radius:5px;color:#ffd479}
+  pre{background:var(--code);border:1px solid var(--border);border-radius:10px;padding:16px;overflow:auto;font-size:12.8px;line-height:1.55}
+  pre code{background:none;padding:0;color:#d6e2f5}
+  .kw{color:#7ee0b8}.str{color:#ffd479}.com{color:#6b7a99}.fn{color:#6db3ff}.typ{color:#ff9ecf}
+  .mermaid{background:#0b101c;border:1px solid var(--border);border-radius:10px;padding:18px;margin:14px 0;text-align:center}
+  .callout{border-left:4px solid var(--accent);background:var(--panel2);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:14px}
+  .callout.warn{border-color:var(--warn)} .callout.danger{border-color:var(--danger)} .callout.ok{border-color:var(--accent2)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .badge{display:inline-block;background:var(--panel2);border:1px solid var(--border);border-radius:20px;padding:2px 12px;font-size:12px;margin:2px;color:var(--accent2)}
+  ul.tight li{margin-bottom:4px}
+  footer{color:var(--muted);font-size:12px;text-align:center;padding:20px}
+  @media(max-width:900px){nav{display:none}main{padding:20px}}
+  @media print{nav{display:none}body{background:#fff;color:#000}section{border:1px solid #ccc;background:#fff}}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav>
+  <div class="brand">Enterprise AI Procurement</div>
+  <div class="sub">Full Design Document<br>CDC · CAP · MCP · A2A</div>
+  <h3>Document</h3>
+  <a href="#s0">0 · Start Here (Beginners)</a>
+  <a href="#s1">1 · Vision &amp; Goals</a>
+  <a href="#s2">2 · Technology Stack</a>
+  <a href="#stut">T · Step-by-Step Tutorial</a>
+  <a href="#s3">3 · Overall Architecture</a>
+  <a href="#s4">4 · Project Structure</a>
+  <a href="#s5">5 · Domain Model (CDS)</a>
+  <a href="#s6">6 · Services (OData API)</a>
+  <a href="#s7">7 · Authentication</a>
+  <a href="#s8">8 · Authorization &amp; RBAC</a>
+  <a href="#s9">9 · Multi-Tenancy</a>
+  <a href="#s10">10 · MCP Interface</a>
+  <a href="#s11">11 · A2A Agents</a>
+  <a href="#s12">12 · Policy Engine</a>
+  <a href="#s13">13 · Workflows &amp; Transactions</a>
+  <a href="#s14">14 · Validation &amp; AI Safety</a>
+  <a href="#s15">15 · Audit &amp; Observability</a>
+  <a href="#s16">16 · Security Model</a>
+  <a href="#s17">17 · API Examples</a>
+  <a href="#s18">18 · Testing</a>
+  <a href="#s19">19 · Deployment</a>
+  <a href="#sbtp">P · SAP BTP Deployment</a>
+  <a href="#s20">20 · Environment &amp; Config</a>
+  <a href="#s21">21 · Lessons &amp; Limitations</a>
+  <a href="#sbuild">B · File-by-File Code Guide</a>
+  <a href="#sjourney">J · Build-to-Deploy Journey</a>
+  <a href="#sappx">H · Appendix: Cheat Sheets</a>
+  <a href="#sgloss">G · Glossary</a>
+</nav>
+<main>
+
+<section id="s0">
+<h2>0 · Start Here — Read This First (Beginners)</h2>
+<p>If you are new to SAP CAP, don't read this document top-to-bottom on day one. Follow this path instead:</p>
+<table>
+<tr><th>Step</th><th>Do this</th><th>Sections</th></tr>
+<tr><td>1</td><td>Understand <b>what</b> the app does in plain English</td><td>Section 1, Section 0.1 below</td></tr>
+<tr><td>2</td><td>Get it <b>running</b> on your machine (copy-paste commands)</td><td>the step-by-step Tutorial tutorial</td></tr>
+<tr><td>3</td><td>Click through the data: list PRs, submit one, approve it</td><td>the step-by-step Tutorial steps 5–7, Section 17</td></tr>
+<tr><td>4</td><td>Learn the <b>building blocks</b>: CDS → services → handlers → lib</td><td>Section 4, Section 5, Section 6</td></tr>
+<tr><td>5</td><td>Understand <b>who can do what</b>: login, roles, tenants</td><td>Section 7, Section 8, Section 9</td></tr>
+<tr><td>6</td><td>Meet the <b>robots</b>: MCP tools and AI agents</td><td>Section 10, Section 11, Section 12</td></tr>
+<tr><td>7</td><td>Go deep: transactions, audit, security, deployment</td><td>Section 13–Section 21 + Glossary</td></tr>
+</table>
+<h3>0.1 · The app in plain English</h3>
+<p>Imagine an office where people request things to buy (laptops, chairs). This backend is the <b>rule-keeping computer</b> behind that process:</p>
+<ul class="tight">
+<li><b>Employee</b> Ravi writes a request: <i>"15 laptops, ₹12,75,000"</i> → saved as <code>DRAFT</code>.</li>
+<li>Ravi clicks <b>submit</b> → request becomes <code>SUBMITTED</code> and lands on a manager's desk.</li>
+<li><b>Approver</b> Meera checks the budget and <b>approves</b> → <code>APPROVED</code> (or rejects with a reason).</li>
+<li><b>Procurement officer</b> Kiran converts it into a <b>purchase order</b> sent to a <b>supplier</b>.</li>
+<li>The supplier delivers goods (goods receipt), sends an <b>invoice</b>; the system matches invoice vs order vs delivery (<b>three-way match</b>); <b>finance</b> pays.</li>
+<li><b>AI agents</b> are junior assistants that can look things up and draft orders — but every click they make passes the <b>same permission checks</b> as a human, and expensive/risky actions need a <b>human</b> to say yes (policy engine).</li>
+<li>Everything important is written into an <b>audit log</b> — who did what, when, on whose behalf.</li>
+</ul>
+<h3>0.2 · Words you'll see everywhere (30-second versions)</h3>
+<ul class="tight">
+<li><b>CAP</b> — SAP's framework for building business backends. You are reading the docs of an app built with it.</li>
+<li><b>CDS</b> — the language CAP uses to <i>describe data</i> (like a blueprint: "a purchase order has a number, a supplier, items…"). Lives in <code>db/*.cds</code>.</li>
+<li><b>Service / OData</b> — the <i>doors</i> through which the outside world talks to the data (web addresses starting with <code>/odata/v4/…</code>).</li>
+<li><b>Handler</b> — TypeScript code (<code>srv/*.ts</code>) that runs when someone knocks on a door: checks permission, applies rules, saves to DB.</li>
+<li><b>RBAC</b> — "role-based access control": your <i>role</i> (employee, manager…) decides what you're <i>allowed</i> to do.</li>
+<li><b>Tenant</b> — one customer company sharing the same app (Acme India vs Acme EU). The app guarantees they never see each other's data.</li>
+<li><b>MCP</b> — a standard plug that lets AI assistants (like OpenCode) use your app's functions as <i>tools</i>.</li>
+<li><b>A2A / agents</b> — autonomous helpers that call those tools to do multi-step jobs (check budget → check supplier → create order).</li>
+<li><b>Policy engine</b> — the table of money limits that decides "auto-ok" vs "needs a human". Not the AI — a boring, predictable table. That's the point.</li>
+<li><b>Audit log</b> — the tamper-evident diary of every sensitive action.</li>
+</ul>
+<div class="callout ok"><b>Rule of the whole system, in one sentence:</b> nobody — not a manager from another department, not another tenant, not an AI agent — can do anything except through a door that checks <i>who they are, what they're allowed, and whether policy permits it</i>, and every sensitive action is written down.</div>
+</section>
+
+<section id="s1">
+<h1>Enterprise AI Procurement</h1>
+<p class="subtitle">Production-grade SAP Cloud Application Programming Model (CAP) backend · Full Design Document with code walkthrough · v1.0 · September 2026</p>
+<h2>1 · Vision &amp; Goals</h2>
+<p>A realistic enterprise procurement platform — <b>not a CRUD demo</b> — where humans, REST clients, MCP clients and autonomous AI agents all consume <b>the same backend through the same authorization model</b>.</p>
+<ul class="tight">
+<li>Purchase requisitions → manager approvals → purchase orders → suppliers → goods receipts → invoices → payments.</li>
+<li>Seven specialized AI agents plus an orchestrator, exposed via A2A, acting only through permission-checked CAP services.</li>
+<li>Six MCP chat servers for OpenCode / Claude / Joule style MCP clients — one curated (<code>/mcp/procurement</code>, 13 tools) plus five domain servers (<code>/mcp/catalog</code>, <code>/mcp/procurement-ops</code>, <code>/mcp/suppliers</code>, <code>/mcp/approvals</code>, <code>/mcp/invoices</code>).</li>
+<li>Non-negotiable guarantees: tenant isolation, RBAC on every path, policy-gated automation, full audit trail, no secrets in code/logs.</li>
+</ul>
+<div>
+<span class="badge">SAP CAP 10</span><span class="badge">Node.js + TypeScript</span><span class="badge">PostgreSQL</span><span class="badge">MCP</span><span class="badge">A2A Agents</span><span class="badge">Docker + Render</span>
+</div>
+</section>
+
+<section id="s2">
+<h2>2 · Technology Stack</h2>
+<table>
+<tr><th>Layer</th><th>Choice (verified Sep 2026)</th><th>Why</th></tr>
+<tr><td>Framework</td><td><code>@sap/cds</code> 10.0.6 · <code>cds-dk</code> 10.0.7</td><td>CDS modelling, OData/REST, transactions, events</td></tr>
+<tr><td>Language</td><td>TypeScript (strict off, <code>skipLibCheck</code>), <code>tsx</code> runtime</td><td>Type safety + erasable-syntax execution, no build step</td></tr>
+<tr><td>Database</td><td>PostgreSQL 18 via <code>@cap-js/postgres</code> 3.0.1 (dev: in-memory SQLite)</td><td>Render-hosted; verified identical behavior on both</td></tr>
+<tr><td>MCP</td><td><code>@cap-js/mcp</code> 1.4.3 — <code>@mcp</code> protocol adapter on 6 services; <code>cds.mcp: {per_action_tool: true, prefix: true}</code></td><td>MCP as just another CAP protocol (Streamable HTTP); each action is its own prefixed tool</td></tr>
+<tr><td>Agents / A2A</td><td><code>@cap-js/agents</code> 0.9.3 (alpha) — <code>@Agent</code> service</td><td>Specialist agents + orchestrator behind one endpoint</td></tr>
+<tr><td>Auth</td><td>JWT (XSUAA/IAS-compatible) + safe mock (<code>x-mock-user</code>) for local</td><td>BT-ready identity, frictionless local dev</td></tr>
+<tr><td>AI</td><td><code>AIService</code> abstraction (mock locally, AI Core when keys exist)</td><td>No LLM lock-in; LLM never authorizes</td></tr>
+<tr><td>Tests</td><td><code>vitest</code> + <code>@cap-js/cds-test</code> (26 unit tests) + live E2E scripts</td><td>RBAC, tenancy, workflow, policy, XSUAA mapping, injection, errors</td></tr>
+<tr><td>Deploy</td><td>Multi-stage <code>Dockerfile</code>, <code>docker-compose.yml</code>, Render-ready</td><td><code>DATABASE_URL</code> / <code>PORT</code> driven</td></tr>
+</table>
+</section>
+
+<section id="stut">
+<h2>T · Step-by-Step Tutorial — Zero to Running (Beginners)</h2>
+<p>Do these in order. Each step says <b>what to type, what you should see, and what just happened</b>. All commands run from the <code>enterprise-ai-procurement</code> folder.</p>
+<h3>Prerequisites (one-time)</h3>
+<ul class="tight">
+<li>Install <b>Node.js 20+</b> (<code>node --version</code> to check).</li>
+<li>Install CAP tooling once: <code>npm i -g @sap/cds-dk</code> (then <code>cds --version</code>).</li>
+<li>Optional: Docker Desktop (only if you want real PostgreSQL locally); OpenCode (only for the MCP chapter).</li>
+</ul>
+<h3>Step 1 — Install dependencies</h3>
+<pre><code>npm i</code></pre>
+<p><b>Expect:</b> lots of downloading, ends with no red errors. <b>What happened:</b> the libraries from Section 2 landed in <code>node_modules/</code>.</p>
+<h3>Step 2 — Check the code is healthy (before running anything)</h3>
+<pre><code>npx tsc --noEmit        <span class="com"># TypeScript typecheck — expect silence + exit 0</span>
+npx cds compile db srv --to csn   <span class="com"># CDS model compile — expect a big JSON dump, no [ERROR]</span>
+npm test                <span class="com"># 26 tests (23 security incl. XSUAA mapping + 3 unit), all green</span></code></pre>
+<div class="callout"><b>Newbie tip:</b> if <code>tsc</code> complains about <code>srv/server.js</code> being overwritten — that's already fixed via <code>"noEmit": true</code> in <code>tsconfig.json</code>. This project never emits compiled JS; <code>tsx</code> runs TypeScript directly.</div>
+<h3>Step 3 — Start the backend</h3>
+<pre><code>npm start</code></pre>
+<p><b>Expect:</b> lines like <code>init from db\data\…csv</code>, then <code>serving CatalogService { at: ['/odata/v4/catalog', '/mcp/catalog'] … }</code> for 8 services, then <code>server listening on { url: 'http://localhost:4004' }</code>. <b>What happened:</b> seed data loaded into an in-memory database; 8 services are live, 6 of them dual-served over MCP (<code>/mcp/catalog</code>, <code>/mcp/procurement-ops</code>, <code>/mcp/suppliers</code>, <code>/mcp/approvals</code>, <code>/mcp/invoices</code>, <code>/mcp/procurement</code>). Leave this window running.</p>
+<h3>Step 4 — Is it alive? (new terminal window)</h3>
+<pre><code>curl localhost:4004/health        <span class="com"># → {"status":"UP"}</span>
+curl localhost:4004/readiness     <span class="com"># → {"ready":true,"db":true,…}</span></code></pre>
+<h3>Step 5 — See the data (as Kiran, the procurement officer)</h3>
+<pre><code>curl -H <span class="str">"x-mock-user: procurement@example.com"</span> ^
+  localhost:4004/odata/v4/procurement/PurchaseRequisitions</code></pre>
+<p><b>Expect:</b> 4 purchase requisitions (PR-1001…PR-1004) with statuses. <b>What happened:</b> the <code>x-mock-user</code> header picked your demo identity (Section 7); the READ handler checked your role and auto-added the tenant filter (Section 8–Section 9). Try <code>other-tenant@example.com</code> instead — you'll get an empty list. That's tenant isolation working.</p>
+<h3>Step 6 — Submit a draft (as Kiran)</h3>
+<pre><code>curl -X POST -H <span class="str">"Content-Type: application/json"</span> -H <span class="str">"x-mock-user: procurement@example.com"</span> ^
+  -d <span class="str">"{\"ID\":\"pr-1004\"}"</span> localhost:4004/odata/v4/procurement/submitRequisition</code></pre>
+<p><b>Expect:</b> <code>"SUBMITTED"</code>. PR-1004 moved <code>DRAFT → SUBMITTED</code> (Section 13). Now try the same call as <code>employee@example.com</code> approving it — you'll get <b>403</b>: employees can't approve (Section 8).</p>
+<h3>Step 7 — Approve it (as Meera, the approver)</h3>
+<pre><code>curl -X POST -H <span class="str">"Content-Type: application/json"</span> -H <span class="str">"x-mock-user: approver@example.com"</span> ^
+  -d <span class="str">"{\"ID\":\"pr-1004\",\"comment\":\"looks good\"}"</span> localhost:4004/odata/v4/procurement/approveRequisition</code></pre>
+<p><b>Expect:</b> <code>"APPROVED"</code> plus an audit record (Section 15). The state machine, the approval row, and the audit write all happened in one transaction.</p>
+<h3>Step 8 — Ask the robots (orchestrator, as Sana the manager)</h3>
+<pre><code>curl -X POST -H <span class="str">"Content-Type: application/json"</span> -H <span class="str">"x-mock-user: manager@example.com"</span> ^
+  -d <span class="str">"{\"goal\":\"Create PO for PR-1001\",\"payload\":\"{\\\"requisitionID\\\":\\\"pr-1001\\\",\\\"supplierID\\\":\\\"s-abc\\\"}\"}"</span> ^
+  localhost:4004/odata/v4/agents/orchestrate</code></pre>
+<p><b>Expect:</b> <code>{"requiresHumanApproval":true,"policyDecision":"REQUIRE_HUMAN","policy":"PO_EXEC"}</code> — PR-1001 costs ₹12.75L, so policy (Section 12) stops automation and demands a human. No PO is created. This is the system's most important behavior: <b>the AI wanted to act, the policy said no.</b></p>
+<h3>Step 9 — Let the robot succeed (small amount)</h3>
+<p>Create a ₹30,000 PR (number auto-generated), submit it, approve it (steps 5–7 pattern), then orchestrate it. <b>Expect:</b> <code>{"requiresHumanApproval":false,"purchaseOrder":[{…}],"policyDecision":"AUTO_APPROVE"}</code> — a real PO row now exists. Same code path a human uses.</p>
+<h3>Step 10 — Plug in OpenCode via MCP</h3>
+<p>Add the snippet from Section 10.3 to <code>opencode.json</code>, run <code>opencode mcp list</code> until <code>cds:MCPService</code> shows <b>connected</b>, then prompt <i>"use the procurement tool to show pending purchase requisitions"</i>. Add the <code>catalog</code> block too and ask <i>"is there budget left for department d-it for 1000?"</i> to chat with <code>CatalogService-checkBudget</code>. Every tool call is permission-checked, tenant-filtered and audited — try it as <code>employee@example.com</code> and watch creation tools get denied.</p>
+<h3>Step 11 — Break things safely (the fun part)</h3>
+<ul class="tight">
+<li>Approve an already-approved PR → <b>409</b> illegal transition.</li>
+<li>Fetch with <code>?tenantId=tenant-b</code> tricks → ignored/denied; you only ever see your tenant.</li>
+<li>POST an MCP <code>createPurchaseOrder</code> as employee → <b>403</b>.</li>
+<li>Create a PR with <code>totalAmount: -5</code> → <b>400</b> validation error.</li>
+<li>Ask the orchestrator for a rejected PR → <code>requiresHumanApproval</code> with reason (never silently proceeds).</li>
+</ul>
+<h3>Step 12 — Run everything against real Postgres (Render)</h3>
+<p>So far you've used throwaway SQLite. The same app runs against real PostgreSQL — same code, same dummy users:</p>
+<pre><code><span class="com"># one-time: secrets already live in gitignored .env + default-env.json</span>
+npm run db:deploy:pg   <span class="com"># schema + seeds → Render (cds-deploy CLI can't carry credentials, hence this script)</span>
+npm start              <span class="com"># .env sets CDS_ENV=postgres → app connects to Render PG</span></code></pre>
+<p><b>Expect:</b> identical results — all 18 E2E checks pass, data <b>persists</b> between restarts (unlike SQLite). Flip back anytime: comment out <code>CDS_ENV</code> in <code>.env</code>, restart. Two Postgres realities to know: direct <code>INSERT</code>s need explicit UUIDs (the code does this), and the free cloud DB sleeps — first connection can take ~30s (pool timeouts raised accordingly).</p>
+<h3>Step 13 — Where to go next in this document</h3>
+<p>Now re-read Section 4–Section 6 (structure/services) with the running app beside you, then Section 7–Section 12. Terms you don't know → Glossary (the Glossary). When a behavior puzzles you, find its handler in <code>srv/</code> and its rule in <code>lib/</code> — the code is organized so every check lives in exactly one obvious place.</p>
+</section>
+
+<section id="s3">
+<h2>3 · Overall Architecture</h2>
+<p>Every caller — Fiori/UI5, REST, MCP client, AI agent — funnels through authentication → request context → authorization → policy → business logic → PostgreSQL. Agents and MCP never touch the database directly.</p>
+<div class="mermaid">flowchart TB
+  U[HUMAN USER] --> A[Authentication JWT / mock]
+  A --> C[RequestContext]
+  C --> Z[AuthorizationService]
+  Z --> O[OData + REST]
+  Z --> AI[Orchestrator Agent]
+  AI --> P[Procurement] &amp; B[Budget] &amp; R[Risk] &amp; I[Invoice] &amp; AP[Approval]
+  P --> M[MCP /mcp/procurement]
+  M --> S[CAP Services]
+  S --> Z2[Authorization + PolicyEngine]
+  Z2 --> BL[Business Logic + Transactions]
+  BL --> PG[(PostgreSQL)]
+  E[External MCP Client e.g. OpenCode] --> M</div>
+<div class="callout ok"><b>Design rule:</b> <code>MCP → CAP Service → Authorization → Policy → Business Logic → PostgreSQL</code>. Never <code>MCP → PostgreSQL</code>, never <code>LLM → Database</code>.</div>
+</section>
+
+<section id="s4">
+<h2>4 · Project Structure</h2>
+<pre><code>enterprise-ai-procurement/
+├── db/
+│   ├── common.cds          # shared aspects: TenantAware, Auditable + enum types
+│   ├── schema.cds          # ~40 entities (identity, org, procurement, finance, agents, AI, risk, policy)
+│   └── data/*.csv          # realistic seeds (users, roles, suppliers, PRs, budgets, agents, tools, policies)
+├── srv/
+│   ├── *-service.cds       # 8 services: procurement, approval, supplier, invoice, catalog, mcp, agent, audit
+│   ├── *-service.ts        # TypeScript handlers (extend cds.ApplicationService via `as any` cast)
+│   └── server.js           # bootstrap: dotenv, CDS_TYPESCRIPT, helmet, rate-limit, /readiness, /liveness, agent card
+├── lib/
+│   ├── auth/               # authentication.ts (JWT/mock → RequestContext), rbac.ts (roles/permissions)
+│   ├── authorization/      # AuthorizationService (requireRole/Permission, tenant guard, tool gate)
+│   ├── agents/             # ai-service.ts (LLM abstraction), agent-auth.ts (per-agent grants)
+│   ├── audit/              # writeAudit() with secret masking
+│   ├── security/           # errors.ts (coded errors), rate-limit.ts, observability.ts
+│   ├── workflow/           # lifecycle.ts (state machines), policy.ts (threshold engine)
+│   ├── validation/         # business validation, 3-way match, prompt-injection sanitize
+│   └── database/           # tenant.ts (server-side tenant resolution)
+├── test/                   # security.test.ts (23) + unit.test.ts (3) — vitest, incl. XSUAA scope mapping
+├── scripts/deploy-pg.cjs    # API-based schema+seed deploy to Postgres (cds-deploy CLI drops credentials)
+├── approuter/               # package.json + xs-app.json (BTP login + route protection)
+├── mta.yaml · xs-security.json · .mtaignore   # BTP Cloud Foundry deployment
+├── .env · default-env.json  # LOCAL SECRETS, gitignored: app vars + VCAP_SERVICES Render credentials
+├── docs/design-document.html  # ← this file
+├── Dockerfile · docker-compose.yml · .cdsrc.json · package.json · README.md · AGENTS.md</code></pre>
+</section>
+
+<section id="s5">
+<h2>5 · Domain Model (CDS)</h2>
+<h3>Concepts: associations vs compositions vs aspects</h3>
+<ul class="tight">
+<li><b>Association</b> = a loose link (foreign key). <code>PurchaseOrders.supplier : Association to Suppliers</code> means "this order points at a supplier that lives its own life". Deleting the order never deletes the supplier.</li>
+<li><b>Composition</b> = ownership. <code>PurchaseOrders.items : Composition of many PurchaseOrderItems</code> means "these lines belong to this order" — they are created, read and deleted <i>through</i> the parent (deep insert, cascade delete).</li>
+<li><b>Aspect</b> = a reusable stamp. <code>c.TenantAware</code> stamps <code>tenantId</code> onto 20+ entities at once; <code>cuid, managed</code> (from <code>@sap/cds/common</code>) stamp UUID keys and created/modified tracking.</li>
+<li><b>CQL/CQN</b> = CAP's query language (a superset of SQL with path expressions like <code>supplier.name</code> instead of JOINs). The MCP <code>query</code> tool accepts CQL <code>SELECT</code> strings — e.g. <code>SELECT from PurchaseRequisitions</code> — which handlers run tenant-filtered.</li>
+</ul>
+<h3>5.1 Shared aspects — <code>db/common.cds</code></h3>
+<p>Reusable aspects keep tenant/audit fields consistent. Enum types give the state machines a single source of truth:</p>
+<pre><code><span class="kw">aspect</span> TenantAware { tenantId : String(<span class="str">64</span>) <span class="kw">not null</span>; }
+<span class="kw">aspect</span> Auditable  { createdByAgent : String(<span class="str">128</span>); lastModifiedByAgent : String(<span class="str">128</span>); }
+
+<span class="kw">type</span> PRStatus : String <span class="kw">enum</span> { DRAFT; SUBMITTED; UNDER_REVIEW; APPROVED; REJECTED; CONVERTED_TO_PO; CANCELLED; }
+<span class="kw">type</span> POStatus : String <span class="kw">enum</span> { DRAFT; PENDING_APPROVAL; APPROVED; SENT_TO_SUPPLIER; PARTIALLY_RECEIVED;
+  FULLY_RECEIVED; INVOICED; CLOSED; CANCELLED; }
+<span class="kw">type</span> ActorType : String <span class="kw">enum</span> { USER; AGENT; SYSTEM; }</code></pre>
+<h3>5.2 Core entities — <code>db/schema.cds</code></h3>
+<table>
+<tr><th>Group</th><th>Entities</th><th>Notes</th></tr>
+<tr><td>Identity</td><td><code>Users, Roles, Permissions, UserRoles, RolePermissions</code></td><td>DB-backed RBAC; mock users map to these roles</td></tr>
+<tr><td>Organization</td><td><code>Organizations, Departments, Employees</code></td><td><code>Organizations.tenantId</code> is the tenancy root</td></tr>
+<tr><td>Master data</td><td><code>Suppliers (+Contacts), Materials (+Categories)</code></td><td>Risk score/level, on-time rate, disputes, spend</td></tr>
+<tr><td>Procurement</td><td><code>PurchaseRequisitions (+Items), Approvals (+Steps), PurchaseOrders (+Items), GoodsReceipts (+Items)</code></td><td><code>version</code> column → optimistic concurrency</td></tr>
+<tr><td>Finance</td><td><code>Invoices (+Items), Payments, Budgets (+Consumptions)</code></td><td>3-way match fields (<code>matchResult/Details</code>)</td></tr>
+<tr><td>Governance</td><td><code>AuditLogs, Policies, PolicyViolations, RiskAssessments</code></td><td>Policies store JSON conditions + priority</td></tr>
+<tr><td>Agents/AI</td><td><code>Agents, AgentPermissions, AgentToolPermissions, AgentExecutions, MCPTools, MCPToolExecutions, AIConversations, AIMessages</code></td><td>Explicit per-agent grants; every execution logged</td></tr>
+<tr><td>Flow</td><td><code>Workflows, WorkflowTasks, Notifications</code></td><td>Approval routing + user notification</td></tr>
+</table>
+<div class="mermaid">erDiagram
+  Users ||--o{ UserRoles : has
+  Roles ||--o{ RolePermissions : grants
+  PurchaseRequisitions ||--o{ PurchaseRequisitionItems : contains
+  PurchaseRequisitions ||--o{ Approvals : reviewed_by
+  PurchaseRequisitions ||--o{ PurchaseOrders : converts_to
+  PurchaseOrders ||--o{ PurchaseOrderItems : contains
+  PurchaseOrders ||--o{ GoodsReceipts : receives
+  PurchaseOrders ||--o{ Invoices : bills
+  Invoices ||--o{ InvoiceItems : contains
+  Invoices ||--o{ Payments : pays
+  Departments ||--o{ Budgets : owns
+  Agents ||--o{ AgentExecutions : runs
+  MCPTools ||--o{ MCPToolExecutions : invokes</div>
+<div class="callout warn"><b>CDS gotchas we hit (documented so you don't):</b> enum defaults use <code>#VALUE</code> (<code>default #DRAFT</code>); element-level <code>unique</code> is invalid — use <code>@assert.unique</code>; action/function return types must be entities <i>of the same service</i>; ID params are typed <code>String</code> (OData URL parsing nulls non-GUID <code>UUID</code> values).</div>
+</section>
+
+<section id="s6">
+<h2>6 · Services (OData API)</h2>
+<table>
+<tr><th>Service</th><th>Path</th><th>Entities / Operations</th></tr>
+<tr><td><code>ProcurementService</code></td><td><code>/odata/v4/procurement</code> + <code>/mcp/procurement-ops</code></td><td>PRs, POs, receipts + <code>submit/approve/reject/convertToPurchaseOrder</code> (each its own prefixed MCP tool)</td></tr>
+<tr><td><code>ApprovalService</code></td><td><code>/odata/v4/approval</code> + <code>/mcp/approvals</code></td><td>Approvals, steps, workflows + <code>decideApproval</code></td></tr>
+<tr><td><code>SupplierService</code></td><td><code>/odata/v4/suppliers</code> + <code>/mcp/suppliers</code></td><td>Suppliers, materials + <code>assessSupplierRisk</code></td></tr>
+<tr><td><code>InvoiceService</code></td><td><code>/odata/v4/invoices</code> + <code>/mcp/invoices</code></td><td>Invoices, payments + <code>match/approve/createPayment</code> (FINANCE-only)</td></tr>
+<tr><td><code>CatalogService</code></td><td><code>/odata/v4/catalog</code> + <code>/mcp/catalog</code></td><td>Users, org, budgets, policies + <code>checkBudget</code></td></tr>
+<tr><td><code>MCPService</code></td><td><code>/odata/v4/mcp</code> + <code>/mcp/procurement</code></td><td>13 curated tools (functions + actions)</td></tr>
+<tr><td><code>AgentService</code> (@Agent)</td><td><code>/odata/v4/agents</code></td><td><code>executeTask / orchestrate / chat</code> (intentionally <b>not</b> an MCP server)</td></tr>
+<tr><td><code>AuditService</code></td><td><code>/odata/v4/audit</code></td><td>Read-only audit + tool executions (intentionally <b>not</b> on MCP — no service-level auth guard yet)</td></tr>
+</table>
+<div class="callout"><b>Critical runtime rule (verified by a full debugging session):</b> handlers must <code>extends (cds.ApplicationService as any)</code>. Raw <code>cds.Service</code> has no CRUD executors — entity reads silently return <code>[]</code> while custom actions keep working, which is extremely misleading. The cast keeps <code>tsc</code> clean where <code>@sap/cds</code> ships no usable handler types.</div>
+</section>
+
+<section id="s7">
+<h2>7 · Authentication — <code>lib/auth/authentication.ts</code></h2>
+<div class="mermaid">sequenceDiagram
+  participant C as Client
+  participant A as AuthenticationService
+  participant X as RequestContext
+  C->>A: Bearer JWT ─or─ x-mock-user (+ x-agent-id)
+  A->>A: verify signature · extract sub/zid/roles/agentId
+  A->>X: {userId, tenantId, roles, permissions, actorType, correlationId…}</div>
+<pre><code><span class="kw">export interface</span> <span class="typ">RequestContext</span> {
+  userId: <span class="kw">string</span>; username: <span class="kw">string</span>; email: <span class="kw">string</span>;
+  tenantId: <span class="kw">string</span>; organizationId?: <span class="kw">string</span>; departmentId?: <span class="kw">string</span>;
+  roles: <span class="kw">string</span>[]; permissions: <span class="kw">string</span>[];
+  isAgent: <span class="kw">boolean</span>; agentId?: <span class="kw">string</span>; delegatedUserId?: <span class="kw">string</span>;
+  actorType: <span class="str">'USER'</span> | <span class="str">'AGENT'</span> | <span class="str">'SYSTEM'</span>;
+  actorId: <span class="kw">string</span>; correlationId: <span class="kw">string</span>; requestId: <span class="kw">string</span>;
+}
+
+<span class="kw">export function</span> <span class="fn">authenticateRequest</span>(req: <span class="kw">any</span>) {
+  <span class="com">// 1) Real JWT: XSUAA/IAS claims (sub, zid, roles/scope, agentId)</span>
+  <span class="kw">if</span> (auth?.startsWith(<span class="str">'Bearer '</span>)) { verify(token, JWT_SECRET) → build ctx }
+  <span class="com">// 2) Safe mock for local dev only (ALLOW_MOCK_AUTH), explicit opt-in header</span>
+  <span class="kw">const</span> mockUser = headers[<span class="str">'x-mock-user'</span>] ?? <span class="str">'employee@example.com'</span>;
+  <span class="kw">if</span> (headers[<span class="str">'x-agent-id'</span>]) { isAgent=<span class="kw">true</span>; actorType=<span class="str">'AGENT'</span>; delegatedUserId=userId }
+}</code></pre>
+<p>Three identities stay distinct: <b>human</b> (<code>USER</code>), <b>agent</b> (<code>AGENT</code> + <code>agentId</code>), <b>delegated</b> (agent acting for a user → <code>delegatedUserId</code>). Mock users: <code>admin / employee / approver / procurement / manager / finance / auditor@example.com</code> (+ <code>other-tenant@example.com</code> on <code>tenant-b</code>). No passwords exist anywhere — local auth is header-selected identity, production is JWT only.</p>
+</section>
+
+<section id="s8">
+<h2>8 · Authorization &amp; RBAC</h2>
+<h3>8.1 Roles → permissions (<code>lib/auth/rbac.ts</code>)</h3>
+<table>
+<tr><th>Role</th><th>Key permissions</th></tr>
+<tr><td><code>ADMIN</code></td><td>everything (<code>ADMIN_SYSTEM</code>)</td></tr>
+<tr><td><code>PROCUREMENT_MANAGER</code></td><td>read/create/update PR, approve/reject, create/update/cancel PO, suppliers, invoices(read), budget(read), agents+MCP</td></tr>
+<tr><td><code>PROCUREMENT_OFFICER</code></td><td>as manager minus approve/reject/cancel</td></tr>
+<tr><td><code>APPROVER</code></td><td>read PR, <b>approve/reject only</b> — no finance, no PO edits</td></tr>
+<tr><td><code>FINANCE</code></td><td>create/approve invoices, payments, budgets — exclusive payment right</td></tr>
+<tr><td><code>SUPPLIER_MANAGER / AUDITOR</code></td><td>suppliers / read-only + audit log</td></tr>
+<tr><td><code>EMPLOYEE</code></td><td>create/update own PRs, read suppliers+budgets — <b>cannot approve, cannot use MCP tools</b></td></tr>
+<tr><td><code>AI_AGENT</code></td><td><b>empty by default</b> — every agent gets explicit per-agent grants only</td></tr>
+</table>
+<h3>8.2 Enforcement — <code>lib/authorization/authorization.ts</code></h3>
+<pre><code><span class="kw">export const</span> AuthorizationService = {
+  <span class="fn">hasPermission</span>(ctx, p) { <span class="kw">return</span> ctx.permissions.includes(p) || ctx.permissions.includes(<span class="str">'ADMIN_SYSTEM'</span>); },
+  <span class="fn">requirePermission</span>(ctx, p) { <span class="fn">this.requireAuth</span>(ctx); <span class="kw">if</span> (!<span class="kw">this</span>.hasPermission(ctx,p))
+    <span class="kw">throw new</span> <span class="fn">AuthError</span>(<span class="str">'FORBIDDEN'</span>, <span class="str">`Permission ${p} required`</span>, <span class="str">403</span>); },
+  <span class="fn">canExecuteTool</span>(ctx, tool, grant) { <span class="fn">this.requirePermission</span>(ctx,<span class="str">'EXECUTE_MCP_TOOL'</span>);
+    <span class="kw">if</span> (ctx.isAgent &amp;&amp; !grant?.allowed) <span class="kw">throw</span> …(<span class="str">'MCP_TOOL_NOT_AUTHORIZED'</span>); },
+  <span class="fn">enforceTenant</span>(ctx, rowTenantId) { … <span class="kw">throw</span> …(<span class="str">'TENANT_ACCESS_DENIED'</span>) <span class="kw">if</span> mismatch },
+};</code></pre>
+<div class="mermaid">flowchart LR
+  WHO[actor + delegated identity] --> OP[permission + tool + entity + action]
+  OP --> ALLOW{grants?}
+  ALLOW -- yes --> POL[PolicyEngine]
+  ALLOW -- no --> DENY[403 + audit record]</div>
+<h3>8.3 Agent authorization — <code>lib/agents/agent-auth.ts</code></h3>
+<div class="mermaid">flowchart TB
+  CALL[Agent tool call: agentId + tool + target] --> ID{known agent?}
+  ID -- no --> DENY[AGENT_NOT_AUTHORIZED 403 + audit]
+  ID -- yes --> GRANT{tool in allowedTools?}
+  GRANT -- no --> DENY
+  GRANT -- yes --> PERM{all required permissions held?}
+  PERM -- no --> DENY
+  PERM -- yes --> MCPREQ{holds EXECUTE_MCP_TOOL?}
+  MCPREQ -- no --> DENY
+  MCPREQ -- yes --> ALLOW[execute + audit ALLOW]</div>
+<p>Never trust <i>"it's an AI agent"</i>. Each agent has a registry entry (tools + permissions) overlaid with DB grants (<code>AgentPermissions</code>, <code>AgentToolPermissions</code>). Example: <code>agent-procurement</code> may <code>createPurchaseOrder</code>; <code>agent-risk</code> may not — enforced per call by <code>authorizeAgentTool()</code>, which throws <code>AGENT_NOT_AUTHORIZED</code> on any gap. A denial aborts the whole task (we removed an early version that swallowed it).</p>
+</section>
+
+<section id="s9">
+<h2>9 · Multi-Tenancy — <code>lib/database/tenant.ts</code></h2>
+<ul class="tight">
+<li>Every tenant-sensitive entity carries <code>tenantId</code> (<code>TenantAware</code> aspect).</li>
+<li>Tenant is resolved <b>only</b> from the auth context (<code>resolveTenant()</code>); client-supplied <code>tenantId</code> is overwritten on write and filtered on read — <code>enforceTenant()</code> rejects cross-tenant access with 403.</li>
+<li>Demo tenants: <code>tenant-a</code> (Acme India) and <code>tenant-b</code> (Acme EU, user <code>other-tenant@example.com</code>).</li>
+<li>Verified live: tenant-b querying PRs gets <code>count: 0</code> via both OData and MCP.</li>
+</ul>
+<div class="mermaid">sequenceDiagram
+  participant M as Attacker (tenant-a session)
+  participant H as Handler
+  participant D as PostgreSQL
+  M->>H: GET /PurchaseRequisitions?tenantId=tenant-b
+  H->>H: ignore query param; tenantId='tenant-a' from auth ctx
+  H->>D: SELECT … WHERE tenantId='tenant-a'
+  D->>M: only tenant-a rows (attacker learns nothing)
+  M->>H: POST create with tenantId='tenant-b'
+  H->>H: overwrite with 'tenant-a' → row lands in own tenant</div>
+</section>
+
+<section id="s10">
+<h2>10 · MCP Interface — six chat servers</h2>
+<p>Runtime MCP (don't confuse with <code>@cap-js/mcp-server</code>, the dev-time coding assistant). Every domain service is dual-served — OData at its <code>/odata/v4/…</code> path plus Streamable-HTTP MCP at its <code>/mcp/…</code> path (via <code>@mcp: 'name'</code> alongside <code>@odata</code>; a bare <code>@protocol:'odata'</code> would silently suppress the MCP endpoint — a bug we found and fixed). Doc comments on actions become the tool descriptions chat clients show, and <code>@mcp.instructions</code> tells the model how to use each server (<i>describe → query → call, never invent IDs</i>). With <code>cds.mcp: {per_action_tool: true, prefix: true}</code> each action is its own prefixed tool (e.g. <code>CatalogService-checkBudget</code>), so connecting all six servers to one client never collides.</p>
+<div class="mermaid">sequenceDiagram
+  participant A as MCP client (OpenCode)
+  participant M as MCP adapter
+  participant H as MCPService handlers
+  participant Z as Authorization+Policy
+  participant D as PostgreSQL
+  A->>M: POST /mcp/procurement (JSON-RPC)
+  M->>H: describe / query / call
+  H->>Z: EXECUTE_MCP_TOOL + tool permission + agent grant + rate limit
+  Z->>D: tenant-filtered business operation
+  D->>H: result
+  H->>A: result + audit + tool-execution record</div>
+<h3>10.1 Tool catalogue (13)</h3>
+<table>
+<tr><th>Tool</th><th>Requires</th><th>What it does</th></tr>
+<tr><td><code>searchPurchaseRequisitions / getPurchaseRequisition / createPurchaseRequisition</code></td><td><code>READ/CREATE_PR</code></td><td>Search (OData parenthesis syntax), fetch, draft creation with auto-numbering</td></tr>
+<tr><td><code>searchPurchaseOrders / getPurchaseOrder / createPurchaseOrder</code></td><td><code>READ_PR / CREATE_PO</code></td><td>Creation delegates to <code>ProcurementService</code> via <code>.send()</code> — same tx, policy and budget gates</td></tr>
+<tr><td><code>searchSuppliers / getSupplier</code></td><td><code>READ_SUPPLIER</code></td><td>Master-data lookup (sanitized before any LLM use)</td></tr>
+<tr><td><code>checkBudget / getInvoiceStatus / getApprovalStatus / getProcurementRisk</code></td><td><code>READ_BUDGET / READ_INVOICE / READ_PR</code></td><td>Budget math, invoice state, approval trail, amount-based risk score</td></tr>
+<tr><td><code>submitForApproval</code></td><td><code>CREATE_PR</code></td><td>Forwards to the PR lifecycle (state-machine enforced)</td></tr>
+</table>
+<p>Each tool declares description, input/output schema, required permission, allowed roles, 20–60/min rate limit, and writes <code>MCPToolExecutions</code> + <code>AuditLogs</code>. Generic adapter reads (<code>query</code>/<code>describe</code>) are covered by <code>before READ</code> tenant+permission guards on every projection — we proved a missing guard leaks cross-tenant data, so this is load-bearing.</p>
+<h3>10.2 Domain MCP servers (chat directly with each service)</h3>
+<table>
+<tr><th>MCP server</th><th>Endpoint</th><th>Tools (prefixed, per-action)</th></tr>
+<tr><td><code>CatalogService</code></td><td><code>/mcp/catalog</code></td><td><code>describe / query / checkBudget</code> — master data + budget availability</td></tr>
+<tr><td><code>ProcurementService</code></td><td><code>/mcp/procurement-ops</code></td><td><code>describe / query / submitRequisition / approveRequisition / rejectRequisition / convertToPurchaseOrder</code></td></tr>
+<tr><td><code>SupplierService</code></td><td><code>/mcp/suppliers</code></td><td><code>describe / query / assessSupplierRisk</code></td></tr>
+<tr><td><code>ApprovalService</code></td><td><code>/mcp/approvals</code></td><td><code>describe / query / decideApproval</code></td></tr>
+<tr><td><code>InvoiceService</code></td><td><code>/mcp/invoices</code></td><td><code>describe / query / matchInvoice / approveInvoice / createPayment</code></td></tr>
+</table>
+<p>These expose the services' own entities via the generic <code>query</code>/<code>describe</code> tools plus one tool per unbound action/function. Reads run through the same <code>before READ</code> tenant+permission guards as OData; writes only happen through the audited actions (OData CREATE/UPDATE/DELETE are <b>not</b> MCP tools). <code>AuditService</code> stays OData-only until it gets a service-level auth guard; <code>AgentService</code> stays <code>@Agent</code>-only.</p>
+<h3>10.3 Connect OpenCode</h3>
+<pre><code>{ <span class="str">"$schema"</span>: <span class="str">"https://opencode.ai/config.json"</span>,
+  <span class="str">"mcp"</span>: { <span class="str">"procurement"</span>: {
+    <span class="str">"type"</span>: <span class="str">"remote"</span>, <span class="str">"url"</span>: <span class="str">"http://localhost:4004/mcp/procurement"</span>,
+    <span class="str">"headers"</span>: { <span class="str">"x-mock-user"</span>: <span class="str">"procurement@example.com"</span> },
+    <span class="str">"oauth"</span>: <span class="kw">false</span>, <span class="str">"enabled"</span>: <span class="kw">true</span> },
+    <span class="str">"catalog"</span>: {
+    <span class="str">"type"</span>: <span class="str">"remote"</span>, <span class="str">"url"</span>: <span class="str">"http://localhost:4004/mcp/catalog"</span>,
+    <span class="str">"headers"</span>: { <span class="str">"x-mock-user"</span>: <span class="str">"procurement@example.com"</span> },
+    <span class="str">"enabled"</span>: <span class="kw">true</span> } } }</code></pre>
+<p>Repeat the <code>catalog</code> block for <code>procurement-ops</code>, <code>suppliers</code>, <code>approvals</code> and <code>invoices</code> (same shape, different <code>url</code>). Local dev autowire registers all six automatically under <code>cds watch</code>. Verify with <code>POST /mcp/&lt;name&gt; {"jsonrpc":"2.0","id":1,"method":"tools/list"}</code> or the MCP Inspector (Streamable HTTP).</p>
+</section>
+
+<section id="s11">
+<h2>11 · A2A Agents — <code>srv/agent-service.*</code></h2>
+<div class="mermaid">flowchart TB
+  ORC[Orchestrator] --> PR[Procurement] &amp; BU[Budget] &amp; RI[Risk] &amp; IN[Invoice] &amp; AP[Approval] &amp; AU[Audit]
+  PR &amp; BU &amp; RI &amp; IN &amp; AP &amp; AU --> SVC[CAP Services] --> DB[(PostgreSQL)]</div>
+<table>
+<tr><th>Agent</th><th>Responsibilities &amp; limits</th></tr>
+<tr><td><code>agent-procurement</code></td><td>Analyze/dedupe requisitions, recommend suppliers, create POs — never auto-approve high-risk</td></tr>
+<tr><td><code>agent-approval</code></td><td>Review pending, flag gaps, escalate — no autonomous high-value approval</td></tr>
+<tr><td><code>agent-risk</code></td><td>History, lateness, disputes, spend → <code>riskScore / riskLevel / reasons / recommendation</code></td></tr>
+<tr><td><code>agent-invoice</code></td><td>Three-way match (PO + goods receipt + invoice)</td></tr>
+<tr><td><code>agent-budget</code></td><td>Available / committed / consumed / remaining + risk flag</td></tr>
+<tr><td><code>agent-audit</code></td><td>Read-only log inspection (<code>VIEW_AUDIT_LOG</code> enforced)</td></tr>
+<tr><td><code>agent-orchestrator</code></td><td>Intent → PR → authZ → budget → supplier → risk → <b>policy gate</b> → PO-or-human → audit</td></tr>
+</table>
+<h3>11.1 Orchestrator flow (verified live both branches)</h3>
+<div class="mermaid">sequenceDiagram
+  participant U as Manager
+  participant O as Orchestrator
+  participant P as Policy engine
+  participant S as ProcurementService
+  participant D as Audit log
+  U->>O: orchestrate("Create PO for PR-1001")
+  O->>O: load PR (tenant-filtered) → status APPROVED?
+  O->>O: require CREATE_PURCHASE_ORDER → budget agent → risk agent
+  O->>P: evaluatePolicy(amount ₹12.75L)
+  P->>O: REQUIRE_HUMAN (PO_EXEC)
+  O->>D: write audit (decision: gated)
+  O->>U: {requiresHumanApproval: true} — no PO created</div>
+<pre><code><span class="com">// srv/agent-service.ts → orchestrate()</span>
+pr = load(requisitionID, tenantId)              <span class="com">// tenant-filtered</span>
+<span class="kw">if</span> (pr.status !== <span class="str">'APPROVED'</span>) <span class="kw">return</span> { requiresHumanApproval: <span class="kw">true</span>, step: <span class="str">'check-status'</span> }
+requirePermission(ctx, <span class="str">'CREATE_PURCHASE_ORDER'</span>)
+budget = specialists[<span class="str">'agent-budget'</span>](dept, amount)
+<span class="kw">if</span> (!budget.available) <span class="kw">return</span> { requiresHumanApproval: <span class="kw">true</span>, reason: <span class="str">'Budget insufficient'</span> }
+decision = evaluatePolicy({ amount })           <span class="com">// LLM recommends; policy decides</span>
+<span class="kw">if</span> (decision ∈ {REQUIRE_HUMAN, DENY}) <span class="kw">return</span> { requiresHumanApproval: <span class="kw">true</span>, … }
+po = ProcurementService.send(<span class="str">'convertToPurchaseOrder'</span>, …)  <span class="com">// same tx path as humans</span>
+audit(AGENT_ACTION_EXECUTED) → { requiresHumanApproval: <span class="kw">false</span>, purchaseOrder: po }</code></pre>
+<p>Live proof: PR-1001 (₹12.75L) → <code>{"requiresHumanApproval":true,"policyDecision":"REQUIRE_HUMAN","policy":"PO_EXEC"}</code>; a ₹30k PR → PO created with <code>AUTO_APPROVE</code>.</p>
+</section>
+
+<section id="s12">
+<h2>12 · Policy Engine — <code>lib/workflow/policy.ts</code></h2>
+<div class="mermaid">flowchart TB
+  IN[amount + riskLevel + department] --> SORT[merge DB + default rules · sort by priority]
+  SORT --> RISK{risk HIGH/CRITICAL?}
+  RISK -- yes --> HUMAN[REQUIRE_HUMAN]
+  RISK -- no --> A{amount &lt; ₹50k?}
+  A -- yes --> AUTO[AUTO_APPROVE]
+  A -- no --> B{amount &lt; ₹500k?}
+  B -- yes --> MGR[REQUIRE_MANAGER]
+  B -- no --> C{amount &lt; ₹1M?}
+  C -- yes --> HUMAN
+  C -- no --> EXEC[REQUIRE_HUMAN mandatory]</div>
+<p>Thresholds live in the <code>Policies</code> entity (editable without code deploys); code defaults mirror them. First match in priority order wins; risk rules outrank amount rules.</p>
+<table>
+<tr><th>Policy</th><th>Condition</th><th>Action</th></tr>
+<tr><td><code>PO_HIGH_RISK</code> (prio 5)</td><td>risk HIGH/CRITICAL</td><td><code>REQUIRE_HUMAN</code></td></tr>
+<tr><td><code>PO_AUTO</code> (10)</td><td>&lt; ₹50,000</td><td><code>AUTO_APPROVE</code></td></tr>
+<tr><td><code>PO_MANAGER</code> (20)</td><td>₹50k–500k</td><td><code>REQUIRE_MANAGER</code></td></tr>
+<tr><td><code>PO_SENIOR</code> (30)</td><td>₹500k–1M</td><td><code>REQUIRE_HUMAN</code></td></tr>
+<tr><td><code>PO_EXEC</code> (40)</td><td>&gt; ₹1M</td><td><code>REQUIRE_HUMAN</code> (mandatory)</td></tr>
+</table>
+<div class="callout danger"><b>AI security principle:</b> the LLM is never the authorization authority. Flow is <code>LLM → tool request → AuthorizationService → PolicyEngine → BusinessService → DB</code>. AI output is re-validated against CDS validation, authZ, policy and DB state before execution.</div>
+</section>
+
+<section id="s13">
+<h2>13 · Workflows &amp; Transactions — <code>lib/workflow/lifecycle.ts</code></h2>
+<div class="mermaid">stateDiagram-v2
+  [*] --> DRAFT: PR created
+  DRAFT --> SUBMITTED --> UNDER_REVIEW --> APPROVED --> CONVERTED_TO_PO
+  UNDER_REVIEW --> REJECTED --> DRAFT: explicit re-open only
+  state PO { [*] --> DRAFT --> PENDING_APPROVAL --> APPROVED --> SENT_TO_SUPPLIER --> PARTIALLY_RECEIVED --> FULLY_RECEIVED --> INVOICED --> CLOSED }</div>
+<p><code>assertTransition(flow, from, to)</code> rejects illegal moves (e.g. <code>REJECTED → APPROVED</code>) with <code>INVALID_STATE_TRANSITION</code> (409). PO creation is one CAP transaction: validate PR → supplier → budget → policy → insert PO + items → flip PR → audit; any failure rolls back. Concurrent approvals are safe via <code>SELECT … FOR UPDATE</code> plus the <code>version</code> check.</p>
+<pre><code><span class="com">// srv/procurement-service.ts → convertToPurchaseOrder (single tx)</span>
+<span class="kw">const</span> tx = cds.tx(req);
+pr = <span class="kw">await</span> tx.run(SELECT.one.from(PurchaseRequisitions).where({ID, tenantId}).forUpdate());
+validatePO(pr, supplier); checkBudget(); decision = evaluatePolicy({amount, risk});
+<span class="kw">if</span> (decision==REQUIRE_HUMAN &amp;&amp; ctx.isAgent) <span class="kw">throw</span> POLICY_REQUIRES_HUMAN_APPROVAL;
+po = <span class="kw">await</span> tx.run(INSERT.into(PurchaseOrders).entries({…}));  <span class="com">// + items copy</span>
+assertTransition(PR_FLOW, pr.status, <span class="str">'CONVERTED_TO_PO'</span>);
+<span class="kw">await</span> tx.update(…).set({status:<span class="str">'CONVERTED_TO_PO'</span>, version: pr.version+<span class="str">1</span>}).where({ID, version: pr.version});
+<span class="kw">await</span> writeAudit(tx, ctx, {action:<span class="str">'PURCHASE_ORDER_CREATED'</span>, …});</code></pre>
+</section>
+
+<section id="s14">
+<h2>14 · Validation &amp; AI Safety — <code>lib/validation/validation.ts</code></h2>
+<h3>14.1 Invoice three-way matching</h3>
+<div class="mermaid">flowchart LR
+  PO[Purchase Order] --> M{match}
+  GR[Goods Receipt] --> M
+  INV[Invoice] --> M
+  M -- clean --> MATCHED --> APPROVED --> PAID
+  M -- issues --> MISMATCH</div>
+<p><code>threeWayMatch()</code> flags price mismatch, quantity-over-PO, missing goods receipt and unknown PO lines; used by <code>matchInvoice</code> and the invoice agent (unit-tested both directions).</p>
+<h3>14.2 Prompt-injection defense</h3>
+<p>Supplier text, invoice notes and comments are <b>data, never instructions</b>. <code>sanitizeForLLM()</code> redacts instruction-override patterns (<i>"ignore previous instructions…"</i>) before anything reaches a model; system/user/tool-result/data channels stay separated, and every agent input passes through it in <code>executeTask</code>/<code>chat</code>.</p>
+</section>
+
+<section id="s15">
+<h2>15 · Audit &amp; Observability</h2>
+<div class="mermaid">flowchart LR
+  ACT[Any sensitive action] --> A[writeAudit: actor + tenant + entity + old/new + corr IDs]
+  A --> MASK[mask secrets · never throw]
+  MASK --> T[(AuditLogs)]
+  ACT --> E[Agent/MCP execution record]
+  E --> T2[(AgentExecutions / MCPToolExecutions)]
+  T &amp; T2 --> READ[AuditService read-only OData for auditors]</div>
+<p><code>writeAudit()</code> records <code>timestamp, tenantId, actorType (USER/AGENT/SYSTEM), actorId, userId, agentId, delegatedUserId, action, entity, entityId, old/new values, result, correlationId, requestId, ip</code> — with secret-masking so tokens/passwords can never land in logs. Emitted actions include <code>PURCHASE_REQUISITION_CREATED/SUBMITTED/APPROVED/REJECTED</code>, <code>PURCHASE_ORDER_CREATED</code>, <code>MCP_TOOL_EXECUTED</code>, <code>AGENT_ACTION_EXECUTED</code>, <code>INVOICE_APPROVED</code>, <code>PAYMENT_CREATED</code>. Complemented by <code>AgentExecutions</code> (tool, input/output, auth decision, timing) and <code>MCPToolExecutions</code>. Structured JSON logs carry request/correlation/tenant/actor IDs on every line; <code>/health</code>, <code>/readiness</code> (DB-checked), <code>/liveness</code> stay secret-free. <code>server.js</code> adds <code>helmet</code> + a global rate limit on top of per-tool buckets (in-memory; Redis for multi-instance).</p>
+</section>
+
+<section id="s16">
+<h2>16 · Security Model</h2>
+<table>
+<tr><th>Threat</th><th>Mitigation (where)</th></tr>
+<tr><td>No/expired/forged auth</td><td>JWT verify; anonymous contexts rejected by <code>requireAuth</code> (401)</td></tr>
+<tr><td>Privilege escalation</td><td>Server-side RBAC in every handler; empty-by-default agent role</td></tr>
+<tr><td>Cross-tenant access</td><td>Server-resolved tenant, <code>enforceTenant</code>, forged <code>tenantId</code> ignored</td></tr>
+<tr><td>Rogue agent / tool</td><td><code>authorizeAgentTool</code> per call; denials abort (never swallowed)</td></tr>
+<tr><td>LLM self-authorization</td><td>Policy engine decides; AI output re-validated pre-execution</td></tr>
+<tr><td>Prompt injection</td><td><code>sanitizeForLLM</code>; data/instruction separation</td></tr>
+<tr><td>Agent loops / abuse</td><td>Per-tool + global rate limits; max-amount tool grants</td></tr>
+<tr><td>Secret leakage</td><td><code>.env</code> never committed; masked audit; clean coded errors (no stack/DB internals)</td></tr>
+<tr><td>Race on approvals</td><td><code>FOR UPDATE</code> + version check; illegal transitions 409</td></tr>
+</table>
+</section>
+
+<section id="s17">
+<h2>17 · API Examples</h2>
+<pre><code><span class="com"># OData (mock user header selects identity)</span>
+GET  /odata/v4/procurement/PurchaseRequisitions?$filter=status <span class="kw">eq</span> <span class="str">'APPROVED'</span>&amp;$top=<span class="str">10</span>
+POST /odata/v4/procurement/submitRequisition            {<span class="str">"ID"</span>:<span class="str">"..."</span>}
+POST /odata/v4/procurement/approveRequisition           {<span class="str">"ID"</span>:<span class="str">"..."</span>,<span class="str">"comment"</span>:<span class="str">"ok"</span>}  <span class="com"># APPROVER+</span>
+POST /odata/v4/procurement/convertToPurchaseOrder       {<span class="str">"requisitionID"</span>:<span class="str">"..."</span>,<span class="str">"supplierID"</span>:<span class="str">"..."</span>}
+POST /odata/v4/invoices/matchInvoice                    {<span class="str">"invoiceID"</span>:<span class="str">"..."</span>}
+
+<span class="com"># OData functions use parenthesis syntax: /fn(p='v'), NOT ?p='v'</span>
+GET  /odata/v4/mcp/getProcurementRisk(requisitionID=<span class="str">'pr-1001'</span>)
+GET  /odata/v4/mcp/checkBudget(departmentID=<span class="str">'d-it'</span>,amount=<span class="str">1000</span>)
+
+<span class="com"># Agents (A2A-style) + MCP (Streamable HTTP JSON-RPC; 6 servers: procurement, catalog, procurement-ops, suppliers, approvals, invoices)</span>
+POST /odata/v4/agents/orchestrate   {<span class="str">"goal"</span>:<span class="str">"Create PO for PR-1001"</span>,<span class="str">"payload"</span>:<span class="str">"{...}"</span>}
+POST /mcp/procurement               {<span class="str">"jsonrpc"</span>:<span class="str">"2.0"</span>,<span class="str">"id"</span>:<span class="str">1</span>,<span class="str">"method"</span>:<span class="str">"tools/list"</span>}
+POST /mcp/catalog                   {<span class="str">"jsonrpc"</span>:<span class="str">"2.0"</span>,<span class="str">"id"</span>:<span class="str">1</span>,<span class="str">"method"</span>:<span class="str">"tools/list"</span>}  <span class="com"># + /mcp/procurement-ops, /mcp/suppliers, /mcp/approvals, /mcp/invoices</span>
+GET  /.well-known/agent.json   <span class="com"># A2A discovery card</span></code></pre>
+</section>
+
+<section id="s18">
+<h2>18 · Testing</h2>
+<p><code>npm test</code> — 26 vitest tests (<code>test/security.test.ts</code> with 23: RBAC matrix, agent-pretending-admin, tenant forgery, illegal transitions, policy bands incl. high-risk override, 3-way match/mismatch, injection stripping, MCP permission map, <b>XSUAA scope→role derivation</b>; <code>test/unit.test.ts</code>: rate limits, error hygiene). Live E2E (18 checks, all passing <b>on both SQLite and Render Postgres 18</b>): boot → full PR lifecycle → 403 denials → MCP tools → agent task → orchestrator <b>both branches</b> (human-gate + auto-PO) → MCP-proxied submit — with zero uncaught server errors.</p>
+</section>
+
+<section id="s19">
+<h2>19 · Deployment</h2>
+<div class="mermaid">flowchart LR
+  GH[GitHub] --> R[Render: npm ci + npm run db:deploy:pg + npm start]
+  R --> RP[(Render Postgres 18 via VCAP binding)]</div>
+<ul class="tight">
+<li><b>Local SQLite:</b> default — throwaway in-memory DB, fresh seeds every boot. Just <code>npm start</code>.</li>
+<li><b>Local → Render Postgres:</b> secrets in gitignored <code>.env</code> (app vars + <code>CDS_ENV=postgres</code> switch) and <code>default-env.json</code> (<code>VCAP_SERVICES</code> entry: external hostname + SSL). Then <code>npm run db:deploy:pg</code> (schema+seeds; <code>scripts/deploy-pg.cjs</code> exists because <code>cds-deploy --to</code> drops credentials) → <code>npm start</code>. Verified: identical 18/18 E2E on both engines.</li>
+<li><b>Docker:</b> multi-stage <code>Dockerfile</code> (deps → typecheck → prod run <code>npm run db:deploy:prod || true; npm start</code>), health-checked on <code>/health</code>.</li>
+<li><b>Render hosting:</b> web service + managed Postgres; env <code>DATABASE_URL</code> style vars or VCAP-shaped binding, <code>JWT_SECRET</code>, <code>ALLOW_MOCK_AUTH=false</code>, optional <code>AI_*</code>; verify <code>/health</code> + <code>/readiness</code>.</li>
+<li>Credential resolution order that matters: explicit <code>cds connect</code> options → <code>VCAP_SERVICES</code> binding (matched by label/tags) → <code>CDS_REQUIRES_DB_*</code> env → pg defaults. The <code>[postgres]</code> profile must exist in <b>both</b> <code>.cdsrc.json</code> and <code>package.json</code>, else a plain value clobbers it.</li>
+</ul>
+</section>
+
+<section id="sbtp">
+<h2>P · SAP BTP Deployment (Cloud Foundry MTA)</h2>
+<p>The app ships BTP-ready: <code>mta.yaml</code>, <code>xs-security.json</code> and <code>approuter/</code> deploy backend + login + roles + database as one multi-target archive. No code changes are needed between local mock, Render HS256, and BTP XSUAA — all three produce the same <code>RequestContext</code>.</p>
+<div class="mermaid">flowchart TB
+  USER[User / Joule / MCP client] --> AR[Approuter: XSUAA login<br/>/health open · APIs xsuaa]
+  AR --> BE[procurement-backend<br/>CAP + tsx · ALLOW_MOCK_AUTH=false]
+  BE --> PG[(procurement-postgres)]
+  BE --> XSUAA[(procurement-xsuaa<br/>scopes + role collections)]
+  AR --> XSUAA</div>
+<h3>P.1 · The four files, explained</h3>
+<table>
+<tr><th>File</th><th>What it declares</th><th>Key details</th></tr>
+<tr><td><code>mta.yaml</code></td><td>2 modules + 2 resources</td><td>Backend (512M, <code>nodejs_buildpack</code>, HTTP health check on <code>/health</code> — CF defaults to <code>/</code>, which would crash-loop); approuter (256M, backend destination with <code>forwardAuthToken</code>); xsuaa application plan bound to <code>xs-security.json</code>; hyperscaler <code>postgresql</code> (match plan to entitlements)</td></tr>
+<tr><td><code>xs-security.json</code></td><td>21 scopes, 9 role-templates, 9 role-collections</td><td>Machine-verified 1:1 against <code>lib/auth/rbac.ts</code> (a script executes the real map and diffs). <code>AI_AGENT</code> deliberately has zero scopes.</td></tr>
+<tr><td><code>approuter/xs-app.json</code></td><td>Route protection</td><td><code>/health|/liveness|/readiness</code> open (load balancers); <code>/odata/*, /mcp/*, /.well-known/*</code> require XSUAA login + CSRF; logout lands on <code>/health</code></td></tr>
+<tr><td><code>approuter/package.json</code> + <code>.mtaignore</code></td><td>Router runtime + slim archive</td><td><code>@sap/approuter ^23.0.0</code>; <code>node_modules/</code> excluded (CF rebuilds per module at staging)</td></tr>
+</table>
+<h3>P.2 · XSUAA authentication flow (new in this release)</h3>
+<div class="mermaid">sequenceDiagram
+  participant U as User
+  participant AR as Approuter
+  participant X as XSUAA
+  participant BE as Backend (@sap/xssec 4.15.0)
+  U->>AR: login → XSUAA
+  X->>AR: JWT (scopes, subdomain)
+  AR->>BE: forward JWT (forwardAuthToken)
+  BE->>X: JWKS validation via bound credentials
+  BE->>BE: scopes→permissions (unknown dropped)<br/>roles derived from ROLE_PERMISSIONS<br/>tenant = subdomain
+  BE->>U: same RequestContext as local/Render</div>
+<pre><code><span class="com">// lib/auth/authentication.ts — validation order</span>
+<span class="str">1.</span> XSUAA (VCAP_SERVICES bound) → xssec.createSecurityContext → subdomain tenant
+<span class="str">2.</span> HS256 JWT (JWT_SECRET set — Render/self-hosted)
+<span class="str">3.</span> Mock header (ALLOW_MOCK_AUTH=true — local only)
+<span class="str">4.</span> anonymous → every handler rejects 401
+
+<span class="com">// scope → role derivation (single source of truth = ROLE_PERMISSIONS)</span>
+<span class="kw">export function</span> <span class="fn">deriveRolesFromScopes</span>(scopes, grantType) {
+  <span class="kw">if</span> (granted.has(<span class="str">'ADMIN_SYSTEM'</span>)) roles.push(<span class="str">'ADMIN'</span>);
+  <span class="kw">for</span> (role <span class="kw">of</span> ROLE_PERMISSIONS)   <span class="com">// role held iff ALL its permissions granted</span>
+    <span class="kw">if</span> (perms.every(p => granted.has(p))) roles.push(role);
+  <span class="kw">if</span> (grantType === <span class="str">'client_credentials'</span>) roles.push(<span class="str">'AI_AGENT'</span>);
+}</code></pre>
+<h3>P.3 · Deploy steps + readiness checklist</h3>
+<pre><code>mbt build &amp;&amp; cf deploy mta_archives/enterprise-ai-procurement_1.0.0.mtar
+cf run-task procurement-backend <span class="str">"npm run db:deploy:prod"</span>   <span class="com"># one-time schema</span>
+cf set-env procurement-backend JWT_SECRET &lt;random&gt; &amp;&amp; cf restage procurement-backend</code></pre>
+<table>
+<tr><th>Check</th><th>Status</th></tr>
+<tr><td>Valid <code>mta.yaml</code> (parsed), valid JSON configs</td><td>done</td></tr>
+<tr><td>XSUAA scopes/roles mirror code (script-diffed)</td><td>done</td></tr>
+<tr><td>HTTP health checks on real endpoints (no <code>/</code> crash-loop)</td><td>done</td></tr>
+<tr><td><code>tsx</code> in production deps (survives buildpack pruning)</td><td>done</td></tr>
+<tr><td>XSUAA validation + scope mapping + 5 new unit tests</td><td>done</td></tr>
+<tr><td>Mock auth forced off in MTA properties</td><td>done</td></tr>
+<tr><td>Secrets out of the archive (<code>cf set-env</code>, never committed)</td><td>done</td></tr>
+<tr><td>Postgres plan vs entitlements; assign role collections in cockpit</td><td>operator step at deploy</td></tr>
+</table>
+</section>
+
+<section id="s20">
+<h2>20 · Environment &amp; Config</h2>
+<p><b>Committed (safe):</b> <code>.env.example</code> (every variable documented, empty values), <code>.cdsrc.json</code> + <code>package.json#cds</code> (sqlite default; <code>[production]</code> → postgres+JWT; <code>[postgres]</code> → postgres+mock — mirrored in <b>both</b> files so plain values can't clobber the profile). <b>Local secrets (gitignored, never committed):</b> <code>.env</code> (<code>PORT</code>, <code>CDS_ENV=postgres</code> switch, <code>JWT_SECRET</code>, <code>ALLOW_MOCK_AUTH</code>; loaded by <code>dotenv</code> in <code>server.js</code>) and <code>default-env.json</code> (<code>VCAP_SERVICES</code> with host/user/password/SSL). <code>.gitignore</code> excludes <code>.env*</code>, <code>default-env.json</code>, <code>node_modules/</code>, <code>dist/</code>, <code>coverage/</code> (secret scan verified clean). Startup contract: run under <code>tsx</code> with <code>CDS_TYPESCRIPT=true</code> (set in <code>server.js</code>), never the raw <code>cds-serve</code> binary (it can't load <code>.ts</code> handlers).</p>
+</section>
+
+<section id="s21">
+<h2>21 · Lessons &amp; Limitations</h2>
+<div class="grid2">
+<div>
+<h4>Hard-won lessons (all verified live)</h4>
+<ul class="tight">
+<li>Extend <code>cds.ApplicationService</code> — never raw <code>cds.Service</code>.</li>
+<li><code>SELECT.one</code> for single rows; <code>.send()</code> for cross-service actions.</li>
+<li><code>after</code> hooks must <code>return data</code>; audit in try/catch.</li>
+<li>OData functions need <code>/fn(p='v')</code> syntax; ID params as <code>String</code>.</li>
+<li><code>@protocol:'odata'</code> suppresses sibling protocols — use <code>@odata @mcp:'x'</code>.</li>
+<li>PostgreSQL vs SQLite: direct <code>INSERT</code> returns <code>[]</code> on PG (object on SQLite) and generates no UUIDs (service-layer <code>fill_in_keys</code> is bypassed) → always set explicit <code>randomUUID()</code> IDs and re-read by ID.</li>
+<li>VCAP binding matches by label/tags (<code>@cap-js/postgres</code> wants label <code>postgresql-db</code>); <code>cds deploy --to</code> drops credentials — use an API deploy script with explicit credentials.</li>
+<li>Cloud Postgres sleeps: raise pool <code>acquireTimeoutMillis</code> (default 1s kills boots) and wake the DB before deploying.</li>
+<li>Duplicate config sources bite: a plain value in <code>package.json</code> can clobber a <code>.cdsrc.json</code> profile block — mirror <code>[postgres]</code> in both.</li>
+</ul>
+</div>
+<div>
+<h4>Known limitations → next</h4>
+<ul class="tight">
+<li><code>@cap-js/agents</code> is alpha; full Joule A2A handshake needs BTP bindings.</li>
+<li>In-memory rate limits → Redis for multi-instance.</li>
+<li>Mock auth is local-only; production needs XSUAA/IAS.</li>
+<li>AI service is mock-backed until AI Core credentials land.</li>
+<li>Seed CSVs cover core flows; extend receipt/invoice chains via API.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="sbuild">
+<h2>B · File-by-File Code Guide + How It Was Built</h2>
+<p>This section walks <b>every important file</b>: what it contains, the key code, and why it's shaped that way. Read it with the repo open beside you.</p>
+
+<h3>B.1 · How it was built (the 20-phase process)</h3>
+<p>Nothing was generated in one shot. The build followed gated phases — each phase ended with <b>compile + tests + live verification</b> before continuing:</p>
+<ol class="tight">
+<li><b>Init:</b> <code>cds init --add nodejs,typescript,postgres</code> → repaired the global <code>cds-dk</code>, pinned verified versions (Section 2).</li>
+<li><b>Domain:</b> wrote <code>common.cds</code> (aspects/enums) then <code>schema.cds</code> (~40 entities); fixed enum defaults (<code>#VALUE</code>), <code>@assert.unique</code>, same-service return types via compiler errors.</li>
+<li><b>Seeds:</b> CSVs for both tenants incl. a rejection, a budget crunch, a risky supplier, an invoice mismatch.</li>
+<li><b>Services:</b> 8 <code>.cds</code> files → handlers skeleton → filled in one service at a time.</li>
+<li><b>Auth/RBAC/tenancy:</b> <code>lib/auth</code> + <code>lib/authorization</code> + tenant guards; proved with forged-tenant tests.</li>
+<li><b>Workflow/audit:</b> lifecycle maps, transactions, <code>writeAudit</code>.</li>
+<li><b>MCP/agents/policy/AI:</b> adapter wiring, 7 agents, threshold engine, mock AI.</li>
+<li><b>Hardening:</b> rate limits, helmet, injection defense, coded errors.</li>
+<li><b>Verification:</b> 21 unit tests + an 18-check live E2E (OData, MCP JSON-RPC, agents) — which caught 5 real bugs (wrong base class, unloaded TS handlers, array-vs-one reads, <code>.run</code> vs <code>.send</code>, UUID param parsing). Each was fixed, re-tested, and recorded in Section 21/AGENTS.md.</li>
+<li><b>Docs + deploy:</b> README, this document, Dockerfile/Render config.</li>
+</ol>
+
+<h3>B.2 · Service handlers, file by file</h3>
+<h4><code>srv/procurement-service.ts</code> — the heart (PR lifecycle + PO creation)</h4>
+<pre><code><span class="kw">export default class</span> <span class="fn">ProcurementService</span> <span class="kw">extends</span> (cds.ApplicationService <span class="kw">as any</span>) {
+  <span class="kw">async</span> <span class="fn">init</span>() {
+    <span class="kw">const</span> { PurchaseRequisitions } = <span class="kw">this</span>.entities;
+    <span class="kw">this</span>.before(<span class="str">'READ'</span>, PurchaseRequisitions, <span class="kw">async</span> (req) => {
+      <span class="kw">const</span> ctx = <span class="fn">ctxOf</span>(req);                       <span class="com">// who are you?</span>
+      AuthorizationService.requirePermission(ctx, <span class="str">'READ_PURCHASE_REQUISITION'</span>);
+      req.query.where({ tenantId: ctx.tenantId });   <span class="com">// your tenant only</span>
+    });
+    <span class="kw">this</span>.before([<span class="str">'CREATE'</span>], PurchaseRequisitions, <span class="kw">async</span> (req) => {
+      …validate…; req.data.tenantId = ctx.tenantId;  <span class="com">// server-owned fields</span>
+      req.data.status = <span class="str">'DRAFT'</span>; req.data.requisitionNo ??= autoNumber();
+    });
+    <span class="kw">this</span>.on(<span class="str">'submitRequisition'</span>/<span class="str">'approve…'</span>/<span class="str">'reject…'</span>, …);  <span class="com">// Section 13 state machine</span>
+    <span class="kw">this</span>.on(<span class="str">'convertToPurchaseOrder'</span>, …);             <span class="com">// Section 13 single tx</span>
+    <span class="kw">return super</span>.init();
+  }
+}</code></pre>
+<h4><code>srv/approval-service.ts</code> — second pair of eyes</h4>
+<p>Guards <code>Approvals/WorkflowTasks</code> reads by tenant; <code>decideApproval</code> re-reads the approval <code>FOR UPDATE</code>, rejects double decisions (<code>Already APPROVED</code> → 409), writes the decision + audit. Separation from procurement is deliberate: approval rules evolve independently.</p>
+<h4><code>srv/supplier-service.ts</code> — master data + risk</h4>
+<p>CREATE/UPDATE require <code>CREATE/UPDATE_SUPPLIER</code> and force server-side <code>tenantId</code>; <code>assessSupplierRisk</code> blends stored <code>riskScore</code> with live signals (<code>disputeCount × 10</code>, lateness) into a 0–100 score and LOW→CRITICAL band.</p>
+<h4><code>srv/invoice-service.ts</code> — money with guardrails</h4>
+<p><code>matchInvoice</code> runs <code>threeWayMatch()</code> and persists <code>MATCHED/MISMATCH + details</code>; <code>approveInvoice</code> only from <code>MATCHED/SUBMITTED</code>; <code>createPayment</code> additionally demands the <code>FINANCE</code> role, flips the invoice to <code>PAID</code>, and audits <code>PAYMENT_CREATED</code> — approvers can never touch payments.</p>
+<h4><code>srv/catalog-service.ts</code> — org, budgets, policies</h4>
+<p>One generic <code>before READ '*'</code> tenant-filter for its tenant entities; <code>checkBudget(departmentID, amount)</code> returns whether <code>total − committed − consumed ≥ amount</code> — the same math agents and PO creation reuse.</p>
+<h4><code>srv/mcp-service.ts</code> — the curated tool front door</h4>
+<pre><code><span class="kw">const</span> <span class="fn">wrap</span> = (toolName, fn) => <span class="kw">this</span>.on(toolName, <span class="kw">async</span> (req) => {
+  <span class="kw">const</span> t0 = Date.now(); <span class="kw">let</span> ctx;
+  <span class="kw">try</span> {
+    ctx = <span class="kw">await</span> <span class="fn">guardTool</span>(req, toolName);  <span class="com">// auth → 2 permissions → rate limit → agent grant</span>
+    <span class="kw">const</span> out = <span class="kw">await</span> fn(req, ctx, cds.tx(req));
+    <span class="kw">await</span> <span class="fn">recordMcp</span>(…<span class="str">'SUCCESS'</span>…); <span class="kw">return</span> out;
+  } <span class="kw">catch</span> (e) { <span class="kw">await</span> <span class="fn">recordMcp</span>(…<span class="str">'DENIED'</span>…); req.reject(<span class="fn">toHttpError</span>(e)); }
+});</code></pre>
+<p>Write-path tools delegate via <code>(svc as any).tx(req).send('convertToPurchaseOrder', …)</code> — the same transactional handler humans use, never a shortcut. The six projections carry <code>before READ</code> tenant+permission guards so the adapter's generic <code>query</code> tool cannot leak.</p>
+<h4><code>srv/agent-service.ts</code> — specialists + orchestrator</h4>
+<p><code>executeTask</code>: require <code>EXECUTE_AGENT</code> → resolve intent to a representative tool → <code>authorizeAgentTool</code> (throws, never swallowed) → sanitize input → mock/real AI plans → specialist runs → policy re-check on actionable outputs → log execution + audit. <code>orchestrate</code>: the Section 11 chain. <code>chat</code>: sanitized single-turn reply.</p>
+<h4><code>srv/server.js</code> — the stage (plain JS, loads first)</h4>
+<pre><code><span class="kw">import</span> cds <span class="kw">from</span> <span class="str">'@sap/cds'</span>;
+process.env.CDS_TYPESCRIPT ??= <span class="str">'true'</span>;  <span class="com">// let .ts handlers resolve</span>
+cds.on(<span class="str">'bootstrap'</span>, (app) => {
+  app.use(helmet()); app.use(rateLimit({ windowMs: <span class="str">15*60*1000</span>, max: <span class="str">600</span> }));
+  app.get(<span class="str">'/readiness'</span>, …db check…); app.get(<span class="str">'/liveness'</span>, …);
+  app.get(<span class="str">'/.well-known/agent.json'</span>, …A2A discovery card…);
+});</code></pre>
+
+<h3>B.3 · Library files, file by file</h3>
+<h4><code>lib/audit/audit.ts</code> — the diary that can't leak</h4>
+<pre><code><span class="kw">export async function</span> <span class="fn">writeAudit</span>(db, ctx, rec, req?) {
+  <span class="kw">try</span> { <span class="kw">await</span> INSERT.into(<span class="str">'procurement.db.AuditLogs'</span>).entries({
+    timestamp: <span class="kw">new</span> Date().toISOString(), tenantId: ctx.tenantId,
+    actorType: ctx.actorType, actorId: ctx.actorId, userId: ctx.userId,
+    agentId: ctx.agentId, delegatedUserId: ctx.delegatedUserId, …,
+    oldValue: <span class="fn">safe</span>(rec.oldValue), newValue: <span class="fn">safe</span>(rec.newValue),  <span class="com">// masks secrets</span>
+    correlationId: ctx.correlationId, requestId: ctx.requestId, ipAddress: … });
+  } <span class="kw">catch</span> (e) { console.error(<span class="str">'[audit] failed…'</span>); }  <span class="com">// observability never breaks business flow</span>
+}</code></pre>
+<h4><code>lib/workflow/lifecycle.ts</code> + <code>policy.ts</code></h4>
+<p><code>PR_FLOW / PO_FLOW</code> maps list every legal edge; <code>assertTransition</code> throws 409 otherwise. <code>evaluatePolicy({amount, riskLevel, departmentId}, dbPolicies)</code> merges DB policies with code defaults, sorts by priority, returns the first match (<code>AUTO_APPROVE … DENY</code>).</p>
+<h4><code>lib/validation/validation.ts</code></h4>
+<p><code>validateRequisition</code> (title, amount &gt; 0), <code>validatePO</code> (no PO from draft/rejected PRs, active supplier), <code>threeWayMatch()</code> (price/qty/receipt/unknown-line issues), <code>sanitizeForLLM()</code> (redacts instruction-override phrasing, caps length).</p>
+<h4><code>lib/security/*</code> + <code>lib/database/tenant.ts</code> + <code>lib/agents/ai-service.ts</code></h4>
+<p><code>errors.ts</code>: <code>AppError(code, message, status)</code>, <code>Codes</code> table, <code>toHttpError()</code> (known → passthrough; unknown → logged server-side, generic 500 to client). <code>rate-limit.ts</code>: in-memory token bucket per tool+actor. <code>observability.ts</code>: one-line JSON logs with request/correlation/tenant/actor IDs. <code>tenant.ts</code>: <code>resolveTenant()</code> throws unless the tenant came from auth context. <code>ai-service.ts</code>: <code>AIService { generate/chat/structuredOutput }</code> with a mock implementation; real AI Core wiring slots in behind <code>AI_API_URL/KEY</code>. <code>lib/cds-globals.d.ts</code> just declares CAP's <code>SELECT/INSERT/…</code> globals for the typechecker.</p>
+
+<h3>B.4 · Seeds, config, containers, tests</h3>
+<p><b>Seeds</b> (<code>db/data/*.csv</code>): two tenants; 8 demo users mapped to roles; 4 suppliers (one HIGH-risk); 6 materials; PR-1001 (approved, ₹12.75L — the policy-gate demo), PR-1002 (rejected), PR-1003 (submitted), PR-1004 (draft); 3 budgets; 7 agents; 13 MCP tools; 5 policies. Deployed by <code>cds deploy</code> (SQLite) or <code>npm run db:deploy:pg</code> (<code>scripts/deploy-pg.cjs</code> — needed because the <code>cds-deploy</code> CLI drops credentials and ignores VCAP binding). <b>Config:</b> <code>package.json</code> scripts (<code>start</code> = tsx serve, <code>build</code> = typecheck, <code>db:deploy:pg</code> = Render deploy); <code>.cdsrc.json</code> (sqlite dev / postgres+jwt production / postgres+mock local profile); <code>.env</code> + <code>default-env.json</code> hold local secrets, both gitignored. <b>Containers:</b> multi-stage <code>Dockerfile</code> + <code>docker-compose.yml</code> (app + Postgres 16). <b>Tests:</b> <code>test/security.test.ts</code> asserts e.g. <i>employee can create but not approve</i>, <i>AI_AGENT has zero wildcard permissions</i>, <i>REJECTED→APPROVED is illegal</i>, <i>high-risk forces human even for small amounts</i>, <i>XSUAA scopes derive FINANCE but never ADMIN without ADMIN_SYSTEM</i>; <code>test/unit.test.ts</code> covers rate limits and leak-free errors.</p>
+</section>
+
+<section id="sjourney">
+<h2>J · Journey — Step by Step, How This Was Built to Deployed</h2>
+<p>Read this like a diary. Each step states the <b>goal</b>, the <b>commands run</b>, and <b>what broke + how it was fixed</b> — so you can replay the whole project yourself.</p>
+<h3>Stage 1 — Empty folder to running skeleton</h3>
+<ul class="tight">
+<li>Looked at the workspace (15 sibling projects, nothing to overwrite), checked versions: Node 24, <code>@sap/cds</code> 10.0.6, <code>@cap-js/postgres</code> 3.0.1, <code>@cap-js/mcp</code> 1.4.3, <code>@cap-js/agents</code> 0.9.3.</li>
+<li>Repaired the global <code>cds-dk</code> (<code>npm install -g @sap/cds</code>), then <code>cds init enterprise-ai-procurement --add nodejs,typescript,postgres,test,lint</code>.</li>
+<li><b>Broke:</b> <code>data</code> facet failed (no model yet) — harmless, skipped; CDS enum defaults needed <code>#VALUE</code> syntax; element <code>unique</code> is illegal → <code>@assert.unique</code>.</li>
+</ul>
+<h3>Stage 2 — Data model + seeds</h3>
+<ul class="tight">
+<li>Wrote <code>db/common.cds</code> (TenantAware/Auditable aspects, all enums) then <code>db/schema.cds</code> (~40 entities).</li>
+<li>Seeded both tenants with a story in every row: a rejection, a budget crunch, a risky supplier, a policy-gate PR.</li>
+<li>Verified with <code>npx cds compile db --to csn</code> and <code>cds deploy --to sqlite:file</code> (seeds listed in output).</li>
+</ul>
+<h3>Stage 3 — Services + security core</h3>
+<ul class="tight">
+<li>8 <code>.cds</code> services, then handlers one service at a time: auth → RBAC → tenant guards → lifecycle → audit.</li>
+<li><b>Broke:</b> raw <code>cds-serve</code> ignores <code>.ts</code> handlers (501s everywhere) → run under <code>tsx</code> with <code>CDS_TYPESCRIPT=true</code>; wrong base class (<code>cds.Service</code> returns empty reads) → <code>cds.ApplicationService</code>.</li>
+<li>Unit tests written alongside (vitest), ending at 26 green.</li>
+</ul>
+<h3>Stage 4 — Robots: MCP, agents, policy, AI</h3>
+<ul class="tight">
+<li>Annotated <code>MCPService</code> with <code>@mcp</code>; built 7 agents + orchestrator; threshold engine in DB + code; mock AI behind an interface. Later annotated all five domain services with <code>@mcp</code> + <code>@mcp.instructions</code> + action doc comments, and enabled <code>cds.mcp {per_action_tool, prefix}</code> (6 live MCP servers, verified via <code>tools/list</code>).</li>
+<li><b>Broke:</b> <code>@protocol:'odata'</code> suppressed the MCP endpoint; array-vs-one reads; <code>.run</code> vs <code>.send</code>; UUID params nulled in URLs; swallowed agent denial. Each fixed + regression-tested live.</li>
+<li>Connected OpenCode to <code>/mcp/procurement</code> and proved tenant isolation + RBAC denials over real MCP JSON-RPC.</li>
+</ul>
+<h3>Stage 5 — Real database + hardening</h3>
+<ul class="tight">
+<li>Wired Render Postgres via gitignored <code>.env</code> + <code>default-env.json</code> (VCAP shape) + <code>[postgres]</code> profile in <b>both</b> config files.</li>
+<li><b>Broke:</b> <code>cds-deploy</code> drops credentials (custom <code>scripts/deploy-pg.cjs</code>); PG returns <code>[]</code> on INSERT with no auto-UUID (explicit IDs + re-read); 1s pool timeout vs sleeping cloud DB (raised); plain values clobbering profile blocks.</li>
+<li>Full 18-check E2E re-ran green on <b>both</b> SQLite and Postgres 18 with dummy users.</li>
+</ul>
+<h3>Stage 6 — BTP + docs + ship</h3>
+<ul class="tight">
+<li><code>mta.yaml</code>, <code>xs-security.json</code> (script-diffed 1:1 against code), <code>approuter/</code>; wired real XSUAA validation (<code>@sap/xssec</code>) with scope→role derivation + 5 tests.</li>
+<li>Wrote README, AGENTS.md, and this document; secret scan clean; <code>Dockerfile</code>/compose ready.</li>
+</ul>
+<div class="callout ok"><b>Replay it yourself:</b> follow steps 1–13 of the step-by-step Tutorial — that tutorial <i>is</i> stages 1–5 compressed, using the final (fixed) code so you skip the painful parts but learn from Section 21's lessons.</div>
+</section>
+
+<section id="sappx">
+<h2>H · Appendix — Cheat Sheets for Daily Use</h2>
+<h3>H.1 · Dummy users: who to be for each test</h3>
+<table>
+<tr><th>Header value (<code>x-mock-user</code>)</th><th>Role · Tenant</th><th>Use it to…</th></tr>
+<tr><td><code>employee@example.com</code></td><td>EMPLOYEE · A</td><td>Create PRs; prove you <b>cannot</b> approve (403) or use MCP tools</td></tr>
+<tr><td><code>approver@example.com</code></td><td>APPROVER · A</td><td>Approve/reject; prove you <b>cannot</b> create payments</td></tr>
+<tr><td><code>procurement@example.com</code></td><td>OFFICER · A</td><td>Submit, create POs, MCP tools, OpenCode header</td></tr>
+<tr><td><code>manager@example.com</code></td><td>MANAGER · A</td><td>Approve + orchestrate end-to-end (has every demo permission)</td></tr>
+<tr><td><code>finance@example.com</code></td><td>FINANCE · A</td><td>Match/approve invoices, create payments (exclusive)</td></tr>
+<tr><td><code>auditor@example.com</code></td><td>AUDITOR · A</td><td>Read <code>/odata/v4/audit/AuditLogs</code> after acting as others</td></tr>
+<tr><td><code>admin@example.com</code></td><td>ADMIN · A</td><td>Anything (break-glass demo)</td></tr>
+<tr><td><code>other-tenant@example.com</code></td><td>EMPLOYEE · <b>B</b></td><td>Prove isolation: PR list is empty, forged tenantIds fail</td></tr>
+</table>
+<h3>H.2 · Troubleshooting: symptom → cause → fix</h3>
+<table>
+<tr><th>You see…</th><th>It means…</th><th>Fix</th></tr>
+<tr><td><code>501 has no handler</code> on actions</td><td><code>.ts</code> handlers not loaded</td><td>Start via <code>npm start</code> (tsx + <code>CDS_TYPESCRIPT</code>); never raw <code>cds-serve</code></td></tr>
+<tr><td>Entity lists empty but actions work</td><td>Handler extends raw <code>cds.Service</code></td><td>Extend <code>(cds.ApplicationService as any)</code></td></tr>
+<tr><td><code>Illegal transition undefined → …</code></td><td>Read returned an array, not a row</td><td>Use <code>SELECT.one</code> for single-row reads</td></tr>
+<tr><td>Server dies on CREATE (connection closed)</td><td><code>after</code> hook returned <code>undefined</code></td><td><code>return data</code> + try/catch around audit</td></tr>
+<tr><td>GET function by ID → 404 though row exists</td><td>Non-GUID value in <code>UUID</code> param, or <code>?p='v'</code> form</td><td>Type ID params <code>String</code>; use <code>/fn(p='v')</code></td></tr>
+<tr><td>MCP endpoint 404</td><td><code>@protocol:'odata'</code> suppressed sibling protocols</td><td>Use <code>@odata</code> + <code>@mcp:'name'</code> (e.g. <code>'catalog'</code>, <code>'procurement-ops'</code>)</td></tr>
+<tr><td><code>cds deploy --to postgres</code> → undefined:5432</td><td>CLI drops credentials; VCAP unmatched</td><td><code>npm run db:deploy:pg</code> (explicit credentials + SSL)</td></tr>
+<tr><td><code>Pool resource could not be acquired</code></td><td>Cloud DB asleep / 1s default timeout</td><td>Ping first; raised pool timeouts in <code>[postgres]</code> profile</td></tr>
+<tr><td><code>tsc</code> "would overwrite input file"</td><td><code>allowJs</code> + emit with no <code>outDir</code></td><td><code>"noEmit": true</code> (already set) — tsx needs no build output</td></tr>
+<tr><td>CF health-check crash-loop</td><td>Default check hits <code>/</code> (no frontend)</td><td>MTA sets <code>health-check-http-endpoint: /health</code> (already set)</td></tr>
+</table>
+<h3>H.3 · Five-minute demo script (show a colleague)</h3>
+<ol class="tight">
+<li><b>0:00</b> — <code>curl localhost:4004/health</code> → UP. "One backend, four kinds of clients."</li>
+<li><b>0:30</b> — List PRs as officer, then as <code>other-tenant</code> → empty. "Tenant isolation, server-side."</li>
+<li><b>1:30</b> — Employee approves → <b>403</b>. Approver approves → <b>APPROVED</b>. "RBAC, not frontend."</li>
+<li><b>2:30</b> — Orchestrate PR-1001 → <code>requiresHumanApproval</code>. "The AI wanted to spend ₹12.75L; policy said no."</li>
+<li><b>3:30</b> — Orchestrate a ₹30k PR → real PO returned. "Same path humans use, fully audited."</li>
+<li><b>4:30</b> — OpenCode MCP call as employee → denied; as officer → works. "Robots obey the same laws."</li>
+</ol>
+</section>
+
+<section id="sgloss">
+<h2>G · Glossary (Beginners)</h2>
+<table>
+<tr><th>Term</th><th>Plain meaning</th><th>Lives in</th></tr>
+<tr><td>CAP</td><td>SAP's framework for business backends: database + web APIs + rules in one model-driven package.</td><td>whole project</td></tr>
+<tr><td>CDS</td><td>The blueprint language: you <i>describe</i> data and services, CAP builds the plumbing.</td><td><code>db/*.cds</code>, <code>srv/*.cds</code></td></tr>
+<tr><td>OData / REST</td><td>Web-address conventions for reading/writing data over HTTP (what your browser/curl calls).</td><td><code>/odata/v4/…</code></td></tr>
+<tr><td>Entity</td><td>One table concept, e.g. <code>PurchaseOrders</code> — rows are the actual orders.</td><td><code>db/schema.cds</code></td></tr>
+<tr><td>Service / handler</td><td>A service is a <i>door</i> (CDS file); a handler is the <i>guard + clerk</i> behind it (TypeScript file).</td><td><code>srv/</code></td></tr>
+<tr><td>RBAC</td><td>Role-based access control: permissions travel with your role, checked on the server every time.</td><td><code>lib/auth/rbac.ts</code></td></tr>
+<tr><td>Tenant</td><td>One customer company on shared infrastructure; isolation = never seeing another's rows.</td><td><code>tenantId</code> columns</td></tr>
+<tr><td>JWT / OAuth2 / OIDC</td><td>Industry-standard login tokens; production identity. Locally replaced by a demo header.</td><td><code>lib/auth/</code></td></tr>
+<tr><td>MCP</td><td>Standard plug letting AI assistants call app functions as <i>tools</i> over HTTP.</td><td><code>/mcp/procurement</code> + <code>/mcp/catalog|procurement-ops|suppliers|approvals|invoices</code></td></tr>
+<tr><td>A2A / agent</td><td>Autonomous helper that plans multi-step jobs by calling tools; orchestrator routes to specialists.</td><td><code>srv/agent-service.*</code></td></tr>
+<tr><td>Policy engine</td><td>Money/risk limit table deciding auto-ok vs human-required. Boring on purpose.</td><td><code>lib/workflow/policy.ts</code></td></tr>
+<tr><td>Three-way match</td><td>Invoice is payable only if order + delivery + invoice agree (price, quantity, supplier).</td><td><code>lib/validation/</code></td></tr>
+<tr><td>Audit log</td><td>Append-mostly diary: who (human/agent), what, when, on whose behalf, with what result.</td><td><code>AuditLogs</code> entity</td></tr>
+<tr><td>Transaction</td><td>All-or-nothing bundle of DB writes: if step 5 of 6 fails, steps 1–4 roll back.</td><td>CAP <code>cds.tx()</code></td></tr>
+<tr><td>Optimistic concurrency</td><td><code>version</code> counter so two simultaneous approvers can't both win silently.</td><td>PR/PO entities</td></tr>
+<tr><td>Seed data</td><td>Demo rows (users, suppliers, PR-1001…): fresh every SQLite boot; deployed once and persistent on Postgres.</td><td><code>db/data/*.csv</code></td></tr>
+<tr><td>Prompt injection</td><td>Attack hiding fake instructions inside business text ("ignore previous orders…"); treated as data, never obeyed.</td><td><code>sanitizeForLLM</code></td></tr>
+<tr><td>Rate limiting</td><td>Speed caps per tool/user so no client (or looping agent) can flood the system.</td><td><code>lib/security/</code></td></tr>
+<tr><td>Docker / Render</td><td>Docker = ship the app in a sealed box; Render = website that runs the box + database for you.</td><td><code>Dockerfile</code>, Section 19</td></tr>
+<tr><td>MTA / approuter / XSUAA</td><td>SAP BTP deployment trio: MTA = the shipping manifest; approuter = the bouncer that logs users in; XSUAA = the ID office issuing role-stamped tokens.</td><td>the BTP chapter, <code>mta.yaml</code></td></tr>
+<tr><td>VCAP_SERVICES</td><td>Cloud Foundry's way of handing apps their service passwords (host/user/pass for Postgres, XSUAA keys) without hardcoding them.</td><td><code>default-env.json</code>, Section 19–20</td></tr>
+<tr><td>tsx / CDS_TYPESCRIPT</td><td>Tooling that lets Node.js run TypeScript directly (no compile step); the env flag tells CAP to resolve <code>.ts</code> handlers.</td><td><code>srv/server.js</code>, Section 21</td></tr>
+<tr><td>CQL</td><td>Already covered under Section 5 concepts: CAP's friendlier SQL the MCP <code>query</code> tool speaks.</td><td>Section 5, Section 10</td></tr>
+</table>
+</section>
+
+<footer>Enterprise AI Procurement · Design Document v1.2 · 6 MCP servers (<code>/mcp/procurement|catalog|procurement-ops|suppliers|approvals|invoices</code>, per-action prefixed tools) · Generated from the verified codebase (tsc clean · 26/26 tests · 18/18 live E2E on SQLite <b>and</b> Render Postgres 18) · Open <code>docs/design-document.html</code> in a browser (Mermaid renders via CDN).</footer>
+</main>
+</div>
+<script>mermaid.initialize({startOnLoad:true,theme:'dark',securityLevel:'loose'});</script>
+</body>
+</html>

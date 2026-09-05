@@ -1,0 +1,10 @@
+ID,name,description,isSystem
+r-admin,ADMIN,System administrator,true
+r-mgr,PROCUREMENT_MANAGER,Procurement manager,false
+r-off,PROCUREMENT_OFFICER,Procurement officer,false
+r-appr,APPROVER,Approver,false
+r-fin,FINANCE,Finance,false
+r-sup,SUPPLIER_MANAGER,Supplier manager,false
+r-aud,AUDITOR,Auditor,false
+r-emp,EMPLOYEE,Employee,false
+r-agent,AI_AGENT,AI agent,false

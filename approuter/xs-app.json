@@ -1,0 +1,35 @@
+{
+  "authenticationMethod": "route",
+  "sessionTimeout": 30,
+  "logout": {
+    "logoutEndpoint": "/do/logout",
+    "logoutPage": "/health"
+  },
+  "routes": [
+    {
+      "source": "^/(health|liveness)$",
+      "target": "/$1",
+      "destination": "procurement-backend",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^/readiness$",
+      "target": "/readiness",
+      "destination": "procurement-backend",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^/(odata/.*|mcp/.*|\\.well-known/.*)$",
+      "target": "/$1",
+      "destination": "procurement-backend",
+      "authenticationType": "xsuaa",
+      "csrfProtection": true
+    },
+    {
+      "source": "^/(.*)$",
+      "target": "/$1",
+      "destination": "procurement-backend",
+      "authenticationType": "xsuaa"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+ID,tenantId,materialId,name,category_ID,unit,unitPrice,currency,active
+m-lap,tenant-a,MAT-001,Laptop,mc-it,EA,85000,INR,true
+m-mon,tenant-a,MAT-002,Monitor,mc-it,EA,22000,INR,true
+m-srv,tenant-a,MAT-003,Server,mc-it,EA,450000,INR,true
+m-chr,tenant-a,MAT-004,Office Chair,mc-furn,EA,12000,INR,true
+m-pmp,tenant-a,MAT-005,Industrial Pump,mc-ind,EA,180000,INR,true
+m-saf,tenant-a,MAT-006,Safety Equipment,mc-ind,SET,9500,INR,true

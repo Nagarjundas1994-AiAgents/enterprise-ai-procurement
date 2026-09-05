@@ -1,0 +1,4 @@
+ID,tenantId,code,department_ID,fiscalYear,totalAmount,committed,consumed,currency
+b-it,tenant-a,BUD-IT-2026,d-it,2026,5000000,1500000,800000,INR
+b-proc,tenant-a,BUD-PROC-2026,d-proc,2026,8000000,1000000,500000,INR
+b-fin,tenant-a,BUD-FIN-2026,d-fin,2026,3000000,200000,100000,INR

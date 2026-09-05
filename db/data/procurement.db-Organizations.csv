@@ -1,0 +1,3 @@
+ID,tenantId,name,country,active
+org-a,tenant-a,Acme Industries IN,IN,true
+org-b,tenant-b,Acme EU Ltd,DE,true

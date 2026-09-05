@@ -1,0 +1,9 @@
+ID,username,email,displayName,active,tenantId,organization_ID,department_ID
+u-admin,admin,admin@example.com,System Admin,true,tenant-a,org-a,d-it
+u-emp,employee,employee@example.com,Ravi Employee,true,tenant-a,org-a,d-it
+u-appr,approver,approver@example.com,Meera Approver,true,tenant-a,org-a,d-it
+u-proc,procurement,procurement@example.com,Kiran Officer,true,tenant-a,org-a,d-proc
+u-mgr,manager,manager@example.com,Sana Manager,true,tenant-a,org-a,d-proc
+u-fin,finance,finance@example.com,Arjun Finance,true,tenant-a,org-a,d-fin
+u-aud,auditor,auditor@example.com,Nina Auditor,true,tenant-a,org-a,d-fin
+u-other,other,other-tenant@example.com,Other Tenant,true,tenant-b,org-b,d-ops

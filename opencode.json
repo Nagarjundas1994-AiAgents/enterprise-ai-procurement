@@ -1,0 +1,53 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "cds:MCPService": {
+      "type": "remote",
+      "url": "http://localhost:4004/mcp/procurement",
+      "headers": {
+        "x-mock-user": "procurement@example.com"
+      },
+      "enabled": true
+    },
+    "cds:CatalogService": {
+      "type": "remote",
+      "url": "http://localhost:4004/mcp/catalog",
+      "headers": {
+        "x-mock-user": "procurement@example.com"
+      },
+      "enabled": true
+    },
+    "cds:ProcurementService": {
+      "type": "remote",
+      "url": "http://localhost:4004/mcp/procurement-ops",
+      "headers": {
+        "x-mock-user": "procurement@example.com"
+      },
+      "enabled": true
+    },
+    "cds:SupplierService": {
+      "type": "remote",
+      "url": "http://localhost:4004/mcp/suppliers",
+      "headers": {
+        "x-mock-user": "procurement@example.com"
+      },
+      "enabled": true
+    },
+    "cds:ApprovalService": {
+      "type": "remote",
+      "url": "http://localhost:4004/mcp/approvals",
+      "headers": {
+        "x-mock-user": "procurement@example.com"
+      },
+      "enabled": true
+    },
+    "cds:InvoiceService": {
+      "type": "remote",
+      "url": "http://localhost:4004/mcp/invoices",
+      "headers": {
+        "x-mock-user": "procurement@example.com"
+      },
+      "enabled": true
+    }
+  }
+}

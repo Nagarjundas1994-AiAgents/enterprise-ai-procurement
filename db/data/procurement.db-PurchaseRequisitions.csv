@@ -1,0 +1,5 @@
+ID,tenantId,requisitionNo,title,description,requester_ID,department_ID,status,totalAmount,currency,priority,version
+pr-1001,tenant-a,PR-1001,Laptops for engineering,15 laptops for new hires,u-emp,d-it,APPROVED,1275000,INR,HIGH,1
+pr-1002,tenant-a,PR-1002,Office chairs Ph1,50 chairs for floor 3,u-emp,d-it,REJECTED,600000,INR,NORMAL,1
+pr-1003,tenant-a,PR-1003,Safety equipment refill,Quarterly safety refill,u-proc,d-proc,SUBMITTED,95000,INR,NORMAL,1
+pr-1004,tenant-a,PR-1004,Industrial pump spare,Urgent maintenance spare,u-proc,d-proc,DRAFT,180000,INR,URGENT,1

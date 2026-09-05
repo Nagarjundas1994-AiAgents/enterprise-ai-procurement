@@ -1,0 +1,171 @@
+{
+  "xsappname": "enterprise-ai-procurement",
+  "tenant-mode": "dedicated",
+  "description": "Enterprise AI Procurement backend — mirrors lib/auth/rbac.ts. Role collections are assigned to users/groups in the BTP cockpit; scopes arrive in the JWT and map 1:1 to app permissions.",
+  "scopes": [
+    { "name": "$XSAPPNAME.READ_PURCHASE_REQUISITION", "description": "Read purchase requisitions" },
+    { "name": "$XSAPPNAME.CREATE_PURCHASE_REQUISITION", "description": "Create purchase requisitions" },
+    { "name": "$XSAPPNAME.UPDATE_PURCHASE_REQUISITION", "description": "Update purchase requisitions" },
+    { "name": "$XSAPPNAME.DELETE_PURCHASE_REQUISITION", "description": "Delete purchase requisitions" },
+    { "name": "$XSAPPNAME.APPROVE_PURCHASE_REQUISITION", "description": "Approve purchase requisitions" },
+    { "name": "$XSAPPNAME.REJECT_PURCHASE_REQUISITION", "description": "Reject purchase requisitions" },
+    { "name": "$XSAPPNAME.CREATE_PURCHASE_ORDER", "description": "Create purchase orders" },
+    { "name": "$XSAPPNAME.UPDATE_PURCHASE_ORDER", "description": "Update purchase orders" },
+    { "name": "$XSAPPNAME.CANCEL_PURCHASE_ORDER", "description": "Cancel purchase orders" },
+    { "name": "$XSAPPNAME.READ_SUPPLIER", "description": "Read suppliers and materials" },
+    { "name": "$XSAPPNAME.CREATE_SUPPLIER", "description": "Create suppliers" },
+    { "name": "$XSAPPNAME.UPDATE_SUPPLIER", "description": "Update suppliers" },
+    { "name": "$XSAPPNAME.CREATE_INVOICE", "description": "Create invoices" },
+    { "name": "$XSAPPNAME.READ_INVOICE", "description": "Read invoices" },
+    { "name": "$XSAPPNAME.APPROVE_INVOICE", "description": "Approve invoices and trigger payments" },
+    { "name": "$XSAPPNAME.READ_BUDGET", "description": "Read budgets" },
+    { "name": "$XSAPPNAME.UPDATE_BUDGET", "description": "Update budgets" },
+    { "name": "$XSAPPNAME.EXECUTE_AGENT", "description": "Execute AI agents" },
+    { "name": "$XSAPPNAME.EXECUTE_MCP_TOOL", "description": "Execute MCP tools" },
+    { "name": "$XSAPPNAME.VIEW_AUDIT_LOG", "description": "Read audit logs" },
+    { "name": "$XSAPPNAME.ADMIN_SYSTEM", "description": "Full system administration" }
+  ],
+  "authorities": [],
+  "role-templates": [
+    {
+      "name": "ADMIN",
+      "description": "System administrator — all permissions",
+      "scope-references": [
+        "$XSAPPNAME.READ_PURCHASE_REQUISITION", "$XSAPPNAME.CREATE_PURCHASE_REQUISITION",
+        "$XSAPPNAME.UPDATE_PURCHASE_REQUISITION", "$XSAPPNAME.DELETE_PURCHASE_REQUISITION",
+        "$XSAPPNAME.APPROVE_PURCHASE_REQUISITION", "$XSAPPNAME.REJECT_PURCHASE_REQUISITION",
+        "$XSAPPNAME.CREATE_PURCHASE_ORDER", "$XSAPPNAME.UPDATE_PURCHASE_ORDER",
+        "$XSAPPNAME.CANCEL_PURCHASE_ORDER", "$XSAPPNAME.READ_SUPPLIER",
+        "$XSAPPNAME.CREATE_SUPPLIER", "$XSAPPNAME.UPDATE_SUPPLIER",
+        "$XSAPPNAME.CREATE_INVOICE", "$XSAPPNAME.READ_INVOICE",
+        "$XSAPPNAME.APPROVE_INVOICE", "$XSAPPNAME.READ_BUDGET",
+        "$XSAPPNAME.UPDATE_BUDGET", "$XSAPPNAME.EXECUTE_AGENT",
+        "$XSAPPNAME.EXECUTE_MCP_TOOL", "$XSAPPNAME.VIEW_AUDIT_LOG",
+        "$XSAPPNAME.ADMIN_SYSTEM"
+      ]
+    },
+    {
+      "name": "PROCUREMENT_MANAGER",
+      "description": "Procurement manager — full requisition/PO lifecycle incl. approval",
+      "scope-references": [
+        "$XSAPPNAME.READ_PURCHASE_REQUISITION", "$XSAPPNAME.CREATE_PURCHASE_REQUISITION",
+        "$XSAPPNAME.UPDATE_PURCHASE_REQUISITION", "$XSAPPNAME.APPROVE_PURCHASE_REQUISITION",
+        "$XSAPPNAME.REJECT_PURCHASE_REQUISITION", "$XSAPPNAME.CREATE_PURCHASE_ORDER",
+        "$XSAPPNAME.UPDATE_PURCHASE_ORDER", "$XSAPPNAME.CANCEL_PURCHASE_ORDER",
+        "$XSAPPNAME.READ_SUPPLIER", "$XSAPPNAME.CREATE_SUPPLIER",
+        "$XSAPPNAME.UPDATE_SUPPLIER", "$XSAPPNAME.CREATE_INVOICE",
+        "$XSAPPNAME.READ_INVOICE", "$XSAPPNAME.READ_BUDGET",
+        "$XSAPPNAME.EXECUTE_AGENT", "$XSAPPNAME.EXECUTE_MCP_TOOL"
+      ]
+    },
+    {
+      "name": "PROCUREMENT_OFFICER",
+      "description": "Procurement officer — operational purchasing, no approvals",
+      "scope-references": [
+        "$XSAPPNAME.READ_PURCHASE_REQUISITION", "$XSAPPNAME.CREATE_PURCHASE_REQUISITION",
+        "$XSAPPNAME.UPDATE_PURCHASE_REQUISITION", "$XSAPPNAME.CREATE_PURCHASE_ORDER",
+        "$XSAPPNAME.UPDATE_PURCHASE_ORDER", "$XSAPPNAME.READ_SUPPLIER",
+        "$XSAPPNAME.CREATE_SUPPLIER", "$XSAPPNAME.CREATE_INVOICE",
+        "$XSAPPNAME.READ_INVOICE", "$XSAPPNAME.READ_BUDGET",
+        "$XSAPPNAME.EXECUTE_AGENT", "$XSAPPNAME.EXECUTE_MCP_TOOL"
+      ]
+    },
+    {
+      "name": "APPROVER",
+      "description": "Approver — approve/reject only, no finance or PO edits",
+      "scope-references": [
+        "$XSAPPNAME.READ_PURCHASE_REQUISITION", "$XSAPPNAME.APPROVE_PURCHASE_REQUISITION",
+        "$XSAPPNAME.REJECT_PURCHASE_REQUISITION", "$XSAPPNAME.READ_SUPPLIER",
+        "$XSAPPNAME.READ_BUDGET", "$XSAPPNAME.READ_INVOICE"
+      ]
+    },
+    {
+      "name": "FINANCE",
+      "description": "Finance — invoices, payments and budgets; exclusive payment right",
+      "scope-references": [
+        "$XSAPPNAME.READ_PURCHASE_REQUISITION", "$XSAPPNAME.READ_INVOICE",
+        "$XSAPPNAME.CREATE_INVOICE", "$XSAPPNAME.APPROVE_INVOICE",
+        "$XSAPPNAME.READ_BUDGET", "$XSAPPNAME.UPDATE_BUDGET",
+        "$XSAPPNAME.READ_SUPPLIER"
+      ]
+    },
+    {
+      "name": "SUPPLIER_MANAGER",
+      "description": "Supplier manager — supplier master data",
+      "scope-references": [
+        "$XSAPPNAME.READ_SUPPLIER", "$XSAPPNAME.CREATE_SUPPLIER",
+        "$XSAPPNAME.UPDATE_SUPPLIER", "$XSAPPNAME.READ_PURCHASE_REQUISITION"
+      ]
+    },
+    {
+      "name": "AUDITOR",
+      "description": "Auditor — read-only plus audit log",
+      "scope-references": [
+        "$XSAPPNAME.READ_PURCHASE_REQUISITION", "$XSAPPNAME.READ_INVOICE",
+        "$XSAPPNAME.READ_BUDGET", "$XSAPPNAME.READ_SUPPLIER",
+        "$XSAPPNAME.VIEW_AUDIT_LOG"
+      ]
+    },
+    {
+      "name": "EMPLOYEE",
+      "description": "Employee — raise and edit own requisitions; no approvals, no MCP tools",
+      "scope-references": [
+        "$XSAPPNAME.READ_PURCHASE_REQUISITION", "$XSAPPNAME.CREATE_PURCHASE_REQUISITION",
+        "$XSAPPNAME.UPDATE_PURCHASE_REQUISITION", "$XSAPPNAME.READ_SUPPLIER",
+        "$XSAPPNAME.READ_BUDGET"
+      ]
+    },
+    {
+      "name": "AI_AGENT",
+      "description": "AI agent base identity — no wildcard permissions; per-agent tool grants apply at runtime",
+      "scope-references": []
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "EnterpriseAIProcurement_ADMIN",
+      "description": "Administrators of Enterprise AI Procurement",
+      "role-template-references": ["$XSAPPNAME.ADMIN"]
+    },
+    {
+      "name": "EnterpriseAIProcurement_ProcurementManager",
+      "description": "Procurement managers",
+      "role-template-references": ["$XSAPPNAME.PROCUREMENT_MANAGER"]
+    },
+    {
+      "name": "EnterpriseAIProcurement_ProcurementOfficer",
+      "description": "Procurement officers",
+      "role-template-references": ["$XSAPPNAME.PROCUREMENT_OFFICER"]
+    },
+    {
+      "name": "EnterpriseAIProcurement_Approver",
+      "description": "Approvers",
+      "role-template-references": ["$XSAPPNAME.APPROVER"]
+    },
+    {
+      "name": "EnterpriseAIProcurement_Finance",
+      "description": "Finance users",
+      "role-template-references": ["$XSAPPNAME.FINANCE"]
+    },
+    {
+      "name": "EnterpriseAIProcurement_SupplierManager",
+      "description": "Supplier managers",
+      "role-template-references": ["$XSAPPNAME.SUPPLIER_MANAGER"]
+    },
+    {
+      "name": "EnterpriseAIProcurement_Auditor",
+      "description": "Auditors",
+      "role-template-references": ["$XSAPPNAME.AUDITOR"]
+    },
+    {
+      "name": "EnterpriseAIProcurement_Employee",
+      "description": "Employees",
+      "role-template-references": ["$XSAPPNAME.EMPLOYEE"]
+    },
+    {
+      "name": "EnterpriseAIProcurement_AIAgent",
+      "description": "AI agent service identities (least privilege; runtime tool grants apply)",
+      "role-template-references": ["$XSAPPNAME.AI_AGENT"]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+ID,tenantId,agentId,name,kind,active,allowedTools,allowedEntities,allowedActions,maxAutoApproveAmount
+ag-proc,tenant-a,agent-procurement,Procurement Agent,PROCUREMENT,true,"[""searchPurchaseRequisitions"",""getPurchaseRequisition"",""searchSuppliers"",""checkBudget"",""createPurchaseOrder""]","[""PurchaseRequisitions"",""Suppliers"",""PurchaseOrders""]","[""read"",""create""]",50000
+ag-appr,tenant-a,agent-approval,Approval Agent,APPROVAL,true,"[""getApprovalStatus"",""getPurchaseRequisition"",""getProcurementRisk""]","[""Approvals"",""PurchaseRequisitions""]","[""read""]",0
+ag-risk,tenant-a,agent-risk,Supplier Risk Agent,RISK,true,"[""getSupplier"",""searchSuppliers"",""getProcurementRisk""]","[""Suppliers""]","[""read""]",0
+ag-inv,tenant-a,agent-invoice,Invoice Agent,INVOICE,true,"[""getInvoiceStatus""]","[""Invoices""]","[""read""]",0
+ag-bud,tenant-a,agent-budget,Budget Agent,BUDGET,true,"[""checkBudget""]","[""Budgets""]","[""read""]",0
+ag-aud,tenant-a,agent-audit,Audit Agent,AUDIT,true,"[]","[""AuditLogs""]","[""read""]",0
+ag-orc,tenant-a,agent-orchestrator,Orchestrator Agent,ORCHESTRATOR,true,"[""*""]","[""*""]","[""read"",""create""]",50000

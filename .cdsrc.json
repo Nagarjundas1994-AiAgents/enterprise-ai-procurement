@@ -1,0 +1,1 @@
+{"requires":{"db":{"kind":"sqlite","credentials":{"database":":memory:"},"[production]":{"kind":"postgres"},"[postgres]":{"kind":"postgres","pool":{"min":0,"max":5,"testOnBorrow":true,"acquireTimeoutMillis":60000}}},"auth":{"kind":"mocked","[production]":{"kind":"jwt"}}},"server":{"port":{"env":"PORT","default":4004}}}

@@ -1,0 +1,14 @@
+ID,name,description,inputSchema,outputSchema,requiredPermission,allowedRoles,rateLimitPerMin,active
+t1,searchPurchaseRequisitions,Search purchase requisitions,"{}","{}",READ_PURCHASE_REQUISITION,"[""EMPLOYEE"",""APPROVER"",""PROCUREMENT_OFFICER""]",60,true
+t2,getPurchaseRequisition,Get a single requisition,"{}","{}",READ_PURCHASE_REQUISITION,"[""EMPLOYEE"",""APPROVER""]",60,true
+t3,createPurchaseRequisition,Create a requisition,"{}","{}",CREATE_PURCHASE_REQUISITION,"[""EMPLOYEE"",""PROCUREMENT_OFFICER""]",30,true
+t4,searchPurchaseOrders,Search purchase orders,"{}","{}",READ_PURCHASE_REQUISITION,"[""PROCUREMENT_OFFICER""]",60,true
+t5,getPurchaseOrder,Get a single PO,"{}","{}",READ_PURCHASE_REQUISITION,"[""PROCUREMENT_OFFICER""]",60,true
+t6,searchSuppliers,Search suppliers,"{}","{}",READ_SUPPLIER,"[""EMPLOYEE"",""PROCUREMENT_OFFICER""]",60,true
+t7,getSupplier,Get supplier details,"{}","{}",READ_SUPPLIER,"[""EMPLOYEE""]",60,true
+t8,checkBudget,Check department budget,"{}","{}",READ_BUDGET,"[""EMPLOYEE"",""FINANCE""]",60,true
+t9,getInvoiceStatus,Get invoice status,"{}","{}",READ_INVOICE,"[""FINANCE""]",60,true
+t10,getApprovalStatus,Get approval status,"{}","{}",READ_PURCHASE_REQUISITION,"[""APPROVER""]",60,true
+t11,getProcurementRisk,Assess procurement risk,"{}","{}",READ_PURCHASE_REQUISITION,"[""APPROVER"",""PROCUREMENT_MANAGER""]",30,true
+t12,createPurchaseOrder,Create PO from approved PR,"{}","{}",CREATE_PURCHASE_ORDER,"[""PROCUREMENT_OFFICER"",""PROCUREMENT_MANAGER""]",20,true
+t13,submitForApproval,Submit requisition for approval,"{}","{}",CREATE_PURCHASE_REQUISITION,"[""EMPLOYEE""]",30,true

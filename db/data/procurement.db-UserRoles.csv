@@ -1,0 +1,9 @@
+ID,user_ID,role_ID
+ur1,u-admin,r-admin
+ur2,u-emp,r-emp
+ur3,u-appr,r-appr
+ur4,u-proc,r-off
+ur5,u-mgr,r-mgr
+ur6,u-fin,r-fin
+ur7,u-aud,r-aud
+ur8,u-other,r-emp

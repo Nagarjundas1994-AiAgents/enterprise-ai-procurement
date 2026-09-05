@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: procurement
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 4004
+      DATABASE_URL: postgresql://postgres:changeme@db:5432/procurement
+      ALLOW_MOCK_AUTH: "true"
+      JWT_SECRET: dev-only-secret-change-me
+    ports:
+      - "4004:4004"
+
+volumes:
+  pgdata:

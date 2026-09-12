@@ -18,13 +18,81 @@ class MockAI implements AIService {
 }
 
 let instance: AIService | null = null;
-/** Prefers SAP AI Core when AI_API_URL/AI_API_KEY set; otherwise safe mock. */
+
+/** OpenAI-compatible chat provider (DeepSeek, AI Core, OpenAI). No SDK needed — plain fetch. */
+class OpenAIChatProvider implements AIService {
+  private endpoint: string;
+  constructor(private baseUrl: string, private apiKey: string, private model: string) {
+    const clean = (baseUrl || '').replace(/\/+$/, '');
+    this.endpoint = clean.endsWith('/chat/completions') ? clean : `${clean}/chat/completions`;
+  }
+  private async callChat(messages: ChatMessage[]): Promise<string> {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 30000);
+    try {
+      const res = await fetch(this.endpoint, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${this.apiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: this.model, messages, stream: false }),
+        signal: ctrl.signal,
+      });
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw Object.assign(new Error(`AI provider ${res.status}: ${body.slice(0, 300)}`), {
+          code: 'AI_PROVIDER_ERROR',
+          status: 502,
+        });
+      }
+      const data: any = await res.json();
+      const content = data?.choices?.[0]?.message?.content;
+      if (typeof content !== 'string' || !content) throw Object.assign(new Error('AI provider returned empty content'), { code: 'AI_PROVIDER_ERROR', status: 502 });
+      return content;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  async generate(prompt: string) {
+    return this.callChat([{ role: 'user', content: prompt }]);
+  }
+  async chat(messages: ChatMessage[]) {
+    return this.callChat(messages);
+  }
+  async structuredOutput<T>(prompt: string, schemaHint: string): Promise<T> {
+    const out = await this.callChat([
+      { role: 'system', content: `Return ONLY valid JSON matching this shape: ${schemaHint}. No markdown, no explanation.` },
+      { role: 'user', content: prompt },
+    ]);
+    const cleaned = out.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
+    try {
+      return JSON.parse(cleaned) as T;
+    } catch {
+      return { raw: out } as unknown as T;
+    }
+  }
+}
+
+/** Test helper — clears cached provider so env changes take effect. */
+export function resetAIService(): void {
+  instance = null;
+}
+
+/**
+ * Prefers a real LLM when a key is set, otherwise safe mock.
+ * Env (all gitignored, never commit):
+ *   AI_API_KEY (or DEEPSEEK_API_KEY) — secret, required for real calls
+ *   AI_API_URL  — default https://api.deepseek.com
+ *   AI_MODEL    — default deepseek-flash (official API; use deepseek-v4-pro for reasoning-heavy tasks)
+ */
 export function getAIService(): AIService {
   if (instance) return instance;
-  // Real SAP AI Core / Generative AI Hub wiring belongs here (via @sap-ai-sdk/*).
-  // Kept behind env so local dev works without credentials.
-  if (process.env.AI_API_URL && process.env.AI_API_KEY) {
-    console.log('[ai] AI Core credentials detected — production wiring enabled (mock fallback for now)');
+  const apiKey = process.env.AI_API_KEY || process.env.DEEPSEEK_API_KEY || '';
+  if (apiKey) {
+    const baseUrl = process.env.AI_API_URL || 'https://api.deepseek.com';
+    const model = process.env.AI_MODEL || 'deepseek-flash';
+    // Never log the key itself.
+    console.log(`[ai] real LLM enabled provider=${process.env.AI_PROVIDER || 'deepseek'} model=${model} url=${baseUrl}`);
+    instance = new OpenAIChatProvider(baseUrl, apiKey, model);
+    return instance;
   }
   instance = new MockAI();
   return instance;

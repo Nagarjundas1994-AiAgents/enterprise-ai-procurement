@@ -5,6 +5,7 @@ import { AuthorizationService } from '../lib/authorization/authorization.js';
 import { authorizeAgentTool, AGENT_DEFINITIONS } from '../lib/agents/agent-auth.js';
 import { getAIService } from '../lib/agents/ai-service.js';
 import { sanitizeForLLM } from '../lib/validation/validation.js';
+import { fetchAgentCard, sendA2AMessage } from '../lib/agents/a2a-client.js';
 import { evaluatePolicy } from '../lib/workflow/policy.js';
 import { writeAudit } from '../lib/audit/audit.js';
 import { toHttpError } from '../lib/security/errors.js';
@@ -16,7 +17,31 @@ async function ctxOf(req: any) {
   return ctx;
 }
 
-// Specialist implementations: each calls CAP business services (never direct SQL from agents).
+// Allowlisted REMOTE A2A agents (other servers). Add more via env, never from client input.
+function remoteAgentEndpoint(agentName: string): { base: string; rpc: string } {
+  const supplierBase = (process.env.REMOTE_SUPPLIER_AGENT_URL || 'http://localhost:4007').replace(/\/+$/, '');
+  const allowlist: Record<string, string> = {
+    'remote-supplier-agent': supplierBase,
+    'remote-logistics-agent': process.env.REMOTE_LOGISTICS_AGENT_URL || `${supplierBase}/logistics`,
+  };
+  const base = allowlist[agentName];
+  if (!base) throw Object.assign(new Error(`Unknown remote agent ${agentName}`), { code: 'A2A_AGENT_UNKNOWN', status: 404 });
+  return { base: base.replace(/\/+$/, ''), rpc: `${base.replace(/\/+$/, '')}/` };
+}
+
+// Best-effort remote intel: never throws, never blocks the PO flow on remote failure.
+async function fetchRemoteSupplierIntel(query: string): Promise<any> {
+  const configured = process.env.REMOTE_SUPPLIER_AGENT_URL;
+  if (!configured) return null;
+  try {
+    const { rpc } = remoteAgentEndpoint('remote-supplier-agent');
+    const reply = await sendA2AMessage(rpc, query, 8000);
+    const clean = sanitizeForLLM(reply.text);
+    try { return JSON.parse(clean); } catch { return { raw: clean.slice(0, 2000) }; }
+  } catch (e: any) {
+    return { unavailable: true, reason: String(e?.message || e).slice(0, 200) };
+  }
+}
 const specialists: Record<string, (tx: any, ctx: any, payload: any) => Promise<any>> = {
   'agent-procurement': async (tx, ctx, p) => {
     const prs = await tx.run(SELECT.from('procurement.db.PurchaseRequisitions').where({ tenantId: ctx.tenantId }).limit(10));
@@ -113,19 +138,47 @@ agent_ID: null, tenantId: ctx.tenantId, toolName: intent,
         AuthorizationService.requirePermission(ctx, 'CREATE_PURCHASE_ORDER');
         const budget = await specialists['agent-budget'](tx, ctx, { departmentID: pr.department_ID, amount: pr.totalAmount });
         if (!budget.budgetAvailable) return JSON.stringify({ requiresHumanApproval: true, reason: 'Budget insufficient', budget });
+        // A2A: ask the REMOTE supplier-network agent for live intel (advisory only).
+        let remoteSupplier: any = null;
+        if (process.env.REMOTE_SUPPLIER_AGENT_URL) {
+          let code: string | undefined;
+          if (p.supplierID) {
+            const local: any = await tx.run(SELECT.one.from('procurement.db.Suppliers').where({ ID: p.supplierID, tenantId: ctx.tenantId }).columns(['supplierId']));
+            code = local?.supplierId || String(p.supplierID);
+          }
+          remoteSupplier = await fetchRemoteSupplierIntel(code ? `supplier ${code}` : 'list suppliers');
+        }
         const dbPolicies = await tx.read('procurement.db.Policies').where({ tenantId: ctx.tenantId, active: true });
         const decision = evaluatePolicy({ amount: Number(pr.totalAmount) }, dbPolicies);
         if (decision.action === 'REQUIRE_HUMAN' || decision.action === 'DENY')
-          return JSON.stringify({ requiresHumanApproval: true, policyDecision: decision.action, policy: decision.code });
+          return JSON.stringify({ requiresHumanApproval: true, policyDecision: decision.action, policy: decision.code, remoteSupplier });
         const svc = await cds.connect.to('ProcurementService');
         const po = await (svc as any).tx(req).send('convertToPurchaseOrder', { requisitionID: pr.ID, supplierID: p.supplierID });
         await writeAudit(tx, ctx, { action: 'AGENT_ACTION_EXECUTED', entity: 'Agent', entityId: 'agent-orchestrator', newValue: { goal } });
-        return JSON.stringify({ requiresHumanApproval: false, purchaseOrder: po, budget, policyDecision: decision.action });
+        return JSON.stringify({ requiresHumanApproval: false, purchaseOrder: po, budget, policyDecision: decision.action, remoteSupplier });
       } catch (e) {
         const http = toHttpError(e);
         if (http.code === 'POLICY_REQUIRES_HUMAN_APPROVAL') return JSON.stringify({ requiresHumanApproval: true, reason: http.message });
         req.reject(http);
       }
+    });
+
+    this.on('callRemoteAgent', async (req: any) => {
+      // A2A bridge: main agent -> remote agent on another server -> remote data.
+      const ctx = await ctxOf(req);
+      try {
+        AuthorizationService.requirePermission(ctx, 'EXECUTE_AGENT');
+        const { agentName, message } = req.data;
+        const { base, rpc } = remoteAgentEndpoint(String(agentName));
+        const cleanMsg = sanitizeForLLM(String(message ?? 'list suppliers'));
+        const card = await fetchAgentCard(base).catch(() => null);
+        const reply = await sendA2AMessage(rpc, cleanMsg, 15000);
+        const cleanReply = sanitizeForLLM(reply.text);
+        let data: any; try { data = JSON.parse(cleanReply); } catch { data = { raw: cleanReply.slice(0, 4000) }; }
+        const tx = cds.tx(req);
+        await writeAudit(tx, ctx, { action: 'AGENT_ACTION_EXECUTED', entity: 'Agent', entityId: `remote:${agentName}`, newValue: { message: cleanMsg.slice(0, 300) } }).catch(() => undefined);
+        return JSON.stringify({ agent: agentName, card: card ? { name: card.name, version: card.version, skills: (card.skills || []).map((s: any) => s.id || s.name) } : null, data });
+      } catch (e) { req.reject(toHttpError(e)); }
     });
 
     this.on('chat', async (req: any) => {

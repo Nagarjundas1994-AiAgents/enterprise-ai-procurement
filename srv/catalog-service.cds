@@ -4,6 +4,9 @@ using { procurement.db as db } from '../db/schema';
 @odata
 @mcp: 'catalog'
 @mcp.instructions: 'Catalog master data and budgets. Use describe to explore entities, then query to read. Never invent IDs. All reads enforce RBAC and tenant isolation. Use checkBudget to verify funds before creating requisitions.'
+// A2A agentification via @cap-js/agents, served at /a2a/catalog
+// (read-only tools, no HITL needed; string value required — see procurement-service.cds).
+@agent: 'catalog'
 service CatalogService {
   entity Users as projection on db.Users excluding { roles };
   entity Roles as projection on db.Roles;

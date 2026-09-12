@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#ffffff"/>
+<title>SAP CAP Plugins &amp; Facets — Complete Developer Encyclopedia</title>
+<style>
+:root{
+  --blue:#0071e3; --bg:#ffffff; --bg-soft:#f5f5f7; --card:#ffffff;
+  --ink:#1d1d1f; --ink2:#424245; --muted:#6e6e73; --faint:#86868b;
+  --border:#d2d2d7; --bsoft:#e8e8ed; --code-bg:#f5f5f7;
+  --green:#1d8127; --amber:#b25000; --red:#c8102e; --violet:#6e56cf; --teal:#0e7c86;
+  --r:14px; --topbar-h:52px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Inter,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+[data-theme="dark"]{
+  --blue:#0a84ff; --bg:#000000; --bg-soft:#1d1d1f; --card:#1d1d1f;
+  --ink:#f5f5f7; --ink2:#d4d4d8; --muted:#a1a1a6; --faint:#86868b;
+  --border:#38383a; --bsoft:#2c2c2e; --code-bg:#161617;
+  --green:#30d158; --amber:#ff9f0a; --red:#ff453a; --violet:#bf5af2; --teal:#40c8e0;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 14px)}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}::selection{background:#0071e333}:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+#readbar{position:fixed;top:0;left:0;height:3px;width:0;z-index:200;background:var(--blue)}
+.topbar{position:sticky;top:0;z-index:100;height:var(--topbar-h);display:flex;align-items:center;gap:12px;padding:0 18px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--bsoft)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand-mark{width:30px;height:30px;border-radius:8px;background:#1d1d1f;color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px}
+[data-theme="dark"] .brand-mark{background:#f5f5f7;color:#000}
+.brand b{font-size:14px;font-weight:700;letter-spacing:-.01em;display:block;line-height:1.1}
+.brand small{font-size:10px;color:var(--faint);display:block}
+.topnav{display:flex;gap:2px;margin-left:6px}
+.topnav a{text-decoration:none;color:var(--muted);font-size:12.5px;padding:7px 10px;border-radius:8px}
+.topnav a:hover{color:var(--ink);background:var(--bg-soft)}
+@media(max-width:1100px){.topnav{display:none}}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.searchbox{position:relative}
+.searchbox input{width:220px;max-width:36vw;background:var(--bg-soft);border:1px solid transparent;color:var(--ink);border-radius:8px;padding:7px 10px 7px 32px;font-size:13px;font-family:inherit;outline:none}
+.searchbox input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #0071e322;width:260px}
+.searchbox svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.5}
+.ibtn{display:inline-flex;align-items:center;gap:6px;border:1px solid transparent;background:var(--bg-soft);color:var(--ink);border-radius:8px;padding:7px 11px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.ibtn:hover{color:var(--blue)}
+.ibtn.on{color:var(--blue);box-shadow:inset 0 0 0 1.5px var(--blue)}
+.burger{display:none}@media(max-width:960px){.burger{display:inline-flex}}
+.hero{border-bottom:1px solid var(--bsoft);background:linear-gradient(180deg,color-mix(in srgb,var(--blue) 7%,var(--bg)),var(--bg) 70%)}
+.hero-inner{max-width:1280px;margin:0 auto;padding:54px 28px 34px}
+.crumb{font-size:12px;color:var(--faint);margin-bottom:12px}
+.crumb a{color:var(--muted);text-decoration:none}
+.eyebrow{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,transparent);padding:5px 12px;border-radius:999px;margin-bottom:14px}
+.hero h1{font-size:clamp(30px,4.2vw,50px);letter-spacing:-.025em;line-height:1.08;margin:0 0 12px;font-weight:700;max-width:900px}
+.hero p.lead{color:var(--muted);font-size:17px;max-width:800px;margin:0 0 18px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:6px 4px;font-size:13px;color:var(--muted)}
+.hero-meta span+span::before{content:"·";margin:0 8px 0 4px;color:var(--faint)}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btn{display:inline-block;background:var(--blue);color:#fff!important;text-decoration:none;font-size:15px;font-weight:500;padding:8px 20px;border-radius:980px}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:none;color:var(--blue)!important;font-weight:400}
+.srcnote{max-width:1280px;margin:0 auto;padding:10px 28px 0;font-size:12px;color:var(--faint)}
+.layout{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:290px minmax(0,1fr);gap:28px;padding:22px 28px;align-items:start}
+@media(max-width:960px){.layout{grid-template-columns:1fr}.sidenav{position:fixed!important;left:0;top:var(--topbar-h);bottom:0;width:300px;z-index:90;border-radius:0!important;transform:translateX(-105%);transition:.22s}.sidenav.open{transform:none;box-shadow:0 20px 60px rgba(0,0,0,.25)}.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:80;opacity:0;pointer-events:none;transition:.22s}.scrim.show{opacity:1;pointer-events:auto}}
+.sidenav{position:sticky;top:calc(var(--topbar-h) + 14px);max-height:calc(100vh - var(--topbar-h) - 28px);overflow:auto;background:var(--card);border:1px solid var(--bsoft);border-radius:var(--r);padding:16px 12px;font-size:13px}
+.sidenav h4{margin:12px 6px 4px;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--faint)}
+.sidenav h4:first-child{margin-top:0}
+.sidenav a{display:block;color:var(--muted);text-decoration:none;padding:5px 10px;border-radius:8px;line-height:1.4}
+.sidenav a:hover{background:var(--bg-soft);color:var(--ink)}
+.sidenav a.active{background:var(--bg-soft);color:var(--ink);font-weight:600}
+.sidenav a.done{color:var(--faint);text-decoration:line-through}
+section.card{background:var(--card);border:1px solid var(--bsoft);border-radius:18px;padding:34px 36px;margin-bottom:20px;scroll-margin-top:calc(var(--topbar-h) + 14px);min-width:0}
+@media(max-width:640px){section.card{padding:24px 20px}.layout{padding:14px}}
+.kicker{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin:0 0 8px}
+h2.st{font-size:clamp(22px,2.6vw,30px);letter-spacing:-.02em;margin:0 0 10px;font-weight:700;line-height:1.2}
+h3.sh{font-size:18px;letter-spacing:-.01em;margin:26px 0 8px;font-weight:650;border-top:1px solid var(--bsoft);padding-top:18px}
+h4.sh{font-size:15px;margin:18px 0 6px}
+p,li{color:var(--ink)}p.muted{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.minicard{background:var(--bg-soft);border-radius:12px;padding:14px 16px;font-size:14px}
+.minicard b{display:block;margin-bottom:2px}
+pre{background:var(--code-bg);border:1px solid var(--bsoft);border-radius:12px;padding:0;margin:12px 0;overflow:hidden;font-size:12.8px;line-height:1.65}
+.chead{display:flex;align-items:center;gap:7px;padding:9px 13px;background:color-mix(in srgb,var(--muted) 7%,transparent);border-bottom:1px solid var(--bsoft);font-size:10.5px;color:var(--faint);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em}
+.chead .d{width:10px;height:10px;border-radius:50%}
+.chead .lang{margin-left:auto}
+pre code{display:block;padding:14px 16px;font-family:var(--mono);overflow:auto}
+code{font-family:var(--mono);font-size:.87em}
+p code,li code,td code{background:var(--bg-soft);border:1px solid var(--bsoft);padding:1px 6px;border-radius:6px;font-size:.85em}
+pre code{background:none;border:none;padding:0}
+.copy{position:absolute}
+.cwrap{position:relative}
+.cbtn{position:absolute;top:40px;right:10px;background:var(--bg-soft);color:var(--muted);border:1px solid var(--bsoft);border-radius:7px;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit;z-index:2}
+.cbtn:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+.tok-k{color:#9b2393}.tok-s{color:#c41a16}.tok-c{color:#007400;font-style:italic}.tok-n{color:#1c00cf}
+[data-theme="dark"] .tok-k{color:#ff7ab2}[data-theme="dark"] .tok-s{color:#ff8170}[data-theme="dark"] .tok-c{color:#6c7986}[data-theme="dark"] .tok-n{color:#d9c97c}
+[data-theme="dark"] pre{color:#f5f5f7}
+table.mx{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;margin:12px 0;border:1px solid var(--bsoft);border-radius:12px;overflow:hidden;display:block;overflow-x:auto}
+table.mx th,table.mx td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--bsoft);white-space:nowrap}
+table.mx th{background:var(--bg-soft);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+table.mx tr:last-child td{border-bottom:none}
+table.mx td{color:var(--ink2)}table.mx td:first-child{font-family:var(--mono);font-size:12.5px}
+.note{background:var(--bg-soft);border:1px solid var(--bsoft);border-left:3px solid var(--faint);border-radius:12px;padding:12px 15px;margin:12px 0;font-size:14px}
+.note b.t{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:3px}
+.note.g{border-left-color:var(--green)}.note.a{border-left-color:var(--amber)}.note.r{border-left-color:var(--red)}.note.v{border-left-color:var(--violet)}.note.b{border-left-color:var(--blue)}
+.badge{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 9px;border-radius:999px;background:var(--bg-soft);border:1px solid var(--bsoft);color:var(--muted);margin:1px 3px 1px 0;white-space:nowrap}
+.badge.yes{background:color-mix(in srgb,var(--green) 12%,transparent);color:var(--green);border-color:transparent}
+.badge.no{background:color-mix(in srgb,var(--red) 9%,transparent);color:var(--red);border-color:transparent}
+.badge.plan{background:color-mix(in srgb,var(--amber) 12%,transparent);color:var(--amber);border-color:transparent}
+.badge.info{background:color-mix(in srgb,var(--blue) 10%,transparent);color:var(--blue);border-color:transparent}
+.badge.dim{opacity:.75}
+.fcard{background:var(--card);border:1px solid var(--bsoft);border-radius:16px;padding:20px 22px;margin-bottom:14px}
+.fcard h3{margin:0 0 4px;font-size:18px;letter-spacing:-.01em}
+.fcard h3 code{font-size:16px}
+.fcard .cmd{font-family:var(--mono);font-size:12.5px;background:var(--bg-soft);border:1px solid var(--bsoft);border-radius:8px;padding:8px 12px;margin:8px 0;overflow-x:auto;white-space:nowrap}
+.frow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;align-items:center}
+.frow .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);min-width:88px}
+details.more{border-top:1px solid var(--bsoft);margin-top:10px}
+details.more summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--blue);padding:10px 0;list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"+ ";font-weight:700}
+details.more[open] summary::before{content:"– "}
+.fbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.sbtn{border:1px solid var(--border);background:var(--card);color:var(--ink);border-radius:8px;font-size:12px;font-weight:600;padding:6px 12px;cursor:pointer;font-family:inherit}
+.sbtn:hover{border-color:var(--blue);color:var(--blue)}
+.sbtn.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;align-items:center}
+.toolbar select,.toolbar input[type="search"]{font-family:inherit;font-size:13px;padding:8px 12px;border-radius:9px;border:1px solid var(--border);background:var(--card);color:var(--ink);outline:none}
+.toolbar select:focus,.toolbar input[type="search"]:focus{border-color:var(--blue)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--border);background:var(--card);color:var(--muted);border-radius:999px;font-size:12px;font-weight:600;padding:5px 13px;cursor:pointer;font-family:inherit}
+.chip.on{background:#1d1d1f;color:#fff;border-color:#1d1d1f}
+[data-theme="dark"] .chip.on{background:#f5f5f7;color:#000;border-color:#f5f5f7}
+#cmpbar{position:fixed;left:50%;transform:translateX(-50%) translateY(120px);bottom:18px;z-index:120;background:#1d1d1f;color:#fff;border-radius:14px;padding:10px 14px;display:flex;gap:10px;align-items:center;font-size:13px;transition:.25s;box-shadow:0 12px 40px rgba(0,0,0,.3);max-width:94vw}
+[data-theme="dark"] #cmpbar{background:#f5f5f7;color:#000}
+#cmpbar.show{transform:translateX(-50%) translateY(0)}
+#cmpbar button{background:var(--blue);border:none;color:#fff;border-radius:8px;font-weight:700;font-size:12.5px;padding:7px 14px;cursor:pointer;font-family:inherit}
+#cmpbar button.plain{background:transparent;color:inherit;border:1px solid currentColor}
+.modal{position:fixed;inset:0;z-index:150;display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;overflow:auto}
+.modal.show{display:flex}
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.45)}
+.mbox{position:relative;background:var(--card);border-radius:18px;max-width:760px;width:100%;padding:28px 30px;max-height:86vh;overflow:auto}
+.mbox h2{margin:0 0 6px;font-size:24px;letter-spacing:-.02em}
+.mx{position:absolute;top:14px;right:14px;border:none;background:var(--bg-soft);border-radius:50%;width:30px;height:30px;cursor:pointer;color:var(--muted);font-size:15px}
+.treeq{border:1px solid var(--bsoft);border-radius:14px;padding:18px;margin:12px 0}
+.treeq .opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.verdict{border-radius:14px;padding:16px 18px;margin:12px 0;background:var(--bg-soft);border:1px solid var(--bsoft)}
+.err{border:1px solid var(--bsoft);border-radius:12px;padding:14px 16px;margin:10px 0}
+.err h4{margin:0 0 4px;font-size:15px;font-family:var(--mono)}
+.err .fix{font-size:13.5px;color:var(--ink2)}
+.steps{counter-reset:st;list-style:none;margin:12px 0;padding:0}
+.steps>li{position:relative;padding:4px 0 14px 38px}
+.steps>li::before{counter-increment:st;content:counter(st);position:absolute;left:0;top:2px;width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700}
+.done-row{display:flex;gap:9px;align-items:center;margin-top:16px;font-size:13px;color:var(--muted)}
+.done-row input{width:16px;height:16px;accent-color:var(--blue)}
+mark.hit{background:#ffe9a8;border-radius:3px}[data-theme="dark"] mark.hit{background:#6b5b00;color:#fff}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;font-size:13.5px;margin:8px 0}
+.kv dt{color:var(--faint);font-weight:600}.kv dd{margin:0;color:var(--ink2)}
+.diagram{font-family:var(--mono);font-size:12.5px;background:var(--bg-soft);border:1px solid var(--bsoft);border-radius:12px;padding:16px;overflow-x:auto;white-space:pre;line-height:1.7;margin:12px 0}
+footer.site{border-top:1px solid var(--bsoft);color:var(--muted);font-size:12.5px;text-align:center;padding:28px}
+#toTop{position:fixed;right:18px;bottom:18px;width:42px;height:42px;border-radius:50%;border:1px solid var(--bsoft);background:var(--card);color:var(--ink);font-size:17px;cursor:pointer;opacity:0;pointer-events:none;transition:.25s;z-index:90;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+#toTop.show{opacity:1;pointer-events:auto}
+.lpath{list-style:none;padding:0;margin:12px 0}
+.lpath li{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--bsoft);font-size:14px}
+.lpath .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--bg-soft);border:1px solid var(--bsoft);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--muted)}
+@media print{.topbar,.sidenav,#toTop,#cmpbar,.toolbar,.fbtns{display:none!important}.layout{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="readbar"></div>
+<header class="topbar">
+<button class="ibtn burger" id="menuBtn">☰</button>
+<a class="brand" href="#top"><span class="brand-mark">C</span><span><b>CAP Plugins Encyclopedia</b><small>cap.cloud.sap · verified 2026</small></span></a>
+<nav class="topnav"><a href="#s-facets">Facets</a><a href="#s-official">Plugins</a><a href="#s-matrix">Matrix</a><a href="#s-tree">Decision tree</a><a href="#s-errors">Error doctor</a><a href="#s-capstone">Capstone</a></nav>
+<div class="top-actions">
+<div class="searchbox"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="q" type="search" placeholder="Search plugins, cmds, errors… ( / )" aria-label="Search"/></div>
+<button class="ibtn" id="favBtn" title="Show favorites only">★ <span id="favN">0</span></button>
+<button class="ibtn" id="themeBtn" title="Toggle theme">🌙</button>
+</div>
+</header>
+<div class="scrim" id="scrim"></div>
+<div class="hero" id="top">
+<div class="hero-inner">
+<div class="crumb">SAP BTP · CAP · Developer reference</div>
+<div class="eyebrow">Complete reference · CAPire-verified</div>
+<h1>SAP CAP Plugins &amp; Facets — Complete Developer Encyclopedia</h1>
+<p class="lead">Every important CAP plugin, <code>cds add</code> facet, extension, integration and capability — explained with code. Facets, adapters, BTP services, messaging, security, deployment, AI.</p>
+<div class="hero-meta"><span>53 facet dossiers · 20 official plugins</span><span>Node.js · Java · CF · Kyma</span><span>Filterable matrix · decision tree · error doctor</span><span>Verified against live CAPire, Sep 2026</span></div>
+<div class="hero-cta"><a class="btn" href="#s-facets">Browse facet catalog →</a><a class="btn ghost" href="#s-tree">What do I need? 🧭</a><a class="btn ghost" href="#s-errors">Error doctor 🩺</a></div>
+</div>
+</div>
+<p class="srcnote">Sources: <a href="https://cap.cloud.sap/docs/tools/cds-cli">CAPire · CDS CLI / cds add</a> · <a href="https://cap.cloud.sap/docs/plugins/">CAPire · Plugins &amp; Enhancements</a> · <a href="https://cap.cloud.sap/docs/node.js/cds-plugins">CAPire · cds-plugin technique</a> · official <a href="https://github.com/cap-js">cap-js</a> / <a href="https://github.com/cap-java">cap-java</a> repos. Items marked <span class="badge plan">verify</span> are not in the current built-in table — confirm with <code>cds add --help</code> in your cds-dk version.</p>
+<div class="layout">
+<nav class="sidenav" id="sidenav" aria-label="Contents">
+<h4>Start</h4>
+<a href="#s-start">What is a CAP plugin?</a>
+<a href="#s-facets">All built-in cds add facets</a>
+<h4>Platform</h4>
+<a href="#s-db">Database plugins</a>
+<a href="#s-sec">Security &amp; identity</a>
+<a href="#s-mtx">Multitenancy</a>
+<a href="#s-ext">Extensibility</a>
+<a href="#s-toggles">Feature toggles</a>
+<h4>Messaging &amp; events</h4>
+<a href="#s-msg">Messaging plugins</a>
+<a href="#s-eventmesh">Event Mesh deep dive</a>
+<a href="#s-kafka">Kafka</a>
+<a href="#s-redis">Redis messaging</a>
+<h4>Integration</h4>
+<a href="#s-dest">Destination</a>
+<a href="#s-conn">Connectivity + S/4HANA</a>
+<a href="#s-approuter">Approuter · html5-repo · portal</a>
+<h4>Services</h4>
+<a href="#s-log">Logging</a>
+<a href="#s-notif">Notifications</a>
+<a href="#s-attach">Attachments</a>
+<a href="#s-dev">data · http · handler · test · typer · esm</a>
+<h4>Ship it</h4>
+<a href="#s-deploy">Deployment facets + MTA</a>
+<a href="#s-kyma">Kyma + CAP Operator</a>
+<a href="#s-pipe">CI/CD pipeline</a>
+<h4>Build your own</h4>
+<a href="#s-custom">Custom cds add plugin</a>
+<a href="#s-cdsplugin">cds-plugin technique</a>
+<a href="#s-java">Java plugins</a>
+<h4>Official catalog</h4>
+<a href="#s-official">Official plugins A–Z</a>
+<a href="#s-ai">AI · Agents · MCP</a>
+<h4>Decide &amp; operate</h4>
+<a href="#s-matrix">Plugin matrix</a>
+<a href="#s-tree">Decision tree</a>
+<a href="#s-install">Installation guide</a>
+<a href="#s-files">Generated file explorer</a>
+<a href="#s-errors">Error doctor</a>
+<a href="#s-secure">Security matrix</a>
+<a href="#s-path">Learning path</a>
+<a href="#s-capstone">Capstone project</a>
+<a href="#s-links">Official links</a>
+</nav>
+<main>
+<section class="card" id="s-start" data-done="s-start">
+<p class="kicker">Part 1 · Concepts</p>
+<h2 class="st">What is a CAP plugin, really?</h2>
+<p>A beginner meets three different things that all get called “plugin”. They are not the same:</p>
+<div class="diagram">CAP Framework (@sap/cds runtime + cds-dk tooling)
+       ↓  declares a reusable slice of capability
+CAP Facet  — e.g. cds add hana ............ (project setup step)
+       ↓  implemented as code in cds-dk via the cds.add Plugin API
+cds add Plugin — e.g. built-in 'hana' ... (runs once, writes files)
+       ↓  OR a runtime package you install
+cds-plugin (Node.js) — e.g. npm add @cap-js/audit-logging
+       ↓  auto-loaded via cds-plugin.js + auto-configured via package.json cds section
+BTP Service Integration — e.g. SAP Audit Log service instance + binding
+       ↓  your code on top
+Custom Extension — your handlers, annotations, custom plugins</div>
+<div class="grid2">
+<div class="minicard"><b>🧩 <code>cds add hana</code> = a facet</b>A one-time project generator. It edits <code>package.json</code>, adds <code>mta.yaml</code> resources, wires <code>cds.requires.db</code>. It does not run in production.</div>
+<div class="minicard"><b>📦 <code>npm add @cap-js/audit-logging</code> = a plugin</b>A runtime package. Its <code>cds-plugin.js</code> is auto-detected and its <code>cds</code> section in <code>package.json</code> auto-configures your app on every boot.</div>
+<div class="minicard"><b>☁️ SAP Audit Log service = a BTP service</b>The platform backing service. The plugin talks to it (via binding) in production and to the console locally. Three layers, one story.</div>
+<div class="minicard"><b>🔌 Your extension = custom code</b>Handlers, annotations, own <code>cds-plugin.js</code> packages, own <code>cds add</code> plugins (Part 32). Same techniques SAP uses.</div>
+</div>
+<div class="note b"><b class="t">Version / compatibility legend used everywhere</b>Badges on every card: <span class="badge yes">Node.js</span> <span class="badge yes">Java</span> <span class="badge no">n/a</span> <span class="badge plan">planned / verify</span>. “CF-only” means the managed-service wiring generated by the facet targets Cloud Foundry. Statuses: Official (in cds-dk or cap-js/cap-java), Community, Experimental/Beta, Deprecated.</div>
+<div class="done-row"><input type="checkbox" id="d-s-start" data-done="s-start"/><label for="d-s-start">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-facets" data-done="s-facets">
+<p class="kicker">Part 2 · The catalog</p>
+<h2 class="st">All built-in <code>cds add</code> facets</h2>
+<p class="muted">Rendered from the verified CAPire CLI table (Node.js / Java columns preserved). Filter, ★ favorite, ☑ compare, or click a card for the full dossier (files, config, mistakes, checklist).</p>
+<div class="toolbar">
+<input type="search" id="fq" placeholder="Filter facets…" aria-label="Filter facets"/>
+<select id="fcat" aria-label="Category"><option value="">All categories</option></select>
+<select id="frt" aria-label="Runtime"><option value="">Node.js + Java</option><option value="node">Node.js ✓</option><option value="java">Java ✓</option><option value="cf">Cloud Foundry</option><option value="kyma">Kyma</option></select>
+<select id="fst" aria-label="Status"><option value="">Any status</option><option value="official">Official</option><option value="community">Community</option><option value="experimental">Experimental/Beta</option><option value="deprecated">Deprecated</option><option value="unverified">Verify</option></select>
+</div>
+<div class="chips" id="catchips"></div>
+<div id="facetGrid"></div>
+<div class="done-row"><input type="checkbox" id="d-s-facets" data-done="s-facets"/><label for="d-s-facets">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-db" data-done="s-db">
+<p class="kicker">Part 3 · Databases</p><h2 class="st">Database plugins</h2>
+<div class="diagram">CAP service
+ ↓  cds.requires.db
+Persistence Service (cap-sql / java)
+ ↓  adapter package
+@cap-js/hana · @cap-js/postgres · @cap-js/sqlite · H2 · Liquibase
+ ↓
+HANA Cloud · PostgreSQL · SQLite · H2</div>
+<table class="mx"><tr><th>Database</th><th>Local</th><th>BTP</th><th>Node.js</th><th>Java</th><th>Production</th><th>Best use</th></tr>
+<tr><td>HANA Cloud</td><td>hdb container</td><td>✓ HDI</td><td>✓</td><td>✓</td><td>✓ flagship</td><td>BTP production</td></tr>
+<tr><td>PostgreSQL</td><td>✓ docker</td><td>✓ CF</td><td>✓ CF-only wiring</td><td>✓ CF-only wiring</td><td>✓ CF</td><td>Open-source CF apps</td></tr>
+<tr><td>SQLite</td><td>✓ :memory:</td><td>—</td><td>✓</td><td>✓</td><td>never</td><td>Inner loop + tests</td></tr>
+<tr><td>H2</td><td>✓</td><td>—</td><td>n/a</td><td>✓</td><td>never</td><td>Java local/tests</td></tr>
+<tr><td>Liquibase</td><td>✓</td><td>✓</td><td>n/a</td><td>✓</td><td>✓ Java</td><td>Audited Java migrations</td></tr></table>
+<h3 class="sh">Switching kinds per profile (Node.js)</h3><div id="code-db1"></div>
+<h3 class="sh">Transactions</h3><div id="code-db2"></div>
+<div class="note a"><b class="t">Performance rule</b>One round-trip per request beats N+1 SELECTs: expand associations in a single query, paginate with <code>$top/$skip</code>, and create indexes for foreign keys you filter on.</div>
+<div class="done-row"><input type="checkbox" id="d-s-db" data-done="s-db"/><label for="d-s-db">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-sec" data-done="s-sec">
+<p class="kicker">Part 4 · Security</p><h2 class="st">Security &amp; identity plugins</h2>
+<h3 class="sh">XSUAA — OAuth2 scopes on Cloud Foundry</h3><div id="code-sec1"></div>
+<p>Flow: approuter login → JWT with <code>xsappname.scope</code> entries → CAP validates signature + tenant → <code>@restrict</code> checks scopes. Role templates live in <code>xs-security.json</code>; role collections are assigned in the cockpit.</p>
+<h3 class="sh">IAS — who logs in</h3>
+<div class="diagram">Browser → IAS (corporate IdP, MFA) → XSUAA (scopes) → CAP → User</div>
+<p>Use IAS when humans must log in with company credentials. IAS authenticates; XSUAA still authorizes. Configure IAS→XSUAA trust and map IAS groups to role collections.</p>
+<h3 class="sh">AMS — centralized authorization</h3>
+<p>AMS evaluates policies at runtime instead of hardcoding every rule in <code>@restrict</code>. Use it when rules change often, need audit, or span apps. Difference: <code>@restrict</code> = static model-level guard; AMS = dynamic policy decision per request (with deny-by-default + short-TTL caching).</p>
+<div class="done-row"><input type="checkbox" id="d-s-sec" data-done="s-sec"/><label for="d-s-sec">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-mtx" data-done="s-mtx">
+<p class="kicker">Part 5 · SaaS</p><h2 class="st">Multitenancy</h2>
+<div class="diagram">Provider subaccount (your app + SaaS registry)
+   ├── Tenant A (own HDI container / isolated data)
+   ├── Tenant B
+   └── Tenant C (subscribe → onboard → use → offboard)</div>
+<p><code>cds add multitenancy</code> wires the SaaS registry and (Node.js) the MTX sidecar for tenant lifecycle. Tenant identity always comes from the JWT/service binding — never from client input. Legacy MTX APIs are marked legacy in CAPire: prefer the current sidecar/subscription model and test subscribe → use → upgrade → unsubscribe end-to-end.</p>
+<div class="done-row"><input type="checkbox" id="d-s-mtx" data-done="s-mtx"/><label for="d-s-mtx">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-ext" data-done="s-ext">
+<p class="kicker">Part 6 · SaaS</p><h2 class="st">Extensibility</h2>
+<div class="diagram">Base application (your model + services)
+       ↓  allowlisted extension points
+Extension project (cds pull → extend → cds push)
+       ↓
+Customer model + behavior, upgrade-safe</div>
+<p>Pair with <code>cds add multitenancy</code>. Workflow: <code>cds pull</code> the base model, add customer fields/logic in a separate extension project, <code>cds push</code> back. Rules: allowlist extendable entities, validate extension models in CI, and re-test upgrades with extensions applied.</p>
+<div class="done-row"><input type="checkbox" id="d-s-ext" data-done="s-ext"/><label for="d-s-ext">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-toggles" data-done="s-toggles">
+<p class="kicker">Part 7 · Rollouts</p><h2 class="st">Feature toggles</h2><div id="code-tog"></div>
+<div class="note b"><b class="t">Discipline</b>Every toggle gets an owner and an expiry date; enforce server-side (never trust client gating for paid features); delete the toggle once fully rolled out.</div>
+<div class="done-row"><input type="checkbox" id="d-s-toggles" data-done="s-toggles"/><label for="d-s-toggles">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-msg" data-done="s-msg">
+<p class="kicker">Part 8 · Events</p><h2 class="st">Messaging plugins</h2>
+<div class="diagram">CAP producer → emit event → Broker (topic/queue) → CAP consumer → handler
+(local/file) ··· (enterprise-messaging / kafka / AEM in production)</div>
+<table class="mx"><tr><th>Plugin</th><th>Local</th><th>Cloud</th><th>Broker</th><th>Use case</th></tr>
+<tr><td>local-messaging</td><td>✓</td><td>—</td><td>none (in-process)</td><td>Dev/test handlers</td></tr>
+<tr><td>file-based-messaging</td><td>✓ replayable</td><td>—</td><td>files</td><td>Offline flows</td></tr>
+<tr><td>enterprise-messaging</td><td>—</td><td>✓ CF</td><td>EM (AMQP/MQTT)</td><td>CF production events</td></tr>
+<tr><td>enterprise-messaging-shared</td><td>—</td><td>✓ CF shared</td><td>EM shared instance</td><td>Multi-app, one instance</td></tr>
+<tr><td>kafka</td><td>✓ docker</td><td>✓ CF+Kyma</td><td>Kafka topics</td><td>Streaming at scale</td></tr>
+<tr><td>redis-messaging</td><td>✓</td><td>✓ CF-only</td><td>Redis</td><td>Lightweight pub/sub</td></tr>
+<tr><td>Advanced Event Mesh</td><td>—</td><td>✓</td><td>Solace/AEM</td><td>Non-SAP + enterprise EDA</td></tr></table>
+<div id="code-msg"></div>
+<div class="note a"><b class="t">Golden rules</b>Consumers must be idempotent (at-least-once delivery); configure dead-letter queues; use CloudEvents envelopes so producers/consumers stay decoupled.</div>
+<div class="done-row"><input type="checkbox" id="d-s-msg" data-done="s-msg"/><label for="d-s-msg">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-eventmesh" data-done="s-eventmesh">
+<p class="kicker">Part 9 · Deep dive</p><h2 class="st">SAP Event Mesh, event-driven CAP</h2>
+<div class="diagram">CAP --emit--> Event Mesh (queue/topic, CloudEvents) --subscribe--> CAP handler
+(retries → dead-letter · monitoring queue depth)</div>
+<div id="code-em"></div>
+<div class="done-row"><input type="checkbox" id="d-s-eventmesh" data-done="s-eventmesh"/><label for="d-s-eventmesh">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-kafka" data-done="s-kafka">
+<p class="kicker">Part 10 · Deep dive</p><h2 class="st">CAP + Apache Kafka</h2>
+<div class="diagram">CAP producer → Kafka topic (partitions) → consumer group → CAP handler
+(serialization contract · retention · replay)</div>
+<p>Local Kafka via Docker; production via provider-managed Kafka. Per-topic decisions: serializer (CloudEvents JSON recommended), partitions vs ordering needs, retention, one consumer group per landscape, retry + DLQ topics, lag monitoring.</p>
+<div class="done-row"><input type="checkbox" id="d-s-kafka" data-done="s-kafka"/><label for="d-s-kafka">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-redis" data-done="s-redis">
+<p class="kicker">Part 11 · Status note</p><h2 class="st">Redis messaging</h2>
+<p><code>cds add redis-messaging</code> wires Redis pub-sub (Cloud Foundry only). Purpose: low-latency fan-out where Redis already exists. Limits: not a durable enterprise queue replacement; confirm the support status in your cds-dk version (<code>cds add --help</code>). Set eviction/persistence deliberately and never assume Kyma support.</p>
+<div class="done-row"><input type="checkbox" id="d-s-redis" data-done="s-redis"/><label for="d-s-redis">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-dest" data-done="s-dest">
+<p class="kicker">Part 12 · Integration</p><h2 class="st">Destination plugin</h2>
+<div class="diagram">CAP → Destination service (URL + OAuth2 / principal propagation) → External system</div>
+<div id="code-dest"></div>
+<div class="done-row"><input type="checkbox" id="d-s-dest" data-done="s-dest"/><label for="d-s-dest">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-conn" data-done="s-conn">
+<p class="kicker">Parts 13–14 · Integration</p><h2 class="st">Connectivity + S/4HANA</h2>
+<div class="diagram">UI5 → CAP → Destination → Connectivity → Cloud Connector → S/4HANA
+(Browser → Approuter → CAP → remote service projection)</div>
+<div id="code-s4"></div>
+<p>Pattern: <code>cds import</code> the business API → remote service → local projections → queries/writes with error mapping. Writes need idempotency keys where the API allows; always map remote errors to CAP error codes.</p>
+<div class="done-row"><input type="checkbox" id="d-s-conn" data-done="s-conn"/><label for="d-s-conn">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-approuter" data-done="s-approuter">
+<p class="kicker">Parts 15–17 · Frontend</p><h2 class="st">Approuter · html5-repo · portal</h2>
+<div class="diagram">Browser → Approuter (login, routes, destinations) → CAP / app-host (html5-repo) / portal tile</div>
+<h3 class="sh">xs-app.json (route discipline: default deny)</h3><div id="code-ar"></div>
+<p><b>html5-repo:</b> built UIs go to app-host via the deployer; verify content after deploy. <b>Portal:</b> expose tiles via <code>CommonDataModel.json</code> in Build Work Zone; verify tile → app → data per space.</p>
+<div class="done-row"><input type="checkbox" id="d-s-approuter" data-done="s-approuter"/><label for="d-s-approuter">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-log" data-done="s-log">
+<p class="kicker">Part 18 · Observability</p><h2 class="st">Application vs audit logging</h2>
+<div class="grid2"><div class="minicard"><b>application-logging</b>Runtime stdout → SAP Cloud Logging. For operators: errors, latency, traces. Never PII.</div><div class="minicard"><b>audit-logging</b>Business/security events → Audit Log service. For compliance: who changed whose data, when.</div></div>
+<div id="code-log"></div>
+<div class="done-row"><input type="checkbox" id="d-s-log" data-done="s-log"/><label for="d-s-log">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-notif" data-done="s-notif">
+<p class="kicker">Part 19 · Services</p><h2 class="st">Notifications</h2><div id="code-notif"></div>
+<p>Templates are versioned + i18n’d; manage their lifecycle like code; throttle sends so workflows can’t storm inboxes.</p>
+<div class="done-row"><input type="checkbox" id="d-s-notif" data-done="s-notif"/><label for="d-s-notif">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-attach" data-done="s-attach">
+<p class="kicker">Part 20 · Services</p><h2 class="st">Attachments</h2><div id="code-attach"></div>
+<p>Binaries belong in Object Store (or SDM repositories) at scale, not HANA; enforce size + MIME limits; malware-scan uploads; authorize per parent entity; consider virus-scan async UX for large files.</p>
+<div class="done-row"><input type="checkbox" id="d-s-attach" data-done="s-attach"/><label for="d-s-attach">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-dev" data-done="s-dev">
+<p class="kicker">Parts 21–26 · Productivity</p><h2 class="st">data · http · handler · test · typer · esm</h2>
+<div id="code-dev"></div>
+<ul><li><b>data:</b> <code>cds add data --filter Books --records 5 --content-type json</code> — small, meaningful seeds; gitignore dumps.</li>
+<li><b>http:</b> <code>cds add http --filter CatalogService</code> — mock-user files stay local; <code>--for-app</code> for remote JWT.</li>
+<li><b>handler:</b> generate stubs, delete what you don’t customize.</li>
+<li><b>test:</b> no built-in facet — use <code>@cap-js/cds-test</code> (Node) / Java test tooling, run in CI.</li>
+<li><b>typer vs typescript:</b> typer generates model types (<code>#cds-models</code>); typescript facet sets up TS handlers. Use both for typed TS apps.</li>
+<li><b>esm vs cjs:</b> CJS is default; <code>cds add esm</code> switches to <code>import/export</code> — audit deps first.</li></ul>
+<div class="done-row"><input type="checkbox" id="d-s-dev" data-done="s-dev"/><label for="d-s-dev">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-deploy" data-done="s-deploy">
+<p class="kicker">Parts 27–28 · Ship</p><h2 class="st">Deployment facets + MTA anatomy</h2>
+<p><b>mta</b> (multi-module, service bindings) vs <b>cf-manifest</b> (simple push) vs <b>containerize+helm</b> (Kubernetes packaging) vs <b>kyma</b> (API Rules, workload identity).</p>
+<h3 class="sh">mta.yaml, section by section</h3><div id="code-mta"></div>
+<div class="done-row"><input type="checkbox" id="d-s-deploy" data-done="s-deploy"/><label for="d-s-deploy">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-kyma" data-done="s-kyma">
+<p class="kicker">Parts 29–30 · Kubernetes</p><h2 class="st">Kyma + CAP Operator</h2>
+<div class="diagram">CAP source → containerize → helm chart → CAP Operator CRs → K8s (multitenant lifecycle)
+values.yaml + values.schema.json (providerSubaccountId, NOT globalAccountId)</div>
+<p><code>cds add kyma</code> gives API Rules and base resources; <code>npm add @cap-js/cap-operator-plugin -D</code> + <code>cds add cap-operator</code> generates the Operator’s custom resources so you don’t hand-write Helm CRs. Keep the chart generated-then-reviewed; <code>helm lint</code> + template diffs in CI.</p>
+<div class="done-row"><input type="checkbox" id="d-s-kyma" data-done="s-kyma"/><label for="d-s-kyma">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-pipe" data-done="s-pipe">
+<p class="kicker">Part 31 · CI/CD</p><h2 class="st">Pipeline</h2>
+<div class="diagram">Git → Build (mbt/helm) → Test (unit+integration) → Security (lint, audit) → Deploy (CF/Kyma) → Monitor</div>
+<p><code>cds add pipeline</code> scaffolds the descriptors (e.g. GitHub Actions). Secrets come from vaults, never YAML; quality gates (tests, lint, <code>cds deploy</code> dry-run) block bad builds before they reach BTP.</p>
+<div class="done-row"><input type="checkbox" id="d-s-pipe" data-done="s-pipe"/><label for="d-s-pipe">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-custom" data-done="s-custom">
+<p class="kicker">Part 32 · Build your own</p><h2 class="st">Custom <code>cds add</code> plugin development</h2>
+<div class="diagram">cds-plugin.js → register(name, impl) → run() writes files → combine() merges configs → options() CLI flags → requires() deps</div>
+<div id="code-custom"></div>
+<p><b>Every method:</b> <code>register</code> names the facet; <code>run</code> writes/generates files; <code>combine</code> merges into existing configs (package.json, mta.yaml); <code>options</code> declares CLI flags; <code>requires</code> lists facets that must run first (e.g. xsuaa).</p>
+<div class="done-row"><input type="checkbox" id="d-s-custom" data-done="s-custom"/><label for="d-s-custom">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-cdsplugin" data-done="s-cdsplugin">
+<p class="kicker">Part 33 · Build your own</p><h2 class="st">The <code>cds-plugin</code> technique</h2>
+<div class="diagram">npm package → cds-plugin.js in root → CAP auto-detects (deps with that file)
+→ merges package.json cds section (auto-config) → loads module on lifecycle events</div>
+<div id="code-plugin"></div>
+<p>Distribution: publish to npm; consumers <code>npm add</code> it and get behavior with zero wiring. Production rules: version conservatively, namespace your <code>cds.requires</code> keys, never mutate other plugins’ config.</p>
+<div class="done-row"><input type="checkbox" id="d-s-cdsplugin" data-done="s-cdsplugin"/><label for="d-s-cdsplugin">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-java" data-done="s-java">
+<p class="kicker">Part 34 · Java</p><h2 class="st">CAP Java plugins</h2>
+<div class="diagram">Maven dependency (jar, runtime scope) → CAP Java runtime → model + behavior contributed</div>
+<div id="code-java"></div>
+<p>Differences that matter: Java plugins ship config via Spring Boot conventions (<code>cds env</code> shows design-time only); messaging/AI plugins may lag Node (see badges); H2/Liquibase are Java-first. Always check the Java column before planning.</p>
+<div class="done-row"><input type="checkbox" id="d-s-java" data-done="s-java"/><label for="d-s-java">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-official" data-done="s-official">
+<p class="kicker">Parts 35–40 · Catalog</p><h2 class="st">Official plugins A–Z</h2>
+<p class="muted">Curated from the CAPire Plugins page + cap-js/cap-java. ★ favorite and ☑ compare work here too.</p>
+<div id="officialGrid"></div>
+<div class="note b"><b class="t">Deep dives (summary)</b><b>Audit logging:</b> annotate <code>@PersonalData</code>, console locally, Audit Log service in prod, outbox delivery. <b>Attachments/SDM:</b> <code>Composition of many Attachments</code>, Fiori facets auto-generated, Object Store at scale. <b>Data Inspector:</b> <code>cds add data-inspector</code>, scope <code>capDataInspectorReadonly</code>, never raw SQL. <b>ABAP RFC:</b> <code>@sap/cds-rfc</code> imports RFC APIs, call via Cloud Connector. <b>Advanced Event Mesh:</b> bridge non-SAP systems into CAP eventing. <b>AI:</b> RPT-1 recommendations + AICore service (see below).</div>
+<div class="done-row"><input type="checkbox" id="d-s-official" data-done="s-official"/><label for="d-s-official">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-ai" data-done="s-ai">
+<p class="kicker">Parts 41–43 · AI</p><h2 class="st">AI · Agents · MCP</h2>
+<div class="diagram">User → AI Agent → MCP Client → MCP Server (@cap-js/mcp) → CAP → Business APIs
+CAP → AI SDK/plugin → SAP AI Core → foundation model (RPT-1, orchestration)</div>
+<div id="code-ai"></div>
+<table class="mx"><tr><th>Technology</th><th>Purpose</th></tr>
+<tr><td>REST</td><td>API communication</td></tr><tr><td>OData</td><td>SAP business API</td></tr>
+<tr><td>Function calling</td><td>Model → tool</td></tr><tr><td>MCP</td><td>Standardized AI tool/resource access</td></tr>
+<tr><td>CAP plugin</td><td>CAP extension</td></tr><tr><td>AI agent</td><td>Goal-oriented execution over CAP tools</td></tr></table>
+<div class="note r"><b class="t">Agent safety</b>Agents authenticate like users, get minimal grants, need human approval for side effects, and every tool call is audit-logged. Never invent APIs — expose only real, authorized operations.</div>
+<div class="done-row"><input type="checkbox" id="d-s-ai" data-done="s-ai"/><label for="d-s-ai">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-matrix" data-done="s-matrix">
+<p class="kicker">Part 44 · Decide</p><h2 class="st">Plugin matrix</h2>
+<div class="toolbar"><input type="search" id="mq" placeholder="Filter matrix…" aria-label="Filter matrix"/></div>
+<div id="mxTable"></div>
+<div class="done-row"><input type="checkbox" id="d-s-matrix" data-done="s-matrix"/><label for="d-s-matrix">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-tree" data-done="s-tree">
+<p class="kicker">Part 45 · Decide</p><h2 class="st">Decision tree: what do I need?</h2>
+<div id="treeBox"></div>
+<div class="done-row"><input type="checkbox" id="d-s-tree" data-done="s-tree"/><label for="d-s-tree">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-install" data-done="s-install">
+<p class="kicker">Part 46 · Operate</p><h2 class="st">8-step installation guide (every plugin)</h2>
+<ol class="steps"><li><b>Install</b> — <code>npm add &lt;plugin&gt;</code> or add the Maven dependency.</li><li><b>Run cds add</b> — <code>cds add &lt;facet&gt;</code> for project wiring.</li><li><b>Inspect</b> — <code>git status/diff</code>: know every touched file.</li><li><b>Configure</b> — profiles for local vs production kinds.</li><li><b>Run locally</b> — <code>cds watch</code> with mocks/consoles.</li><li><b>Test</b> — unit + integration, incl. failure paths.</li><li><b>Deploy</b> — bind real services, verify in cockpit.</li><li><b>Monitor</b> — logs, metrics, queue depth, audit viewer.</li></ol>
+<div class="done-row"><input type="checkbox" id="d-s-install" data-done="s-install"/><label for="d-s-install">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-files" data-done="s-files">
+<p class="kicker">Part 47 · Operate</p><h2 class="st">Generated file explorer</h2>
+<div class="grid2"><div><b>Before</b><div id="code-before"></div></div><div><b>After <code>cds add hana xsuaa mta approuter</code></b><div id="code-after"></div></div></div>
+<p class="muted">Rule: generated-then-reviewed. <code>git diff</code> after every <code>cds add</code>; never commit secrets; keep <code>mta.yaml</code> + <code>xs-security.json</code> in sync with code.</p>
+<div class="done-row"><input type="checkbox" id="d-s-files" data-done="s-files"/><label for="d-s-files">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-errors" data-done="s-errors">
+<p class="kicker">Part 48 · Operate</p><h2 class="st">Error doctor 🩺</h2>
+<div class="toolbar"><input type="search" id="eq" placeholder="Describe the symptom…" aria-label="Search errors"/></div>
+<div id="errList"></div>
+<div class="done-row"><input type="checkbox" id="d-s-errors" data-done="s-errors"/><label for="d-s-errors">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-secure" data-done="s-secure">
+<p class="kicker">Part 49 · Operate</p><h2 class="st">Plugin security matrix</h2>
+<table class="mx"><tr><th>Plugin area</th><th>Credentials</th><th>AuthN/Z</th><th>Audit</th><th>Rule</th></tr>
+<tr><td>Database</td><td>service binding</td><td>tenant-bound HDI</td><td>schema change log</td><td>least-privilege users</td></tr>
+<tr><td>xsuaa/ias/ams</td><td>client secrets</td><td>JWT + scopes/policies</td><td>login + decision logs</td><td>deny by default</td></tr>
+<tr><td>Messaging</td><td>broker credentials</td><td>topic ACLs</td><td>DLQ + delivery logs</td><td>idempotent consumers</td></tr>
+<tr><td>Destination/Connectivity</td><td>OAuth vault</td><td>propagation vs tech user</td><td>call logs</td><td>no secrets in code</td></tr>
+<tr><td>Attachments</td><td>store keys</td><td>per-entity checks</td><td>upload/download events</td><td>scan + size/MIME limits</td></tr>
+<tr><td>AI/MCP/Agents</td><td>AI Core binding</td><td>minimal tool grants</td><td>every tool call</td><td>human approval for effects</td></tr></table>
+<div class="done-row"><input type="checkbox" id="d-s-secure" data-done="s-secure"/><label for="d-s-secure">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-path" data-done="s-path">
+<p class="kicker">Part 50 · Learn</p><h2 class="st">Beginner learning path</h2>
+<ol class="lpath"><li><span class="n">1</span>CAP fundamentals + cds CLI + CDS + services + CRUD</li><li><span class="n">2</span>hana (SQLite locally) + data/http facets for the inner loop</li><li><span class="n">3</span>xsuaa + approuter + destination + connectivity + one S/4HANA read</li><li><span class="n">4</span>messaging: local → enterprise-messaging; event-mesh deep dive</li><li><span class="n">5</span>audit-logging + attachments + notifications</li><li><span class="n">6</span>multitenancy + extensibility + toggles</li><li><span class="n">7</span>mta → pipeline → Kyma → CAP Operator; typer/typescript; test</li><li><span class="n">8</span>cds-plugin + custom cds add plugin; AI → MCP → agents; capstone</li></ol>
+<div class="done-row"><input type="checkbox" id="d-s-path" data-done="s-path"/><label for="d-s-path">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-capstone" data-done="s-capstone">
+<p class="kicker">Part 51 · Capstone</p><h2 class="st">Enterprise Procurement CAP Platform</h2>
+<div class="diagram">USER → UI5 → Approuter → CAP ─┬─ HANA ─┬─ S/4HANA (Destination+Connectivity)
+ AI Agent → MCP → CAP tools ───────┴─ AI Core ┴─ Event Mesh → subscribers</div>
+<div id="code-capstone"></div>
+<p>Build order: model → SQLite → handlers → hana → xsuaa → approuter → destination/connectivity → S/4 projection → enterprise-messaging → audit-logging → attachments → multitenancy → mta → pipeline → AI/MCP. Verify each layer before adding the next.</p>
+<div class="done-row"><input type="checkbox" id="d-s-capstone" data-done="s-capstone"/><label for="d-s-capstone">Mark section done</label></div>
+</section>
+
+<section class="card" id="s-links" data-done="s-links">
+<p class="kicker">Part 54 · Reference</p><h2 class="st">Official links (verified live)</h2>
+<ul><li><a href="https://cap.cloud.sap/docs/tools/cds-cli">CAPire · CDS CLI / cds add table</a></li>
+<li><a href="https://cap.cloud.sap/docs/plugins/">CAPire · Plugins &amp; Enhancements</a></li>
+<li><a href="https://cap.cloud.sap/docs/node.js/cds-plugins">CAPire · cds-plugin technique</a></li>
+<li><a href="https://cap.cloud.sap/docs/tools/apis/cds-add">CAPire · cds add Plugin API</a></li>
+<li><a href="https://cap.cloud.sap/docs/tools/cds-typer">CAPire · CDS Typer</a></li>
+<li><a href="https://cap.cloud.sap/docs/guides/security/dpp-audit-logging">CAPire · Audit logging guide</a></li>
+<li><a href="https://github.com/cap-js">GitHub · cap-js org</a> · <a href="https://github.com/cap-java">cap-java org</a> · <a href="https://github.com/cap-js-community">cap-js-community</a></li>
+<li><a href="https://bestofcapjs.org">bestofcapjs.org · community index</a></li></ul>
+<div class="done-row"><input type="checkbox" id="d-s-links" data-done="s-links"/><label for="d-s-links">Mark section done</label></div>
+</section>
+</main>
+</div>
+<div id="cmpbar"><span id="cmpTxt">0 selected</span><button id="cmpGo">Compare</button><button class="plain" id="cmpClear">Clear</button></div>
+<div class="modal" id="modal"><div class="mbg" id="mbg"></div><div class="mbox" id="mbox"><button class="mx" id="mx">✕</button><div id="mbody"></div></div></div>
+<button id="toTop" title="Back to top">↑</button>
+<footer class="site">SAP CAP Plugins &amp; Facets Encyclopedia · content verified against live CAPire (cds-cli, plugins, cds-plugins pages) + official cap-js/cap-java repos, Sep 2026 · items marked “verify” are not in the current built-in table — check <code>cds add --help</code>.</footer>
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+/* theme + readbar + drawer */
+const root=document.documentElement;
+function setTheme(t){root.setAttribute('data-theme',t);try{localStorage.setItem('cap-plug-theme',t)}catch(e){}$('#themeBtn').textContent=t==='dark'?'☀️':'🌙';document.querySelector('meta[name="theme-color"]').setAttribute('content',t==='dark'?'#000000':'#ffffff');}
+let st=null;try{st=localStorage.getItem('cap-plug-theme')}catch(e){}
+setTheme(st||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+$('#themeBtn').addEventListener('click',()=>setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark'));
+addEventListener('scroll',()=>{const h=document.documentElement,m=h.scrollHeight-h.clientHeight;$('#readbar').style.width=(m>0?h.scrollTop/m*100:0)+'%';$('#toTop').classList.toggle('show',h.scrollTop>700);},{passive:true});
+$('#toTop').addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+const sn=$('#sidenav');$('#menuBtn').addEventListener('click',()=>{sn.classList.toggle('open');$('#scrim').classList.toggle('show',sn.classList.contains('open'));});
+$('#scrim').addEventListener('click',()=>{sn.classList.remove('open');$('#scrim').classList.remove('show');});
+/* data stores (filled below) */
+const FACETS=[
+{id:'completion',cat:'Project setup',kind:'Productivity',status:'official',node:true,java:true,cf:false,kyma:false,prod:false,what:'Installs shell tab-completion for all cds commands (bash/zsh/fish/PowerShell).',why:'Saves typing and discovers subcommands and options interactively.',when:'Day one on every developer laptop; never deployed.',files:'shell rc files (~/.bashrc, ~/.zshrc, …)',config:'',mistakes:['Forgetting to restart the shell, then thinking it is broken.','Installing globally but expecting it per-project.','Removing the package without running cds completion --remove.'],checklist:['Run cds completion --remove before uninstalling the DK.','Document the shell setup in onboarding docs.']},
+{id:'sample',cat:'Project setup',kind:'Project generator',status:'official',node:true,java:true,cf:false,kyma:false,prod:false,what:'Scaffolds the full bookshop sample (model, services, handlers, Fiori UI).',why:'The canonical learning and reference baseline — matches the CAPire getting-started guide.',when:'Learning, PoCs, and UI pattern reference; strip it before production.',files:'db/, srv/, app/, package.json',config:'',mistakes:['Shipping sample data/entities to production.','Keeping sample auth config instead of real XSUAA.','Treating generated handlers as architecture.'],checklist:['Delete or replace sample model before go-live.','Replace mock users with xsuaa/ias.']},
+{id:'tiny-sample',cat:'Project setup',kind:'Project generator',status:'official',node:true,java:true,cf:false,kyma:false,prod:false,what:'Scaffolds a minimal CAP app with no UI.',why:'Smallest possible backend to verify toolchain and start clean.',when:'New microservices and API-only backends.',files:'db/, srv/, package.json',config:'',mistakes:['Adding UI later by hand instead of using Fiori tooling.','Forgetting cds add data for smoke tests.'],checklist:['Add lint + tests early.','Decide Node.js vs Java before adding facets.']},
+{id:'mta',cat:'Deployment',kind:'Deployment',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'—',what:'Generates the MTA deployment descriptor wiring modules, resources and service bindings.',why:'The deployable contract for Cloud Foundry: one mtar for app + services.',when:'As soon as you target any BTP CF runtime.',files:'mta.yaml, .mtaignore',config:'',mistakes:['Hand-editing generated service names so bindings break.','Forgetting path: parameters for approuter content.','Committing secrets into mta.yaml.'],checklist:['Keep mta.yaml generated-then-reviewed in git.','Parameterize passwords via deploy variables.','Validate with mbt build locally.']},
+{id:'cf-manifest',cat:'Deployment',kind:'Deployment',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'—',what:'Generates a plain Cloud Foundry manifest.yml as an alternative to MTA.',why:'Simpler push-based deploys for small apps and demos.',when:'Demos and single-app deploys; MTA wins for multi-module systems.',files:'manifest.yml',config:'',mistakes:['Mixing manifest and MTA deploys for the same app.','Missing service bindings that MTA would wire.'],checklist:['Use one deploy mechanism per landscape.','Record cf push commands in the pipeline.']},
+{id:'helm',cat:'Deployment',kind:'Deployment',status:'official',node:true,java:true,cf:false,kyma:true,prod:true,svc:'—',what:'Generates a Helm chart (values.yaml, values.schema.json, templates) for Kubernetes.',why:'Package, version and install the app on any K8s/Kyma cluster.',when:'Kyma or Gardener deployments; required input for the CAP Operator plugin.',files:'chart/, values.yaml, values.schema.json',config:'',mistakes:['Editing templates instead of values, losing upgradeability.','Hardcoding secrets instead of secret refs.'],checklist:['Lint the chart (helm lint) in CI.','Externalize all environment-specific values.']},
+{id:'containerize',cat:'Deployment',kind:'Deployment',status:'official',node:true,java:true,cf:false,kyma:true,prod:true,svc:'—',what:'Adds Docker packaging (Dockerfile, .dockerignore) for the CAP app.',why:'Run anywhere containers run; basis for Kyma and hybrid landscapes.',when:'Any container target; pair with helm/kyma facets.',files:'Dockerfile, .dockerignore',config:'',mistakes:['Baking node_modules into the image.','Running as root in the container.'],checklist:['Multi-stage build, non-root user.','Pin base image digests.']},
+{id:'kyma',cat:'Deployment',kind:'Deployment',status:'official',node:true,java:true,cf:false,kyma:true,prod:true,svc:'—',what:'Adds Kyma/Kubernetes deployment resources and API Rule wiring.',why:'Expose and secure services on Kyma with certificates and gateways.',when:'Deploying to SAP BTP Kyma runtime.',files:'kyma resources, API Rules',config:'',mistakes:['Forgetting the workload identity for service bindings.','HTTP-only rules in production.'],checklist:['TLS everywhere via API Rules.','Wire service bindings via ServiceInstance refs.']},
+{id:'hana',cat:'Database',kind:'Database',status:'official',node:true,java:true,cf:true,kyma:true,prod:true,svc:'hana / hana-cloud',what:'Binds SAP HANA Cloud as the persistence service (HDI containers).',why:'The production database for CAP on BTP: HDI isolation, calculation views, native SQL.',when:'Production on BTP; keep SQLite/H2 for local dev.',files:'package.json (@cap-js/hana), mta.yaml (hdb resource), default-env.json',config:'{"cds":{"requires":{"db":{"kind":"hana"}}}}',mistakes:['Developing only on SQLite and meeting HANA-only SQL errors at deploy.','Forgetting hdbtabledata/deploy-format for CSV seeds.','One HDI container per developer without_.hdiconfig discipline.'],checklist:['Run cds deploy --to hana in CI.','Test native artifacts (views, procedures) on a real container.','Size the HANA Cloud instance for data + build memory.']},
+{id:'postgres',cat:'Database',kind:'Database',status:'official',node:'cf',java:'cf',cf:true,kyma:false,prod:true,svc:'postgresql (CF marketplace)',what:'Binds PostgreSQL via @cap-js/postgres (CF marketplace service).',why:'Open-source relational option on CF with full CAP query support.',when:'CF apps that prefer Postgres; local Postgres via Docker.',files:'package.json (@cap-js/postgres), mta.yaml',config:'{"cds":{"requires":{"db":{"kind":"postgres"}}}}',mistakes:['Assuming Kyma support — facet wiring is CF-only.','Missing pgcrypto/pg extensions needed by CAP.'],checklist:['Provision HA Postgres for production.','Verify extensions in the service plan.']},
+{id:'sqlite',cat:'Database',kind:'Database',status:'official',node:true,java:true,cf:false,kyma:false,prod:false,what:'In-memory/file SQLite for zero-setup local development.',why:'Fastest inner loop: no containers, instant cds watch.',when:'Local dev and unit tests only — never production.',files:'package.json (@cap-js/sqlite), in-memory default',config:'{"cds":{"requires":{"db":{"kind":"sqlite","credentials":{"database":":memory:"}}}}}',mistakes:['Shipping :memory: semantics (no persistence) to prod.','Using SQLite-only SQL functions.'],checklist:['Gate production kind behind a profile.','Mirror critical queries against the prod DB in CI.']},
+{id:'h2',cat:'Database',kind:'Database',status:'official',node:false,java:true,cf:false,kyma:false,prod:false,what:'Java-only in-memory database for local runs and tests.',why:'The Java equivalent of SQLite for fast local development.',when:'CAP Java local development and tests.',files:'pom.xml (H2), application.yaml',config:'',mistakes:['Expecting it from Node.js (n/a).','Relying on H2 SQL dialect in prod code.'],checklist:['Keep H2 test-scoped.','Run integration tests against the real DB type.']},
+{id:'liquibase',cat:'Database',kind:'Database',status:'official',node:false,java:true,cf:true,kyma:false,prod:true,svc:'hana',what:'Versioned schema migrations for CAP Java via Liquibase changelogs.',why:'Controlled, reviewable DB evolution instead ofish deploy-everything.',when:'Java + HANA landscapes needing audited migrations.',files:'db/changelog/, pom.xml',config:'',mistakes:['Mixing cds deploy and Liquibase on the same schema.','Non-repeatable changesets edited after deploy.'],checklist:['One changelog per release, code-reviewed.','Test upgrade + rollback paths.']},
+{id:'xsuaa',cat:'Security',kind:'Security',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'xsuaa',what:'OAuth2/JWT authentication and scope-based authorization via XSUAA.',why:'Enterprise login, scopes, role templates and collections on CF.',when:'Every production CF app with users.',files:'xs-security.json, mta.yaml (xsuaa resource), approuter routes',config:'{"cds":{"requires":{"auth":{"kind":"xsuaa"}}}}',mistakes:['Trusting client-sent tenant/user claims.','Forgetting $XSAPPNAME prefix in scopes.','Testing only with mock users.'],checklist:['Mirror scopes 1:1 in xs-security.json and code.','Assign role collections in the cockpit.','Test JWT (not mock) before release.']},
+{id:'ias',cat:'Security',kind:'Security',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'identity (IAS)',what:'Federates human login through SAP Identity Authentication Service.',why:'Corporate IdP, MFA and conditional access for business users.',when:'Workforce apps needing company login instead of plain XSUAA users.',files:'mta.yaml (identity resource), approuter config',config:'',mistakes:['Confusing IAS (who logs in) with XSUAA scopes (what they may do).','Missing IAS→XSUAA trust for token exchange.'],checklist:['Configure IAS trust + corporate IdP federation.','Map IAS groups to XSUAA role collections.']},
+{id:'ams',cat:'Security',kind:'Security',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'authorization management (AMS)',what:'Centralized, policy-based authorization decisions at runtime.',why:'Decouple fine-grained access rules from code and @restrict annotations.',when:'Complex, auditable authorization landscapes.',files:'AMS policies, mta.yaml binding',config:'',mistakes:['Duplicating AMS rules in @restrict and drifting.','No fallback when AMS is unreachable.'],checklist:['Define deny-by-default policies.','Cache decisions with short TTL + audit.']},
+{id:'multitenancy',cat:'SaaS',kind:'Multitenancy',status:'official',node:true,java:true,cf:true,kyma:true,prod:true,svc:'saas-registry, destination',what:'Turns the app into a SaaS provider: subscribe/onboard tenants with isolated data.',why:'Sell one deployment to many customers with tenant isolation.',when:'Any multi-customer SaaS on BTP.',files:'mta.yaml (saas-registry, mtx sidecar), tenant-aware services',config:'{"cds":{"requires":{"multitenancy":true}}}',mistakes:['Reading tenant from client input instead of JWT/service.','Forgetting tenant onboarding/offboarding hooks.','Marking legacy MTX APIs as current.'],checklist:['Isolate persistence per tenant.','Test subscribe → use → unsubscribe end-to-end.','Automate tenant upgrades.']},
+{id:'toggles',cat:'SaaS',kind:'Feature management',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'feature-flags (optional)',what:'Feature toggles for conditional functionality and staged rollouts.',why:'Ship dark, enable per tenant/environment without redeploy.',when:'Rollouts, A/B behavior, kill-switches.',files:'package.json (@cap-js/feature-flags or config), toggles config',config:'{"cds":{"features":{"newCheckout":true}}}',mistakes:['Toggle sprawl with no expiry dates.','Client-side-only gating of paid features.'],checklist:['Name owners + expiry per toggle.','Enforce toggles server-side.']},
+{id:'extensibility',cat:'SaaS',kind:'Extensibility',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'—',what:'Design-time + runtime model/service extension points for SaaS customers.',why:'Let subscribers add fields/logic without forking your app.',when:'SaaS products with customer-specific needs.',files:'extension allowlists, cds push/pull setup',config:'',mistakes:['Allowing unrestricted extensions that break upgrades.','No validation of extension models.'],checklist:['Allowlist extendable entities.','Test upgrades with extensions applied.']},
+{id:'local-messaging',cat:'Messaging',kind:'Messaging',status:'official',node:true,java:'plan',cf:false,kyma:false,prod:false,what:'In-process pub/sub: emit and handle CAP events with no broker.',why:'Develop event handlers locally with zero infrastructure.',when:'Local dev and unit tests of event logic.',files:'package.json messaging presets',config:'{"cds":{"requires":{"messaging":{"kind":"local"}}}}',mistakes:['Assuming delivery guarantees that only a broker gives.','Testing ordering that production brokers do not keep.'],checklist:['Re-test against the real broker before release.']},
+{id:'file-based-messaging',cat:'Messaging',kind:'Messaging',status:'official',node:true,java:'plan',cf:false,kyma:false,prod:false,what:'Persists events to files so producers/consumers can be developed offline.',why:'Replayable local event streams without a broker.',when:'Local dev of event-driven flows.',files:'./.cds-outbox or data dirs',config:'{"cds":{"requires":{"messaging":{"kind":"file"}}}}',mistakes:['Committing giant event files to git.','Confusing files with durable production queues.'],checklist:['Gitignore event dumps.','Switch kind per profile.']},
+{id:'enterprise-messaging',cat:'Messaging',kind:'Messaging',status:'official',node:true,java:'plan',cf:true,kyma:false,prod:true,svc:'enterprise-messaging',what:'Binds SAP Enterprise Messaging (AMQP/MQTT via Message Client) on CF.',why:'Managed queues, topics, CloudEvents and at-least-once delivery.',when:'Production eventing on Cloud Foundry.',files:'mta.yaml (em resource), messaging config',config:'{"cds":{"requires":{"messaging":{"kind":"enterprise-messaging"}}}}',mistakes:['No idempotent consumers → duplicate side effects.','Missing dead-letter handling.'],checklist:['Idempotent handlers + dead-letter queues.','Monitor queue depth and retries.']},
+{id:'enterprise-messaging-shared',cat:'Messaging',kind:'Messaging',status:'official',node:true,java:'plan',cf:true,kyma:false,prod:true,svc:'enterprise-messaging (shared)',what:'Variant that shares one Enterprise Messaging instance across apps.',why:'Lower cost when many small services need topics.',when:'Multi-app landscapes sharing a namespace.',files:'mta.yaml (shared instance)',config:'',mistakes:['Topic name collisions between apps.','Unclear ownership of shared queues.'],checklist:['Namespace topics per app.','Document shared-instance quota.']},
+{id:'redis-messaging',cat:'Messaging',kind:'Messaging',status:'official',node:'cf',java:'plan',cf:true,kyma:false,prod:true,svc:'redis (CF marketplace)',what:'Redis-backed messaging/pub-sub wiring (CF only).',why:'Low-latency fan-out where Redis is already present.',when:'CF apps needing lightweight pub/sub; verify current support status.',files:'mta.yaml (redis)',config:'',mistakes:['Treating Redis streams as durable enterprise queues.','Assuming Kyma support.'],checklist:['Confirm support status in your cds-dk version.','Set eviction + persistence policy.']},
+{id:'kafka',cat:'Messaging',kind:'Messaging',status:'official',node:true,java:true,cf:true,kyma:true,prod:true,svc:'kafka (provider-managed)',what:'Kafka topics as CAP messaging transport, local and production.',why:'High-throughput partitioned streams and replay.',when:'Event streaming at scale, on CF or Kyma.',files:'messaging config, topic bindings',config:'{"cds":{"requires":{"messaging":{"kind":"kafka"}}}}',mistakes:['Wrong serializer for CloudEvents envelopes.','No consumer-group strategy per landscape.'],checklist:['Schema/serialization contract per topic.','Tune partitions, retention, consumer groups.']},
+{id:'event-mesh',cat:'Messaging',kind:'Messaging',status:'unverified',node:'plan',java:'plan',cf:false,kyma:false,prod:false,what:'Not in the current CAPire built-in facet table — event use cases are served by enterprise-messaging / Advanced Event Mesh plugin.',why:'Avoids teaching a facet name your cds-dk may not know.',when:'Use enterprise-messaging facet + @cap-js/advanced-event-mesh instead.',files:'—',config:'',mistakes:['Running cds add event-mesh on a version that lacks it.'],checklist:['Run cds add --help to confirm names in your version.']},
+{id:'approuter',cat:'Integration',kind:'Integration',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'— (approuter module)',what:'Adds the Application Router: auth, routing, destinations for UIs.',why:'Single front door: login, JWT forwarding, HTML5 serving.',when:'Every Fiori/UI5 app on CF.',files:'approuter/, xs-app.json, mta.yaml',config:'',mistakes:['Public routes accidentally left authenticationType none.','Missing CSRF protection on state-changing routes.'],checklist:['Default-deny route table.','Forward auth tokens, never invent them.']},
+{id:'connectivity',cat:'Integration',kind:'Integration',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'connectivity',what:'Adds the Connectivity service + Cloud Connector proxy to on-premise.',why:'Reach S/4HANA and other on-prem systems through the tunnel.',when:'Hybrid landscapes with on-prem backends.',files:'mta.yaml (connectivity)',config:'{"cds":{"requires":{"connectivity":{}}}}',mistakes:['Forgetting Cloud Connector location IDs.','Testing only on-prem-reachable networks.'],checklist:['Open only required subaccounts/locations.','Monitor tunnel health.']},
+{id:'destination',cat:'Integration',kind:'Integration',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'destination',what:'Adds the Destination service for URLs, OAuth2, principal propagation.',why:'External calls without hardcoded secrets or tokens.',when:'Any outbound HTTP to S/4, REST, or SaaS APIs.',files:'mta.yaml (destination)',config:'{"cds":{"requires":{"destinations":{}}}}',mistakes:['Storing URLs in code instead of destinations.','Using technical users where propagation is required.'],checklist:['One destination per backend + landscape.','Rotate OAuth credentials.']},
+{id:'html5-repo',cat:'Integration',kind:'Integration',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'html5-apps-repo',what:'Hosts built UIs in the HTML5 Application Repository (app-host).',why:'Versioned Fiori apps served through the approuter.',when:'Fiori/UIs deployed with the MTA.',files:'mta.yaml (html5-apps-repo, deployer)',config:'',mistakes:['Deploying UI without the deployer step.','Cache-busting filenames breaking references.'],checklist:['Build UI in the MTA build.','Verify app-host content after deploy.']},
+{id:'portal',cat:'Integration',kind:'Integration',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'portal',what:'Exposes apps in SAP Build Work Zone / portal launchpad.',why:'Tiles, catalogs and groups for business users.',when:'Launchpad-distributed Fiori apps.',files:'CommonDataModel.json, mta.yaml',config:'',mistakes:['Using old launchpad terminology in new Work Zone configs.','Missing destination for content federation.'],checklist:['Verify tile → app → data chain per space.']},
+{id:'application-logging',cat:'Observability',kind:'BTP service',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'application-logs',what:'Binds SAP Cloud Logging for runtime stdout/log drains.',why:'Searchable, retained logs instead of ephemeral container output.',when:'Production on CF.',files:'mta.yaml (application-logs)',config:'{"cds":{"requires":{"logging":{}}}}',mistakes:['Logging PII/secrets.','No correlation IDs across services.'],checklist:['Structured JSON logs + request IDs.','Retention + alert rules.']},
+{id:'audit-logging',cat:'Observability',kind:'Security',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'auditlog',what:'Project wiring for the Audit Log service; runtime behavior comes from @cap-js/audit-logging.',why:'Tamper-evident business/security audit trail.',when:'Any app handling personal or financial data.',files:'mta.yaml (auditlog)',config:'{"cds":{"requires":{"audit-log":true}}}',mistakes:['Confusing it with application-logging.','Annotating nothing, so nothing is logged.'],checklist:['Annotate @PersonalData coverage.','Verify logs in the Audit Log viewer.']},
+{id:'notifications',cat:'Services',kind:'BTP service',status:'official',node:true,java:'plan',cf:true,kyma:false,prod:true,svc:'notification service',what:'Sends business notifications to Build Work Zone inboxes.',why:'Alert users where they work, with templates + i18n.',when:'Approval and incident workflows.',files:'mta.yaml, notification templates',config:'{"cds":{"requires":{"notifications":{}}}}',mistakes:['No lifecycle management of templates.','Spamming without throttling.'],checklist:['Template versioning + i18n.','Rate-limit notification storms.']},
+{id:'attachments',cat:'Services',kind:'BTP service',status:'official',node:true,java:true,cf:true,kyma:true,prod:true,svc:'object-store / HANA',what:'Project wiring for file attachments (metadata + binary, object store).',why:'Upload/download with malware scan and Fiori UI facets.',when:'Documents on business entities.',files:'db/ aspect usage, mta.yaml',config:'',mistakes:['Storing binaries in HANA at scale.','Skipping virus-scan wiring.'],checklist:['Object Store for binaries.','Size + MIME limits enforced.']},
+{id:'data',cat:'Developer productivity',kind:'Productivity',status:'official',node:true,java:true,cf:false,kyma:false,prod:false,what:'Generates CSV/JSON seed files (headers or sample records, filterable).',why:'Instant realistic test data for every entity.',when:'Dev/test bootstrapping.',files:'db/data/*.csv|json',config:'',mistakes:['Committing huge generated files.','Forgetting --filter and generating everything.'],checklist:['Keep seeds small and meaningful.','Separate demo vs test datasets.']},
+{id:'http',cat:'Developer productivity',kind:'Productivity',status:'official',node:true,java:true,cf:false,kyma:false,prod:false,what:'Generates .http request files for services/entities, incl. mock auth.',why:'Click-to-run API tests from VS Code, debuggable and shareable.',when:'API development and demos.',files:'http/*.http',config:'',mistakes:['Pointing files at production hosts.','Leaking real tokens in committed files.'],checklist:['Keep mock-user files local-only.','Use --for-app for remote JWT flows.']},
+{id:'lint',cat:'Developer productivity',kind:'Productivity',status:'official',node:true,java:true,cf:false,kyma:false,prod:false,what:'Adds CDS linting configuration and rules.',why:'Consistent models and early error detection.',when:'From the first commit; enforce in CI.',files:'eslint config / cds lint setup',config:'',mistakes:['Linting without CI enforcement.'],checklist:['Fail builds on lint errors.']},
+{id:'pipeline',cat:'Deployment',kind:'Deployment',status:'official',node:true,java:true,cf:true,kyma:false,prod:true,svc:'— (CI service)',what:'Generates CI/CD pipeline descriptors (e.g. GitHub Actions) for build/test/deploy.',why:'Repeatable path to production with quality gates.',when:'As soon as code is shared.',files:'.github/workflows or Jenkinsfile',config:'',mistakes:['Secrets in pipeline YAML.','Deploying without test gates.'],checklist:['Secret management via vault.','Build → test → security → deploy stages.']},
+{id:'esm',cat:'Developer productivity',kind:'Project setup',status:'official',node:true,java:false,cf:false,kyma:false,prod:true,what:'Switches the Node.js project to ECMAScript modules (import/export).',why:'Modern module syntax and tree-shaking.',when:'New Node.js projects; check dependency ESM readiness.',files:'package.json (type: module)',config:'',mistakes:['Mixing require/import without interop care.','Old CJS-only deps breaking the build.'],checklist:['Audit deps for ESM support.']},
+{id:'typer',cat:'Developer productivity',kind:'Productivity',status:'official',node:true,java:false,cf:false,kyma:false,prod:false,what:'Generates typed TS representations of CDS models (@cap-js/cds-typer, #cds-models).',why:'Intellisense and compile-time safety for entities and services.',when:'TypeScript or typed-JS development.',files:'jsconfig/tsconfig, @cds-models/, .gitignore',config:'',mistakes:['Forgetting npm i after adding (devDependency not auto-installed).','Committing generated @cds-models.'],checklist:['Regenerate types in CI.','Map #cds-models subpath imports.']},
+{id:'typescript',cat:'Developer productivity',kind:'Productivity',status:'official',node:true,java:false,cf:false,kyma:false,prod:true,what:'TypeScript project setup for CAP Node.js handlers.',why:'Types across the full handler stack.',when:'Teams standardizing on TS.',files:'tsconfig.json, src layout',config:'',mistakes:['Any-typed handlers losing the benefit.'],checklist:['Strict mode on.']},
+{id:'handler',cat:'Developer productivity',kind:'Productivity',status:'official',node:true,java:true,cf:false,kyma:false,prod:false,what:'Generates action/function (and Node entity) handler stubs, filterable.',why:'Correct signatures without hand-writing boilerplate.',when:'After modeling actions/functions.',files:'srv/*-handler stubs',config:'',mistakes:['Generating for entities you never customize (noise).'],checklist:['Delete unused stubs.']},
+{id:'data-inspector',cat:'Observability',kind:'BTP service',status:'official',node:true,java:false,cf:true,kyma:false,prod:true,svc:'xsuaa (+auditlog optional)',what:'Secure, audited inspection of service data via a UI5 app (CAP-service level, never raw SQL).',why:'Support and troubleshooting with auth respected.',when:'Dev and (scoped) production support.',files:'xs-security.json scope capDataInspectorReadonly, mta.yaml module',config:'',mistakes:['Granting the scope too broadly.','Expecting direct SQL access.'],checklist:['Least-privilege role collections.','Pair with audit-logging.']},
+{id:'cap-operator',cat:'Deployment',kind:'Operator / K8s',status:'official',node:true,java:false,cf:false,kyma:true,prod:true,svc:'— (K8s)',what:'Generates the Helm chart custom resources for the CAP Operator (values.yaml, values.schema.json).',why:'Automated lifecycle of multitenant CAP apps on Kubernetes.',when:'Kyma/Gardener with CAP Operator installed.',files:'chart/, values.yaml, values.schema.json',config:'',mistakes:['Using deprecated globalAccountId instead of providerSubaccountId.','Hand-writing CRs instead of generating.'],checklist:['Pin providerSubaccountId.','Keep chart generated-then-reviewed.']},
+{id:'test',cat:'Developer productivity',kind:'Productivity',status:'unverified',node:'plan',java:'plan',cf:false,kyma:false,prod:false,what:'Not in the current CAPire built-in facet table — testing is done via @cap-js/cds-test / Java test tooling.',why:'Listed for completeness; do not script against this name.',when:'Use cds-test libraries instead.',files:'—',config:'',mistakes:['Assuming cds add test exists in your version.'],checklist:['Run cds add --help to confirm names.']},
+{id:'cjs',cat:'Developer productivity',kind:'Project setup',status:'unverified',node:'plan',java:false,cf:false,kyma:false,prod:false,what:'Not in the current built-in table — CommonJS is the Node.js default unless esm is added.',why:'Included only because it appears in older lists.',when:'Default; add esm to switch.',files:'—',config:'',mistakes:['Adding a facet that does not exist.'],checklist:['Confirm with cds add --help.']},
+{id:'extension',cat:'SaaS',kind:'Extensibility',status:'unverified',node:'plan',java:'plan',cf:false,kyma:false,prod:false,what:'Not in the current built-in table — extension projects use cds pull/push and the extensibility facet.',why:'Avoids teaching a wrong command.',when:'Use cds add extensibility + cds pull.',files:'—',config:'',mistakes:['Running cds add extension on current cds-dk.'],checklist:['Confirm with cds add --help.']},
+{id:'react',cat:'Integration',kind:'Integration',status:'unverified',node:'plan',java:'plan',cf:false,kyma:false,prod:false,what:'Not a built-in facet — React UIs are scaffolded via Fiori tools/app wizards.',why:'Included only because it appears in older lists.',when:'Use UI generators, then html5-repo + approuter.',files:'—',config:'',mistakes:['Expecting React wiring from cds add.'],checklist:['Confirm with cds add --help.']},
+{id:'vue',cat:'Integration',kind:'Integration',status:'unverified',node:'plan',java:'plan',cf:false,kyma:false,prod:false,what:'Not a built-in facet — same as react: UI tooling, not cds add.',why:'Completeness only.',when:'Use UI generators, then html5-repo + approuter.',files:'—',config:'',mistakes:['Expecting Vue wiring from cds add.'],checklist:['Confirm with cds add --help.']},
+{id:'event-mesh-shared',cat:'Messaging',kind:'Messaging',status:'unverified',node:'plan',java:'plan',cf:false,kyma:false,prod:false,what:'Not in the current built-in table — sharing is covered by enterprise-messaging-shared.',why:'Completeness only.',when:'Use enterprise-messaging-shared.',files:'—',config:'',mistakes:['Scripting a facet name that may not exist.'],checklist:['Confirm with cds add --help.']},
+{id:'nodejs',cat:'Project setup',kind:'Project generator',status:'unverified',node:true,java:false,cf:false,kyma:false,prod:false,what:'Runtime selection for Node.js — officially a cds init flag (cds init --nodejs), not a documented cds add facet.',why:'Included because it appears in facet lists; the runtime choice shapes every later facet.',when:'Project creation via cds init --nodejs.',files:'package.json (@sap/cds)',config:'',mistakes:['Running cds add nodejs on a cds-dk that lacks it.'],checklist:['Confirm with cds add --help; otherwise choose at init.']},
+{id:'java',cat:'Project setup',kind:'Project generator',status:'unverified',node:false,java:true,cf:false,kyma:false,prod:false,what:'Runtime selection for Java — officially a cds init flag (cds init --java), not a documented cds add facet.',why:'Same as nodejs: listed for completeness, verified as init-time choice.',when:'Project creation via cds init --java.',files:'pom.xml (cds Maven)',config:'',mistakes:['Running cds add java on a cds-dk that lacks it.'],checklist:['Confirm with cds add --help; otherwise choose at init.']},
+];
+const PLUGINS=[
+{id:'audit-logging',name:'Audit Logging',pkg:'@cap-js/audit-logging',cat:'Security / Observability',status:'official',node:true,java:true,cf:true,kyma:false,svc:'auditlog',what:'Annotation-driven personal-data audit logging: console locally, SAP Audit Log service in production, via transactional outbox.',install:'npm add @cap-js/audit-logging  (+ Java: cds-feature-auditlog-v2)'},
+{id:'attachments',name:'Attachments',pkg:'@cap-js/attachments',cat:'Services',status:'official',node:true,java:true,cf:true,kyma:true,svc:'object-store / HANA',what:'Attachments aspect with upload/download, malware scan, Fiori facets; backends from HANA to Object Store.',install:'npm add @cap-js/attachments  (+ cds add attachments)'},
+{id:'sdm',name:'SAP Document Management',pkg:'@cap-js/sdm',cat:'Services',status:'official',node:true,java:true,cf:true,kyma:false,svc:'document-management',what:'Attachments stored in SAP Document Management repositories incl. auto onboarding/offboarding per tenant.',install:'npm add @cap-js/sdm'},
+{id:'notifications',name:'Notifications',pkg:'@cap-js/notifications',cat:'Services',status:'official',node:true,java:'plan',cf:true,kyma:false,svc:'notifications',what:'Business notifications to Build Work Zone: CAP-service API, templates + i18n, outbox delivery.',install:'npm add @cap-js/notifications  (+ cds add notifications)'},
+{id:'data-inspector',name:'Data Inspector',pkg:'@cap-js/data-inspector',cat:'Observability',status:'official',node:true,java:false,cf:true,kyma:false,svc:'xsuaa',what:'Read-only UI5 data inspection at CAP-service level with scope control and audit integration.',install:'cds add data-inspector'},
+{id:'data-privacy',name:'Data Privacy (DPI)',pkg:'@cap-js/data-privacy',cat:'Security',status:'experimental',node:true,java:false,cf:true,kyma:false,svc:'data-privacy-integration',what:'Beta: exposes /dpp/information + /dpp/retention from @PersonalData/@ILM annotations for SAP DPI.',install:'npm add @cap-js/data-privacy'},
+{id:'change-tracking',name:'Change Tracking',pkg:'@cap-js/change-tracking',cat:'Services',status:'official',node:true,java:true,cf:true,kyma:false,svc:'—',what:'@changelog annotations capture, store and display entity change history in Fiori.',install:'npm add @cap-js/change-tracking'},
+{id:'telemetry',name:'Telemetry',pkg:'@cap-js/telemetry',cat:'Observability',status:'official',node:true,java:true,cf:true,kyma:false,svc:'cloud-logging / Dynatrace',what:'OpenTelemetry tracing + metrics with auto-instrumentation; export to Cloud Logging, Dynatrace, Jaeger.',install:'npm add @cap-js/telemetry'},
+{id:'ord',name:'ORD (Open Resource Discovery)',pkg:'@cap-js/ord',cat:'Integration',status:'official',node:true,java:true,cf:true,kyma:false,svc:'—',what:'Generates ORD documents so landscapes can discover your APIs and metadata.',install:'npm add @cap-js/ord'},
+{id:'ai',name:'AI',pkg:'@cap-js/ai',cat:'AI',status:'official',node:true,java:'plan',cf:true,kyma:false,svc:'AI Core (aicore)',what:'RPT-1 value-help recommendations in Fiori + AICore CAP service (resource groups, deployments, predictRowColumns). Java in alpha.',install:'npm add @cap-js/ai'},
+{id:'aem',name:'Advanced Event Mesh',pkg:'@cap-js/advanced-event-mesh',cat:'Messaging',status:'official',node:true,java:true,cf:true,kyma:true,svc:'advanced-event-mesh',what:'Bridge non-SAP systems into event-driven CAP via SAP Integration Suite Advanced Event Mesh.',install:'npm add @cap-js/advanced-event-mesh'},
+{id:'event-hub',name:'Cloud Application Event Hub',pkg:'@cap-js/event-broker',cat:'Messaging',status:'official',node:true,java:true,cf:true,kyma:false,svc:'event-hub',what:'Consume S/4HANA Cloud events (e.g. BusinessPartner.Changed) in standalone CAP apps.',install:'npm add @cap-js/event-broker'},
+{id:'abap-rfc',name:'ABAP RFC',pkg:'@sap/cds-rfc',cat:'Integration',status:'official',node:true,java:false,cf:true,kyma:false,svc:'connectivity (Cloud Connector)',what:'Import RFC-enabled function module APIs from ABAP systems and call them from handlers.',install:'npm add @sap/cds-rfc'},
+{id:'cap-operator',name:'CAP Operator plugin',pkg:'@cap-js/cap-operator-plugin',cat:'Deployment',status:'official',node:true,java:false,cf:false,kyma:true,svc:'— (K8s)',what:'Dev-dependency generating the Helm custom resources the CAP Operator needs (values.yaml/schema).',install:'npm add @cap-js/cap-operator-plugin -D  +  cds add cap-operator'},
+{id:'mcp',name:'MCP',pkg:'@cap-js/mcp',cat:'AI',status:'official',node:true,java:false,cf:true,kyma:true,svc:'—',what:'Exposes CAP operations as MCP tools/resources over Streamable HTTP for AI agents.',install:'npm add @cap-js/mcp'},
+{id:'agents',name:'Agents (A2A)',pkg:'@cap-js/agents',cat:'AI',status:'experimental',node:true,java:false,cf:true,kyma:true,svc:'—',what:'Agent-annotated services with specialist + orchestrator patterns (alpha API).',install:'npm add @cap-js/agents'},
+{id:'graphql',name:'GraphQL Adapter',pkg:'@cap-js/graphql',cat:'Integration',status:'official',node:true,java:false,cf:true,kyma:true,svc:'—',what:'@graphql services get an auto-generated GraphQL schema + endpoint.',install:'npm add @cap-js/graphql'},
+{id:'odata-v2',name:'OData V2 Adapter',pkg:'@cap-js-community/odata-v2-adapter',cat:'Integration',status:'community',node:true,java:true,cf:true,kyma:true,svc:'—',what:'Protocol adapter V2→V4 for legacy UIs (tree tables). Deprecated protocol — use only if needed.',install:'npm add @cap-js-community/odata-v2-adapter'},
+{id:'websocket',name:'WebSocket',pkg:'@cap-js-community/websocket',cat:'Messaging',status:'community',node:true,java:false,cf:true,kyma:true,svc:'—',what:'@protocol websocket services over WebSocket/Socket.IO for push scenarios.',install:'npm add @cap-js-community/websocket'},
+{id:'ui5-server',name:'UI5 Dev Server',pkg:'cds-plugin-ui5',cat:'Developer productivity',status:'community',node:true,java:false,cf:false,kyma:false,svc:'—',what:'Serves UI5 tooling projects (incl. TS transpile) inside cds serve.',install:'npm add cds-plugin-ui5 -D'},
+];
+const ERRORS=[
+{s:'cds add: "Unknown facet"',c:'Typo, or the facet does not exist in your cds-dk version.',d:'Run cds add --help and compare with the catalog table above.',f:'Use the exact facet name; upgrade @sap/cds-dk for newer facets.',p:'Pin cds-dk version in onboarding docs.'},
+{s:'npm 404 for @cap-js/* package',c:'Typo in package name or private registry without npmjs proxy.',d:'npm view &lt;pkg&gt; versions; check .npmrc registry.',f:'Fix the name; allow the public registry for SAP scopes.',p:'Use lockfiles and a registry proxy that mirrors npmjs.'},
+{s:'Service binding missing (VCAP_SERVICES empty)',c:'Service instance not created or not bound to the app.',d:'cf services / cf env; check mta.yaml resources + requires.',f:'Create + bind the instance, restage; cds bind locally.',p:'Generate bindings from mta.yaml; never hand-wire in prod.'},
+{s:'401 Unauthorized on OData',c:'Missing/expired JWT, wrong XSUAA tenant, or mock user in prod profile.',d:'Decode the JWT (xsuaa subdomain, exp, scopes); check Authorization header.',f:'Re-login; fix approuter route auth; use grant type correctly.',p:'Test with real JWTs before release, not only mocks.'},
+{s:'403 Forbidden (scope/role missing)',c:'User lacks the scope; role collection not assigned.',d:'Compare token scopes vs xs-security.json scopes vs @restrict.',f:'Assign role collection; add scope to role template.',p:'Mirror scopes 1:1 between code and xs-security.json.'},
+{s:'HDI deployment failure (cds deploy --to hana)',c:'Container exists with incompatible schema, missing entitlements, or failed .hdb objects.',d:'Check deploy logs; verify hdi-container + hana entitlement quota.',f:'Clean container or fix failing artifacts; add quota.',p:'Deploy from CI on every merge to catch breaks early.'},
+{s:'Database connection failure at runtime',c:'Wrong kind/profile, missing binding, or network egress blocked.',d:'cds env requires.db; check DATABASE_URL/VCAP + logs.',f:'Correct profile wiring; bind the service; open egress.',p:'Readiness probe that runs SELECT 1.'},
+{s:'No messages delivered (enterprise-messaging)',c:'Wrong topic/queue, missing subscription, or unhandled CloudEvents envelope.',d:'Check EM dashboard queue depth; log raw incoming messages.',f:'Fix topic config; confirm subscription; parse CloudEvents.',p:'Dead-letter queue + depth alerts.'},
+{s:'Kafka consumer stuck / rebalancing',c:'Slow processing, wrong group.id per landscape, or deserialization errors.',d:'Consumer lag metrics; check serializer + group config.',f:'Scale partitions; fix deserializer; isolate landscapes by group.',p:'Lag/DLQ dashboards per topic.'},
+{s:'XSUAA misconfiguration (invalid xs-security.json)',c:'Scope name without $XSAPPNAME, bad role-template JSON.',d:'Validate JSON; compare with a generated reference file.',f:'Regenerate via cds add xsuaa, then re-apply custom scopes.',p:'Lint xs-security.json in CI.'},
+{s:'IAS login loop',c:'Missing IAS→XSUAA trust or wrong redirect URIs.',d:'Trace SAML/OIDC flow; check trust + allowed redirects.',f:'Configure trust; whitelist approuter URLs.',p:'Document trust setup per landscape.'},
+{s:'MTA build/deploy failure',c:'Version conflicts, missing build params, or failed module builds.',d:'mbt build logs per module; check mta.yaml schema version.',f:'Fix the failing module; align _schema-version; rebuild.',p:'mbt build in CI on every PR.'},
+{s:'Kyma API Rule 404 / no TLS',c:'Rule points at wrong service/port or lacks TLS config.',d:'kubectl describe apirule; check service DNS + port.',f:'Correct backend ref; enable TLS.',p:'GitOps the API Rules; smoke-test endpoints.'},
+{s:'CAP Operator: CR rejected',c:'values.yaml violates values.schema.json, or deprecated globalAccountId used.',d:'Operator logs + helm template output.',f:'Regenerate chart; use providerSubaccountId.',p:'helm lint + template diff in CI.'},
+{s:'AI Core 404 / model unavailable',c:'No deployment in the resource group, wrong model ID, or missing binding.',d:'List resource groups + deployments via the AICore service.',f:'Create deployment; fix binding; handle cold-start provisioning.',p:'Warm deployments; cache deployment IDs.'},
+{s:'Audit logs missing in production',c:'No auditlog binding, missing @PersonalData annotations, or outbox disabled.',d:'cds env requires.audit-log --profile production; check annotations.',f:'Bind auditlog; annotate models; keep outbox on.',p:'Verify in Audit Log viewer after each release.'},
+];
+let FAV=new Set();try{FAV=new Set(JSON.parse(localStorage.getItem('cap-plug-fav')||'[]'))}catch(e){}
+let DONE={};try{DONE=JSON.parse(localStorage.getItem('cap-plug-done')||'{}')}catch(e){}
+const CMP=new Set();let favOnly=false;
+function saveFav(){try{localStorage.setItem('cap-plug-fav',JSON.stringify([...FAV]))}catch(e){}$('#favN').textContent=FAV.size;}
+function saveDone(){try{localStorage.setItem('cap-plug-done',JSON.stringify(DONE))}catch(e){}paintDone();}
+function paintDone(){$$('[data-done]').forEach(s=>{const id=s.getAttribute('data-done');const on=!!DONE[id];const box=s.querySelector('input[data-done]');if(box)box.checked=on;const a=document.querySelector('.sidenav a[href="#'+id+'"]');if(a)a.classList.toggle('done',on);});}
+document.addEventListener('change',e=>{const b=e.target.closest('input[data-done]');if(!b)return;DONE[b.getAttribute('data-done')]=b.checked;saveDone();});
+$('#favN').textContent=FAV.size;
+$('#favBtn').addEventListener('click',()=>{favOnly=!favOnly;$('#favBtn').classList.toggle('on',favOnly);renderFacets();renderOfficial();});
+/* syntax highlight */
+const HL={cds:{c:/\/\/[^\n]*|\/\*[\s\S]*?\*\//,k:/\b(namespace|using|service|entity|as|projection|on|action|function|returns|many|type|aspect|key|not|null|default|extend|annotate|from|event|mixin)\b/},js:{c:/\/\/[^\n]*|\/\*[\s\S]*?\*\//,k:/\b(const|let|var|function|async|await|return|if|else|for|of|new|require|module|exports|cds|SELECT|from|where)\b/},sh:{c:/#[^\n]*/,k:/\b(cds|npm|npx|mvn|cf|mbt|docker|kubectl|helm|git|cds|add|init|bind|deploy|build|up)\b/},json:{c:null,k:/\b(true|false|null)\b/},yaml:{c:/#[^\n]*/,k:/\b(true|false|null|modules|resources|requires|provides|parameters|properties|type|name|path|version)\b/},xml:{c:null,k:/\b(dependency|groupId|artifactId|version|scope)\b/},java:{c:/\/\/[^\n]*|\/\*[\s\S]*?\*\//,k:/\b(public|private|class|void|new|return|import|package|extends|String|int|boolean)\b/},http:{c:/#[^\n]*/,k:/\b(GET|POST|PUT|PATCH|DELETE|HEAD|Authorization|Content-Type)\b/}};
+function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function highlight(scope){(scope||document).querySelectorAll('pre code').forEach(codeEl=>{if(codeEl.dataset.hl)return;codeEl.dataset.hl='1';
+const lab=codeEl.closest('pre').querySelector('.lang');let lang=(lab?lab.textContent:'code').trim().toLowerCase();
+if(lang==='javascript'||lang==='typescript')lang='js';if(lang==='bash'||lang==='shell')lang='sh';if(lang==='yml')lang='yaml';
+const spec=HL[lang]||HL.js;const src=codeEl.textContent;const parts=[],kinds=[];
+if(spec.c){parts.push('('+spec.c.source+')');kinds.push('tok-c');}
+parts.push('("(?:[^"\\\\]|\\\\.)*"|\'(?:[^\'\\\\]|\\\\.)*\')');kinds.push('tok-s');
+if(spec.k){parts.push('('+spec.k.source+')');kinds.push('tok-k');}
+parts.push('(\\b\\d+(?:\\.\\d+)?\\b)');kinds.push('tok-n');
+let rx;try{rx=new RegExp(parts.join('|'),'g')}catch(e){return;}
+let out='',last=0,m;while((m=rx.exec(src))!==null){out+=escH(src.slice(last,m.index));const gi=m.slice(1).findIndex(g=>g!==undefined);out+='<span class="'+kinds[gi]+'">'+escH(m[0])+'</span>';last=m.index+m[0].length;}
+codeEl.innerHTML=out+escH(src.slice(last));});}
+function codeBlock(lang,code){return '<div class="cwrap"><pre><div class="chead"><span class="d" style="background:#ff5f57"></span><span class="d" style="background:#febc2e"></span><span class="d" style="background:#28c840"></span><span class="lang">'+lang+'</span></div><code>'+escH(code)+'</code></pre><button class="cbtn">⧉ copy</button></div>';}
+document.addEventListener('click',e=>{const b=e.target.closest('.cbtn');if(!b)return;const t=b.parentElement.querySelector('code').innerText;navigator.clipboard.writeText(t).then(()=>{b.textContent='✓ copied';setTimeout(()=>b.textContent='⧉ copy',1400);});});
+/* badges + cards */
+function bYes(v){return v===true?'<span class="badge yes">✓</span>':v==='plan'?'<span class="badge plan">planned</span>':v==='cf' ?'<span class="badge info">CF-only</span>':'<span class="badge no">n/a</span>';}
+function stBadge(s){const m={official:['info','Official'],community:['','Community'],experimental:['plan','Beta/Exp.'],deprecated:['no','Deprecated'],unverified:['plan','Verify']};const x=m[s]||m.unverified;return '<span class="badge '+x[0]+'">'+x[1]+'</span>';}
+function facetCard(f){
+const fav=FAV.has('f:'+f.id)?' on':'';const cmp=CMP.has('f:'+f.id)?' on':'';
+return '<div class="fcard" data-fid="'+f.id+'" data-cat="'+f.cat+'" data-kind="'+(f.kind||'')+'">'
++'<h3><code>cds add '+f.id+'</code></h3>'
++'<div class="frow">'+stBadge(f.status)+'<span class="badge dim">'+f.cat+'</span><span class="badge info">'+(f.kind||'Facet')+'</span></div>'
++'<div class="frow"><span class="lbl">Node.js</span>'+bYes(f.node)+'<span class="lbl">Java</span>'+bYes(f.java)+'<span class="lbl">CF</span>'+bYes(f.cf)+'<span class="lbl">Kyma</span>'+bYes(f.kyma)+'</div>'
++'<p style="margin:6px 0;font-size:14px">'+f.what+'</p>'
++'<details class="more"><summary>Full dossier: why · files · config · mistakes · checklist</summary>'
++'<p><b>Why:</b> '+f.why+'</p><p><b>When:</b> '+f.when+'</p>'
++'<div class="cmd">cds add '+f.id+'</div>'
++(f.files?'<p><b>Generates/touches:</b> <code>'+f.files+'</code></p>':'')
++(f.config?codeBlock('json',f.config):'')
++'<p><b>Common mistakes:</b></p><ul>'+f.mistakes.map(m=>'<li>'+m+'</li>').join('')+'</ul>'
++'<p><b>Production checklist:</b></p><ul>'+f.checklist.map(m=>'<li>'+m+'</li>').join('')+'</ul>'
++'</details>'
++'<div class="fbtns"><button class="sbtn fav'+fav+'" data-a="fav">★ Favorite</button><button class="sbtn cmp'+cmp+'" data-a="cmp">☑ Compare</button><button class="sbtn" data-a="open">Details →</button></div>'
++'</div>';}
+function renderFacets(){
+const q=($('#fq').value||'').toLowerCase(),cat=$('#fcat').value,rt=$('#frt').value,st2=$('#fst').value;
+const list=FACETS.filter(f=>{
+if(favOnly&&!FAV.has('f:'+f.id))return false;
+if(cat&&f.cat!==cat)return false;
+if(st2&&f.status!==st2)return false;
+if(rt==='node'&&f.node!==true)return false;
+if(rt==='java'&&f.java!==true)return false;
+if(rt==='cf'&&!(f.cf===true||f.cf==='cf'))return false;
+if(rt==='kyma'&&f.kyma!==true)return false;
+if(q&&!(f.id+' '+f.what+' '+f.why+' '+f.cat).toLowerCase().includes(q))return false;
+return true;});
+$('#facetGrid').innerHTML=list.length?list.map(facetCard).join(''):'<p class="muted">No facets match. <button class="sbtn" onclick="document.querySelector(\'#fq\').value=\'\';document.querySelector(\'#fcat\').value=\'\';document.querySelector(\'#frt\').value=\'\';document.querySelector(\'#fst\').value=\'\'">Reset</button></p>';
+highlight($('#facetGrid'));}
+function renderOfficial(){
+const box=$('#officialGrid');if(!box)return;
+const list=PLUGINS.filter(p=>!favOnly||FAV.has('p:'+p.id));
+box.innerHTML=list.map(p=>'<div class="fcard"><h3>'+p.name+'</h3><div class="frow">'+stBadge(p.status)+'<span class="badge dim">'+p.cat+'</span><span class="badge dim">'+p.pkg+'</span></div>'
++'<div class="frow"><span class="lbl">Node.js</span>'+bYes(p.node)+'<span class="lbl">Java</span>'+bYes(p.java)+'</div>'
++'<p style="font-size:14px;margin:6px 0">'+p.what+'</p>'
++'<div class="cmd">'+p.install+'</div>'
++'<div class="fbtns"><button class="sbtn fav'+(FAV.has('p:'+p.id)?' on':'')+'" data-pid="'+p.id+'" data-a="pfav">★ Favorite</button><button class="sbtn cmp'+(CMP.has('p:'+p.id)?' on':'')+'" data-pid="'+p.id+'" data-a="pcmp">☑ Compare</button></div></div>').join('');}
+/* modal + compare */
+function openModal(html){$('#mbody').innerHTML=html;$('#modal').classList.add('show');highlight($('#mbox'));}
+$('#mx').addEventListener('click',()=>$('#modal').classList.remove('show'));
+$('#mbg').addEventListener('click',()=>$('#modal').classList.remove('show'));
+addEventListener('keydown',e=>{if(e.key==='Escape')$('#modal').classList.remove('show');});
+function paintCmp(){const n=CMP.size;$('#cmpTxt').textContent=n+' selected';$('#cmpbar').classList.toggle('show',n>0);}
+$('#cmpClear').addEventListener('click',()=>{CMP.clear();paintCmp();renderFacets();renderOfficial();});
+$('#cmpGo').addEventListener('click',()=>{
+if(!CMP.size)return;
+const rows=[...CMP].map(k=>{const[t,id]=k.split(':');return t==='f'?Object.assign({kind2:'facet',cmd:'cds add '+id},FACETS.find(f=>f.id===id)):Object.assign({kind2:'plugin',cmd:''},PLUGINS.find(p=>p.id===id));});
+const cols=['Name','Kind','Category','Status','Node.js','Java','CF','Kyma','Install / command'];
+openModal('<h2>Compare ('+rows.length+')</h2><table class="mx"><tr>'+cols.map(c=>'<th>'+c+'</th>').join('')+'</tr>'
++rows.map(r=>'<tr><td>'+(r.cmd||r.name)+'</td><td>'+r.kind2+'</td><td>'+(r.cat||'—')+'</td><td>'+(r.status||'—')+'</td><td>'+(r.node===true?'✓':r.node||'—')+'</td><td>'+(r.java===true?'✓':r.java||'—')+'</td><td>'+(r.cf===true?'✓':r.cf||'—')+'</td><td>'+(r.kyma===true?'✓':r.kyma||'—')+'</td><td>'+(r.install||r.cmd||'—')+'</td></tr>').join('')+'</table>');});
+document.addEventListener('click',e=>{
+const b=e.target.closest('[data-a]');if(!b)return;const a=b.getAttribute('data-a');
+if(a==='fav'){const id=b.closest('.fcard').dataset.fid;FAV.has('f:'+id)?FAV.delete('f:'+id):FAV.add('f:'+id);saveFav();renderFacets();}
+if(a==='cmp'){const id=b.closest('.fcard').dataset.fid;CMP.has('f:'+id)?CMP.delete('f:'+id):CMP.add('f:'+id);paintCmp();renderFacets();}
+if(a==='pfav'){const id=b.dataset.pid;FAV.has('p:'+id)?FAV.delete('p:'+id):FAV.add('p:'+id);saveFav();renderOfficial();}
+if(a==='pcmp'){const id=b.dataset.pid;CMP.has('p:'+id)?CMP.delete('p:'+id):CMP.add('p:'+id);paintCmp();renderOfficial();}
+if(a==='open'){const f=FACETS.find(x=>x.id===b.closest('.fcard').dataset.fid);openModal(facetCard(f));}});
+/* matrix */
+function renderMatrix(){
+const box=$('#mxTable');if(!box||typeof FACETS==='undefined')return;
+const all=[...FACETS.map(f=>({n:'cds add '+f.id,c:f.cat,o:f.status==='official'?'Yes':f.status,n2:f.node,j:f.java,cf:f.cf,ky:f.kyma,svc:f.svc||'—',p:(f.cf===true||f.cf==='cf'||f.kyma===true)?'Yes':'—',s:f.status})),
+...PLUGINS.map(p=>({n:p.pkg,c:p.cat+' / '+(p.kind||'Plugin'),o:p.status==='official'?'Yes':p.status,n2:p.node,j:p.java,cf:p.cf,ky:p.kyma,svc:p.svc||'—',p:'Yes',s:p.status}))];
+const q=(($('#mq')||{value:''}).value||'').toLowerCase();
+const rows=all.filter(r=>!q||(r.n+' '+r.c+' '+r.s).toLowerCase().includes(q));
+box.innerHTML='<table class="mx"><tr><th>Plugin / facet</th><th>Category</th><th>Official</th><th>Node</th><th>Java</th><th>CF</th><th>Kyma</th><th>BTP service</th><th>Prod</th><th>Status</th></tr>'
++rows.map(r=>'<tr><td>'+r.n+'</td><td>'+r.c+'</td><td>'+r.o+'</td><td>'+(r.n2===true?'✓':r.n2||'—')+'</td><td>'+(r.j===true?'✓':r.j||'—')+'</td><td>'+(r.cf===true?'✓':r.cf||'—')+'</td><td>'+(r.ky===true?'✓':r.ky||'—')+'</td><td>'+r.svc+'</td><td>'+r.p+'</td><td>'+r.s+'</td></tr>').join('')+'</table><p class="muted">'+rows.length+' rows</p>';}
+/* decision tree */
+const TREE={start:{q:'What are you trying to do?',o:[['Need a database','db'],['Need authentication','auth'],['Need an external SAP system','ext'],['Need events / messaging','msg'],['Need Kubernetes','k8s'],['Need multitenancy','mtx'],['Need logging','log'],['Need AI','ai'],['Need a reusable extension','reuse'],['Need a project generator','gen']]},
+db:{t:'Database',h:'Local SQLite → production HANA (or PostgreSQL on CF).',c:'cds add sqlite · cds add hana'},
+auth:{t:'Authentication',h:'XSUAA for CF OAuth/JWT; IAS for human login federation; AMS for centralized authorization.',c:'cds add xsuaa · cds add ias · cds add ams'},
+ext:{t:'External systems',h:'Destination holds URLs+auth; Connectivity adds Cloud Connector proxy to on-prem S/4.',c:'cds add destination · cds add connectivity'},
+msg:{t:'Messaging',h:'Local dev: local/file-based messaging. Prod CF: enterprise-messaging. Kyma/event-driven: Kafka or Advanced Event Mesh.',c:'cds add local-messaging · cds add enterprise-messaging · cds add kafka'},
+k8s:{t:'Kubernetes',h:'Helm chart via helm facet; Kyma deployment via kyma facet; automated lifecycle via CAP Operator plugin.',c:'cds add helm · cds add kyma · cds add cap-operator'},
+mtx:{t:'Multitenancy',h:'SaaS provider/subscriber model with tenant isolation; pair with extensibility for customer fields.',c:'cds add multitenancy · cds add extensibility'},
+log:{t:'Logging',h:'Console/file runtime logs vs tamper-proof business audit trail to the Audit Log service.',c:'cds add application-logging · @cap-js/audit-logging'},
+ai:{t:'AI',h:'Value-help recommendations + managed AI Core access via the AI plugin; agents call CAP over MCP.',c:'npm add @cap-js/ai · @cap-js/mcp'},
+reuse:{t:'Reusable extension',h:'Ship an npm package with cds-plugin.js (auto-loaded, auto-configured).',c:'cds-plugin technique'},
+gen:{t:'Project generator',h:'Implement the cds.add Plugin API (register/run/combine/options/requires).',c:'custom cds add plugin'}};
+function renderTree(id){const n=TREE[id];const box=$('#treeBox');if(!box)return;
+if(!n.o){box.innerHTML='<div class="verdict"><b>'+n.t+'</b><p>'+n.h+'</p><div class="cmd">'+n.c+'</div><button class="sbtn" id="treeBack">← Start over</button></div>';$('#treeBack').addEventListener('click',()=>renderTree('start'));return;}
+box.innerHTML='<div class="treeq"><b>'+n.q+'</b><div class="opts">'+n.o.map((o,i)=>'<button class="sbtn" data-t="'+o[1]+'">'+o[0]+'</button>').join('')+'</div></div>';
+box.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>renderTree(b.dataset.t)));}
+/* error doctor */
+function renderErrors(){
+const box=$('#errList');if(!box)return;const q=(($('#eq')||{value:''}).value||'').toLowerCase();
+const list=ERRORS.filter(e=>!q||(e.s+' '+e.c+' '+e.f).toLowerCase().includes(q));
+box.innerHTML=list.map(e=>'<div class="err"><h4>'+e.s+'</h4><p><b>Cause:</b> '+e.c+'</p><p><b>Diagnose:</b> '+e.d+'</p><p class="fix"><b>Fix:</b> '+e.f+'</p><p><b>Prevent:</b> '+e.p+'</p></div>').join('')||'<p class="muted">No matching error.</p>';}
+/* global search */
+function clearHits(){$$('mark.hit').forEach(m=>m.replaceWith(document.createTextNode(m.textContent)));}
+$('#q').addEventListener('input',e=>{
+const t=e.target.value.trim().toLowerCase();clearHits();
+if(!t)return;const rx=new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');let n=0;
+$$('main p,main li,main h2,main h3,main td').forEach(el=>{if(el.children.length||el.closest('pre'))return;
+if(el.textContent.toLowerCase().includes(t)){el.innerHTML=el.textContent.replace(rx,m=>{n++;return '<mark class="hit">'+m+'</mark>';});}});
+const f=$('#fq');if(f){f.value=t;renderFacets();}
+const first=$('mark.hit');if(first)first.scrollIntoView({block:'center'});});
+addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();$('#q').focus();}});
+/* spy */
+const spy=new IntersectionObserver(es=>{es.forEach(x=>{if(x.isIntersecting){$$('.sidenav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+x.target.id));}})},{rootMargin:'-30% 0px -60% 0px'});
+$$('section.card[id]').forEach(s=>spy.observe(s));
+/* code samples */
+const CODES={
+'code-db1':['json','{\n  "cds": {\n    "requires": {\n      "db": {\n        "kind": "sqlite",\n        "credentials": { "database": ":memory:" },\n        "[production]": { "kind": "hana" }\n      }\n    }\n  }\n}'],
+'code-db2':['js',"const tx = cds.tx(req);\nconst po = await tx.run(SELECT.one.from(POs).where({ID}).forUpdate());\nawait tx.update(POs).set({status:'APPROVED'}).where({ID});\n// commit on success, rollback on throw — one unit of work"],
+'code-sec1':['cds','@requires: \'authenticated-user\'\nservice CatalogService {\n  @restrict: [{ grant: \'READ\', to: \'Viewer\' }]\n  entity Books;\n}'],
+'code-tog':['js',"if (await cds.features('newCheckout', req)) {\n  return checkoutV2(req.data);\n}\nreturn checkoutV1(req.data);"],
+'code-msg':['js',"// producer\nawait this.emit('Order.created', { ID, total });\n// consumer\nsrv.on('Order.created', async msg => {\n  await fulfill(msg.data); // idempotent!\n});"],
+'code-em':['json','{\n  "cds": {\n    "requires": {\n      "messaging": { "kind": "enterprise-messaging" }\n    }\n  }\n}'],
+'code-dest':['js',"const bupa = await cds.connect.to('API_BUSINESS_PARTNER');\nconst res = await bupa.run(SELECT.from('A_BusinessPartner').limit(10));\n// URL + OAuth2 come from the destination, never from code"],
+'code-s4':['cds','using { API_BUSINESS_PARTNER as bupa } from \'./external\';\nservice S4 {\n  entity Partners as projection on bupa.A_BusinessPartner;\n}'],
+'code-ar':['json','{\n  "routes": [\n    { "source": "^/health$", "authenticationType": "none" },\n    { "source": "^/(odata|mcp)/.*$", "authenticationType": "xsuaa" },\n    { "source": "^(.*)$", "authenticationType": "xsuaa" }\n  ]\n}'],
+'code-log':['js',"const cds = require('@sap/cds');\nconst LOG = cds.log('my-service');\nLOG.info('order created', { ID });\n// audit trail separately: @PersonalData + @cap-js/audit-logging"],
+'code-notif':['js',"const alert = await cds.connect.to('notifications');\nawait alert.notify({\n  recipients: ['approvers'],\n  title: 'PO needs approval',\n  properties: [{ key: 'po', value: poNo }]\n});"],
+'code-attach':['cds',"using { Attachments } from '@cap-js/attachments';\nentity Incidents {\n  key ID : UUID;\n  attachments : Composition of many Attachments;\n}"],
+'code-dev':['sh','cds add data --filter Books --records 5\ncds add http --filter CatalogService\ncds add handler --filter submitOrder\ncds add typer   # then: npm i'],
+'code-mta':['yaml','_schema-version: "3.3"\nID: procurement-app\nversion: 1.0.0\nmodules:\n  - name: srv\n    type: nodejs\n    path: gen/srv\n    requires: [db, xsuaa, destination]\nresources:\n  - name: db\n    type: com.sap.xs.hana\n  - name: xsuaa\n    type: org.cloudfoundry.managed-service'],
+'code-custom':['js',"// cds-plugin.js\nconst cds = require('@sap/cds-dk');\ncds.add.register('my-feature', require('./lib/add'));\n\n// lib/add.js\nmodule.exports = class extends cds.add.Plugin {\n  async run() { /* write files */ }\n  async combine() { /* merge package.json / mta.yaml */ }\n  options() { return { out: { type: 'string' } }; }\n  requires() { return ['xsuaa']; }\n}"],
+'code-plugin':['js',"// my-plugin/cds-plugin.js\nconst cds = require('@sap/cds');\ncds.on('served', () => { /* register handlers, middleware */ });\n// + package.json \"cds\" section = auto-configuration"],
+'code-java':['xml','<dependency>\n  <groupId>com.sap.cds</groupId>\n  <artifactId>cds-feature-auditlog-v2</artifactId>\n  <scope>runtime</scope>\n</dependency>'],
+'code-ai':['js',"// @cap-js/ai: RPT-1 recommendations come free on value-help fields.\n// AI Core as a CAP service:\nconst ai = await cds.connect.to('AICore');\nconst groups = await ai.run(SELECT.from('resourceGroups'));"],
+'code-before':['sh','my-cap/\n├── app/\n├── db/\n└── srv/'],
+'code-after':['sh','my-cap/\n├── app/  (+ approuter/)\n├── db/  (+ HDI config)\n├── srv/\n├── package.json  (modified)\n├── mta.yaml  (added)\n└── xs-security.json  (added)'],
+'code-capstone':['sh','procurement/\n├── db/ (HANA, @PersonalData)\n├── srv/ (OData + MCP + agents)\n├── app/ (Fiori via approuter)\n├── mta.yaml (db, xsuaa, dest, conn, em, auditlog)\n└── chart/ (CAP Operator values)']};
+Object.entries(CODES).forEach(([id,[lang,src]])=>{const el=document.getElementById(id);if(el){el.innerHTML=codeBlock(lang,src);}});
+/* facet filter wiring */
+const cats=[...new Set(FACETS.map(f=>f.cat))];
+$('#fcat').innerHTML='<option value="">All categories</option>'+cats.map(c=>'<option>'+c+'</option>').join('');
+$('#catchips').innerHTML=cats.map(c=>'<button class="chip">'+c+'</button>').join('');
+$('#catchips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;const on=b.classList.toggle('on');
+$$('#catchips .chip').forEach(x=>{if(x!==b)x.classList.remove('on');});
+$('#fcat').value=on?b.textContent:'';renderFacets();});
+['fq','fcat','frt','fst'].forEach(id=>$('#'+id).addEventListener('input',renderFacets));
+const mq=$('#mq');if(mq)mq.addEventListener('input',renderMatrix);
+const eq=$('#eq');if(eq)eq.addEventListener('input',renderErrors);
+/* first paint */
+paintDone();renderFacets();renderOfficial();renderMatrix();renderTree('start');renderErrors();highlight(document);
+})();
+</script>
+</body>
+</html>

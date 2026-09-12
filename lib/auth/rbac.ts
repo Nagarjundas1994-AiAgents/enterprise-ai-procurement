@@ -84,4 +84,6 @@ export const MCP_TOOL_PERMISSIONS: Record<string, string> = {
   getProcurementRisk: PERMISSIONS.READ_PR,
   createPurchaseOrder: PERMISSIONS.CREATE_PO,
   submitForApproval: PERMISSIONS.CREATE_PR,
+  getRemoteSuppliers: PERMISSIONS.READ_SUPPLIER,
+  getRemoteLogisticsIntel: PERMISSIONS.READ_SUPPLIER,
 };

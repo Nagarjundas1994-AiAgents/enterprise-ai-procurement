@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Build Your Own Enterprise AI Procurement — Step-by-Step | SAP CAP + MCP + A2A</title>
+<style>
+/* ============ ProcureX-AI Docs — premium design system (SAP Horizon + Mintlify grade) ============ */
+:root{
+  --sap-blue:#0a6ed1; --sap-blue-600:#085caf; --sap-dark:#001c38; --sap-navy:#002a54;
+  --sap-light:#e8f1fa; --teal:#0ad1a0; --violet:#6c2bd9;
+  --bg:#eef2f7; --bg-soft:#f7f9fc; --card:#ffffff; --ink:#16283c; --ink-2:#33475f;
+  --muted:#5f7288; --faint:#8ba0b5;
+  --green:#107e3e; --green-bg:#e9f7ee; --amber:#e9730c; --amber-bg:#fff4e6;
+  --red:#bb0000; --red-bg:#fdecec; --violet-bg:#f1eafd; --blue-bg:#eef5fe;
+  --border:#dde5ef; --border-soft:#e8eef5;
+  --code-bg:#0b1526; --code-bg-2:#0f1f38; --radius:16px; --radius-s:10px;
+  --shadow:0 1px 2px #0a25401a,0 8px 28px -8px #0a25402e;
+  --shadow-lg:0 2px 4px #0a254014,0 20px 52px -16px #00376b40;
+  --topbar-h:60px;
+  --font:"72","SAP 72","Segoe UI",Inter,-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,Menlo,monospace;
+}
+[data-theme="dark"]{
+  --bg:#0a1220; --bg-soft:#0d1626; --card:#111d31; --ink:#e8eef6; --ink-2:#c3d0e0;
+  --muted:#93a5bb; --faint:#6b7f96;
+  --border:#1f2f47; --border-soft:#1a2a42;
+  --sap-light:#12294a; --blue-bg:#0f2340; --green-bg:#0d2b1c; --amber-bg:#2e1f0c;
+  --red-bg:#331314; --violet-bg:#211243;
+  --shadow:0 1px 2px #0009,0 12px 32px -8px #000a;
+  --shadow-lg:0 2px 6px #000a,0 24px 60px -16px #000c;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 18px)}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.7;
+  background-image:radial-gradient(1000px 320px at 50% -120px,#0a6ed114,transparent);background-attachment:fixed}
+[data-theme="dark"] body{background-image:radial-gradient(1000px 320px at 50% -120px,#0a6ed133,transparent)}
+a{color:var(--sap-blue);text-decoration-thickness:1px;text-underline-offset:2px}
+::selection{background:#0a6ed133}
+.progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:200;
+  background:linear-gradient(90deg,#0a6ed1,#6c2bd9,#0ad1a0);box-shadow:0 0 12px #0a6ed188}
+/* ---- top nav ---- */
+.topbar{position:sticky;top:0;z-index:100;height:var(--topbar-h);display:flex;align-items:center;gap:14px;
+  padding:0 22px;background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(14px) saturate(1.3);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);font-weight:800;letter-spacing:.1px;white-space:nowrap}
+.brand-mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:17px;
+  background:conic-gradient(from 210deg,#0a6ed1,#6c2bd9,#0ad1a0,#0a6ed1);box-shadow:0 4px 14px #0a6ed155}
+.brand small{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;line-height:1}
+.brand b{font-size:15.5px;line-height:1.15}
+.topnav{display:flex;gap:4px;margin-left:8px}
+.topnav a{text-decoration:none;color:var(--muted);font-size:13.5px;font-weight:600;padding:8px 12px;border-radius:9px}
+.topnav a:hover{color:var(--ink);background:var(--bg-soft)}
+.topnav a.active{color:var(--sap-blue);background:var(--sap-light)}
+@media(max-width:900px){.topnav{display:none}}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:9px}
+.searchbox{position:relative}
+.searchbox input{width:230px;max-width:38vw;background:var(--bg-soft);border:1px solid var(--border);color:var(--ink);
+  border-radius:10px;padding:8px 12px 8px 34px;font-size:13px;font-family:inherit;outline:none;transition:.2s}
+.searchbox input:focus{border-color:var(--sap-blue);box-shadow:0 0 0 3px #0a6ed122;width:270px}
+.searchbox svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.55}
+.icon-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:var(--card);color:var(--ink);
+  border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s}
+.icon-btn:hover{border-color:var(--sap-blue);color:var(--sap-blue);transform:translateY(-1px)}
+.hamburger{display:none}
+@media(max-width:940px){.hamburger{display:inline-flex}.searchbox input{width:150px}}
+/* ---- hero ---- */
+.hero{position:relative;color:#fff;overflow:hidden;padding:0;background:linear-gradient(135deg,#000f24 0%,#001c38 30%,#003a75 68%,#0a6ed1 100%)}
+.hero::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(#ffffff10 1px,transparent 1px),linear-gradient(90deg,#ffffff10 1px,transparent 1px);
+  background-size:44px 44px;mask-image:radial-gradient(900px 480px at 30% 0%,#000 30%,transparent 75%)}
+.hero::after{content:"";position:absolute;width:560px;height:560px;right:-160px;top:-220px;border-radius:50%;
+  background:radial-gradient(circle,#6c2bd988,transparent 65%);filter:blur(10px)}
+.hero-glow{position:absolute;width:520px;height:420px;left:-140px;bottom:-220px;border-radius:50%;
+  background:radial-gradient(circle,#0ad1a055,transparent 65%);filter:blur(10px)}
+.hero-inner{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:66px 28px 0}
+.crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#a9c6e6;margin-bottom:16px;flex-wrap:wrap}
+.crumb a{color:#d6e6f7;text-decoration:none}.crumb a:hover{text-decoration:underline}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#ffffff18;border:1px solid #ffffff3d;
+  padding:7px 15px;border-radius:999px;font-size:12.5px;letter-spacing:.4px;font-weight:600;backdrop-filter:blur(6px)}
+.badge .dot{width:8px;height:8px;border-radius:50%;background:#2dffa8;box-shadow:0 0 10px #2dffa8;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.hero h1{font-size:clamp(30px,4.4vw,54px);line-height:1.08;margin:20px 0 14px;font-weight:800;letter-spacing:-1.2px;max-width:900px}
+.hero h1 .grad{background:linear-gradient(92deg,#7cc4ff,#c9a6ff 55%,#5ff2c4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{max-width:840px;color:#c9ddf2;font-size:16.5px;margin:0}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.hero-meta span{display:inline-flex;align-items:center;gap:7px;background:#ffffff12;border:1px solid #ffffff2c;
+  border-radius:999px;padding:7px 14px;font-size:13px;color:#e6f1fd;backdrop-filter:blur(6px)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0 8px}
+.btn{display:inline-flex;align-items:center;gap:9px;background:#fff;color:#00376b!important;text-decoration:none;
+  padding:12px 22px;border-radius:12px;font-weight:800;font-size:14.5px;box-shadow:0 8px 24px #0006;transition:.2s;border:1px solid #fff}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px #0007}
+.btn.primary{background:linear-gradient(92deg,#2d9bff,#6c2bd9);color:#fff!important;border-color:#ffffff44}
+.btn.ghost{background:#ffffff14;color:#fff!important;border:1px solid #ffffff45;box-shadow:none;backdrop-filter:blur(6px)}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0 0;padding:20px 0 30px;max-width:1000px}
+.hero-stat{background:#ffffff0f;border:1px solid #ffffff26;border-radius:14px;padding:14px 16px;backdrop-filter:blur(8px)}
+.hero-stat b{display:block;font-size:22px;letter-spacing:-.5px}
+.hero-stat span{font-size:12.5px;color:#b8d2ea}
+@media(max-width:760px){.hero-stats{grid-template-columns:repeat(2,1fr)}}
+/* ---- layout ---- */
+.layout{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:300px minmax(0,1fr);gap:26px;padding:26px 28px 10px;align-items:start}
+@media(max-width:940px){.layout{grid-template-columns:1fr}.toc{position:fixed!important;left:0;top:var(--topbar-h);bottom:0;width:300px;z-index:90;
+  border-radius:0!important;transform:translateX(-105%);transition:.25s;max-height:none!important}.toc.open{transform:none;box-shadow:var(--shadow-lg)}.scrim{position:fixed;inset:0;background:#0008;z-index:80;opacity:0;pointer-events:none;transition:.25s}.scrim.show{opacity:1;pointer-events:auto}}
+.toc{position:sticky;top:calc(var(--topbar-h) + 16px);align-self:start;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px;max-height:calc(100vh - var(--topbar-h) - 32px);overflow:auto;box-shadow:var(--shadow)}
+.toc h3{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--faint);display:flex;align-items:center;justify-content:space-between}
+.toc-filter{width:100%;margin:8px 0 10px;background:var(--bg-soft);border:1px solid var(--border);color:var(--ink);
+  border-radius:9px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none}
+.toc-filter:focus{border-color:var(--sap-blue);box-shadow:0 0 0 3px #0a6ed122}
+.toc ol{margin:0;padding:0;list-style:none;font-size:13.5px}
+.toc li{margin:1px 0}
+.toc a{display:flex;gap:9px;text-decoration:none;color:var(--ink-2);padding:7px 10px;border-radius:9px;border-left:3px solid transparent;line-height:1.45}
+.toc a .n{font-family:var(--mono);font-size:11px;color:var(--faint);min-width:30px;padding-top:2px}
+.toc a:hover{background:var(--bg-soft);color:var(--ink)}
+.toc a.active{background:var(--sap-light);color:var(--sap-blue);border-left-color:var(--sap-blue);font-weight:700}
+.toc a.active .n{color:var(--sap-blue)}
+.toc-progress{margin-top:12px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--muted)}
+.toc-progress .bar{height:6px;background:var(--border-soft);border-radius:99px;margin-top:7px;overflow:hidden}
+.toc-progress .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0a6ed1,#6c2bd9,#0ad1a0);border-radius:99px;transition:.2s}
+.content{min-width:0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:30px 30px 26px;margin-bottom:22px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;scroll-margin-top:calc(var(--topbar-h) + 18px)}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#0a6ed1,#6c2bd9);opacity:0;transition:.25s}
+.card:hover::before{opacity:1}
+.card.reveal{animation:rise .5s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.step-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.step-no{display:inline-flex;align-items:center;gap:8px;font-weight:800;border-radius:999px;padding:6px 14px;font-size:12px;
+  letter-spacing:.7px;color:#fff;background:linear-gradient(92deg,#0a6ed1,#6c2bd9);box-shadow:0 4px 12px #0a6ed144}
+.step-time{font-size:12px;color:var(--faint);font-weight:600}
+.card h2{font-size:clamp(21px,2.4vw,27px);margin:10px 0 8px;letter-spacing:-.4px;line-height:1.3}
+.card h3{font-size:17px;margin-top:24px;padding-top:16px;border-top:1px dashed var(--border);letter-spacing:-.2px}
+.card h3:first-of-type{border-top:none}
+p.muted{color:var(--muted)}
+.lead-note{font-size:15px;color:var(--ink-2)}
+.callout{border:1px solid var(--border);border-left:5px solid var(--sap-blue);background:var(--blue-bg);
+  border-radius:6px 14px 14px 6px;padding:14px 16px 14px 15px;margin:16px 0;font-size:14.5px;position:relative}
+.callout b{display:flex;align-items:center;gap:7px;margin-bottom:4px;font-size:14px}
+.callout.green{border-left-color:var(--green);background:var(--green-bg)}
+.callout.amber{border-left-color:var(--amber);background:var(--amber-bg)}
+.callout.red{border-left-color:var(--red);background:var(--red-bg)}
+.callout.violet{border-left-color:var(--violet);background:var(--violet-bg)}
+/* code editor chrome */
+pre{background:var(--code-bg);color:#e2e8f0;border-radius:14px;padding:0;overflow:hidden;font-size:13px;line-height:1.65;
+  position:relative;border:1px solid #1e293b;margin:14px 0;box-shadow:0 10px 30px -12px #000c}
+[data-theme="dark"] pre{border-color:var(--border)}
+.code-head{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#ffffff08;border-bottom:1px solid #ffffff14;font-size:11.5px;color:#9fb3c8}
+.code-head .d{width:11px;height:11px;border-radius:50%}
+.code-head .lang{margin-left:auto;font-family:var(--mono);text-transform:uppercase;letter-spacing:.8px;font-size:10.5px}
+pre code{display:block;padding:16px;font-family:var(--mono);overflow:auto}
+code{font-family:var(--mono)}
+p code, li code, td code{background:var(--sap-light);color:var(--sap-blue);padding:2px 7px;border-radius:7px;font-size:.88em;border:1px solid var(--border)}
+[data-theme="dark"] p code,[data-theme="dark"] li code,[data-theme="dark"] td code{color:#8fc2ff}
+pre code{background:transparent;color:inherit;padding:0;border:none}
+.copy{position:absolute;top:44px;right:10px;background:#ffffff14;color:#fff;border:1px solid #ffffff2e;border-radius:8px;
+  font-size:11.5px;font-weight:700;padding:5px 11px;cursor:pointer;font-family:inherit;transition:.18s;z-index:2}
+.copy:hover{background:#0a6ed1;border-color:#0a6ed1}
+.copy.ok{background:var(--green);border-color:var(--green)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;margin:14px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+th,td{border:none;border-bottom:1px solid var(--border-soft);padding:11px 13px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{background:var(--bg-soft);font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+tbody tr:hover{background:var(--bg-soft)}
+.kbd{background:#111827;color:#fff;border-radius:6px;padding:2px 8px;font-size:12.5px;font-family:var(--mono)}
+.checklist{list-style:none;padding:0;margin:12px 0}
+.checklist li{background:var(--bg-soft);border:1px solid var(--border);border-radius:11px;padding:11px 14px 11px 42px;margin:8px 0;
+  position:relative;cursor:pointer;transition:.18s;font-size:14px}
+.checklist li:hover{border-color:var(--sap-blue)}
+.checklist li::before{content:"";position:absolute;left:13px;top:13px;width:19px;height:19px;border-radius:7px;border:2px solid var(--faint);background:var(--card);transition:.18s}
+.checklist li.done{text-decoration:line-through;color:var(--muted);border-color:var(--green)}
+.checklist li.done::before{background:var(--green);border-color:var(--green);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4'%3E%3Cpath d='M4 12l5 5L20 6'/%3E%3C/svg%3E");background-size:12px;background-position:center;background-repeat:no-repeat}
+.diagram{background:linear-gradient(180deg,#0d2c52,#0b2540);color:#cfe6ff;border-radius:14px;padding:20px 18px;font-family:var(--mono);
+  font-size:12.5px;overflow:auto;white-space:pre;border:1px solid #ffffff1f;line-height:1.7;box-shadow:inset 0 1px 0 #ffffff22}
+.step-nav{display:flex;gap:10px;margin-top:20px;padding-top:18px;border-top:1px solid var(--border-soft);flex-wrap:wrap}
+.step-nav a{flex:1;min-width:200px;text-decoration:none;border:1px solid var(--border);border-radius:12px;padding:12px 15px;background:var(--bg-soft);transition:.18s}
+.step-nav a:hover{border-color:var(--sap-blue);transform:translateY(-1px)}
+.step-nav small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--faint);font-weight:700}
+.step-nav b{color:var(--ink);font-size:14px}
+.footer{max-width:1240px;margin:0 auto;text-align:center;color:var(--muted);padding:34px 28px 46px;font-size:13px}
+.footer .fcard{background:linear-gradient(135deg,#001c38,#003a75);color:#d6e6f7;border-radius:18px;padding:30px 26px;margin-bottom:22px;position:relative;overflow:hidden}
+.footer .fcard::before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff0d 1px,transparent 1px),linear-gradient(90deg,#ffffff0d 1px,transparent 1px);background-size:36px 36px}
+.footer .fcard h3{position:relative;margin:0 0 8px;font-size:21px;color:#fff}
+.footer .fcard p{position:relative;margin:0 0 16px;color:#b8d2ea}
+#toTop{position:fixed;right:22px;bottom:22px;width:46px;height:46px;border-radius:14px;border:1px solid var(--border);
+  background:var(--card);color:var(--ink);font-size:19px;cursor:pointer;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.25s;z-index:90}
+#toTop.show{opacity:1;pointer-events:auto}
+#toTop:hover{background:var(--sap-blue);color:#fff;border-color:var(--sap-blue)}
+@media(max-width:640px){.card{padding:22px 18px}.top-actions .hide-m{display:none}.hero-inner{padding:48px 18px 0}.layout{padding:16px 14px}}
+@media print{.topbar,.toc,#toTop,.hero-cta,.copy,.step-nav{display:none!important}.layout{grid-template-columns:1fr}.card{box-shadow:none;break-inside:avoid}}
+/* ============ masterclass-grade upgrades (skill sap-masterclass-builder + Stripe/Mintlify 2026 patterns) ============ */
+:focus-visible{outline:2px solid var(--sap-blue);outline-offset:2px}
+/* grouped nav (Mintlify pattern) */
+.toc li.g{list-style:none;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--faint);padding:14px 10px 3px}
+.toc li.g:first-child{padding-top:2px}
+.toc a.done{color:var(--muted)}
+.toc a.done .t,.toc a.done span:last-child{color:var(--muted)}
+.toc a.done::after{content:"✓";color:var(--green);font-weight:800;margin-left:auto}
+/* syntax tokens (skill HL engine) */
+.tok-k{color:#7ec8ff}.tok-s{color:#a8e6a1}.tok-c{color:#8b98a8;font-style:italic}.tok-n{color:#f0c674}
+mark.hit{background:#fdd663;color:#152536;padding:0 .12em;border-radius:3px}
+#searchstatus{font-size:12.5px;color:var(--muted);margin:8px 2px 2px;min-height:18px}
+/* done tracking + progress chip */
+.done-row{display:flex;align-items:center;gap:9px;margin:14px 0 0;font-size:13.5px;color:var(--muted)}
+.done-row input{width:16px;height:16px;accent-color:var(--green);cursor:pointer}
+.done-row label{cursor:pointer}
+.progchip{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--muted);border:1px solid var(--border);background:var(--card);border-radius:999px;padding:7px 12px;white-space:nowrap}
+.progchip b{color:var(--green)}
+/* right rail — Stripe 3rd column (hidden < 1200px, like the masterclass) */
+.rail{display:none}
+@media(min-width:1200px){
+.layout{grid-template-columns:300px minmax(0,1fr);max-width:1280px}
+.rail{display:block;position:sticky;top:calc(var(--topbar-h) + 16px);align-self:start;max-height:calc(100vh - var(--topbar-h) - 32px);overflow:auto;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 14px;box-shadow:var(--shadow);font-size:12.5px}
+.rail h2{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--faint);margin:0 0 8px}
+.rail a{display:block;color:var(--muted);text-decoration:none;padding:4px 0 4px 10px;border-left:2px solid var(--border-soft);line-height:1.45}
+.rail a:hover,.rail a.active{color:var(--sap-blue);border-left-color:var(--sap-blue)}
+.rail .mode-note{margin-top:12px;padding:9px 10px;border:1px solid var(--border);border-radius:9px;background:var(--bg-soft);color:var(--muted);font-size:11.5px;line-height:1.5}
+}
+/* drafting-sheet figure (skill .diagram paper pattern) */
+.sheet{margin:16px 0;border:1px solid #dcd6c3;border-top:3px solid #0b3d91;border-radius:8px;background:#fcfbf6;background-image:linear-gradient(rgba(11,61,145,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(11,61,145,.07) 1px,transparent 1px);background-size:22px 22px;padding:18px 14px 8px;overflow:auto;box-shadow:var(--shadow)}
+.sheet svg{display:block;width:100%;height:auto}
+@media(max-width:640px){.sheet svg{min-width:560px}}
+.hero-stat span{text-wrap:balance}
+.sheet .figcap{margin:10px -14px 0;padding:8px 14px 2px;border-top:1px dashed #dcd6c3;font-family:var(--mono);font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:#6b7690}
+@media print{.rail,.done-row,.progchip,#searchstatus{display:none!important}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+/* ============ Apple Developer Documentation theme (override layer) ============ */
+:root{
+  --sap-blue:#0071e3;
+  --bg:#ffffff; --bg-soft:#f5f5f7; --card:#ffffff;
+  --ink:#1d1d1f; --ink-2:#424245; --muted:#6e6e73; --faint:#86868b;
+  --border:#d2d2d7; --border-soft:#e8e8ed;
+  --sap-light:#f5f5f7; --blue-bg:#f5f5f7; --green-bg:#f5f5f7; --amber-bg:#f5f5f7; --red-bg:#f5f5f7; --violet-bg:#f5f5f7;
+  --green:#1d8127; --amber:#b25000; --red:#c8102e; --violet:#6e56cf;
+  --code-bg:#f5f5f7;
+  --shadow:none; --shadow-lg:0 4px 24px rgba(0,0,0,.06);
+  --topbar-h:48px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Inter,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+[data-theme="dark"]{
+  --sap-blue:#0a84ff;
+  --bg:#000000; --bg-soft:#1d1d1f; --card:#1d1d1f;
+  --ink:#f5f5f7; --ink-2:#d4d4d8; --muted:#a1a1a6; --faint:#86868b;
+  --border:#38383a; --border-soft:#2c2c2e;
+  --sap-light:#1d1d1f; --blue-bg:#1d1d1f; --green-bg:#1d1d1f; --amber-bg:#1d1d1f; --red-bg:#1d1d1f; --violet-bg:#1d1d1f;
+  --green:#30d158; --amber:#ff9f0a; --red:#ff453a; --violet:#bf5af2;
+  --code-bg:#161617;
+  --shadow:none; --shadow-lg:0 4px 24px rgba(0,0,0,.5);
+}
+body{background:var(--bg);background-image:none;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+[data-theme="dark"] body{background-image:none}
+::selection{background:#0071e333}
+a{color:var(--sap-blue)}
+.progress{background:var(--sap-blue);box-shadow:none}
+/* top nav — Apple slim bar */
+.topbar{height:var(--topbar-h);padding:0 22px;background:color-mix(in srgb,var(--bg) 80%,transparent);border-bottom:1px solid var(--border-soft)}
+.brand-mark{width:28px;height:28px;border-radius:7px;background:#1d1d1f;color:#fff;font-size:15px;box-shadow:none;font-weight:700}
+[data-theme="dark"] .brand-mark{background:#f5f5f7;color:#000}
+.brand b{font-size:14px;font-weight:600;letter-spacing:-.01em}
+.brand small{font-size:10px;color:var(--faint)}
+.topnav a{font-size:12px;font-weight:400;color:var(--ink-2);padding:6px 10px}
+.topnav a:hover{background:none;color:var(--sap-blue)}
+.topnav a.active{background:none;color:var(--sap-blue);font-weight:600}
+.icon-btn,.progchip{background:var(--bg-soft);border-color:transparent;border-radius:8px;font-weight:500}
+.icon-btn:hover{border-color:transparent;color:var(--sap-blue);transform:none}
+.searchbox input{background:var(--bg-soft);border-color:transparent;border-radius:8px}
+.searchbox input:focus{border-color:var(--sap-blue);box-shadow:0 0 0 3px #0071e322;width:230px}
+/* page header — Apple docs have no banner: white, hairline, huge title */
+.hero{background:none;color:var(--ink);border-bottom:1px solid var(--border-soft)}
+.hero::before,.hero::after,.hero-glow{display:none}
+.hero-inner{padding:56px 28px 40px}
+.crumb{color:var(--faint);font-size:12px}
+.crumb a{color:var(--muted)}
+.badge{background:var(--bg-soft);border:1px solid transparent;color:var(--muted);font-weight:500;backdrop-filter:none}
+.badge .dot{background:var(--sap-blue);box-shadow:none;animation:none}
+.hero h1{font-weight:700;letter-spacing:-.025em;color:var(--ink)}
+.hero h1 .grad{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:inherit}
+.hero p.lead{color:var(--muted);font-size:17px;line-height:1.6}
+.hero-meta span{background:none;border:none;color:var(--muted);padding:0;font-size:13px}
+.hero-meta span+span::before{content:"·";margin-right:10px;color:var(--faint)}
+.hero-meta{gap:8px 4px}
+.btn{border-radius:980px;background:var(--sap-blue);color:#fff!important;box-shadow:none;border:none;font-weight:500;font-size:15px;padding:8px 18px}
+.btn:hover{transform:none;box-shadow:none;filter:brightness(1.07)}
+.btn.primary{background:var(--sap-blue);border:none}
+.btn.ghost{background:none;color:var(--sap-blue)!important;border:none;box-shadow:none;font-weight:400}
+.hero-stats{padding:24px 0 8px}
+.hero-stat{background:none;border:none;padding:0 0 0 20px;border-left:1px solid var(--border);border-radius:0;backdrop-filter:none}
+.hero-stat:first-child{border-left:none;padding-left:0}
+.hero-stat b{font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+.hero-stat span{color:var(--muted);font-size:12px}
+/* sidebar — borderless Apple nav */
+.toc{background:transparent;border:none;box-shadow:none;padding:18px 6px}
+.toc-filter{background:var(--bg-soft);border-color:transparent;border-radius:8px}
+.toc li.g{color:var(--faint);font-weight:700}
+.toc a{border-left:none;border-radius:8px;color:var(--muted);font-weight:400}
+.toc a .n{color:var(--faint)}
+.toc a:hover{background:var(--bg-soft);color:var(--ink)}
+.toc a.active{background:var(--bg-soft);color:var(--ink);border-left:none;font-weight:600}
+.toc a.active .n{color:var(--sap-blue)}
+.toc a.done::after{color:var(--sap-blue)}
+.toc-progress{background:var(--bg-soft);border:none}
+/* cards — hairlines, air, no accent bar */
+.card{border:1px solid var(--border);border-radius:18px;box-shadow:none;padding:36px 40px}
+.card::before{display:none}
+.card.reveal{animation:none}
+.step-no{background:none;color:var(--faint);font-size:12px;font-weight:600;letter-spacing:.06em;padding:0;box-shadow:none}
+.card h2{font-weight:700;letter-spacing:-.02em}
+.card h3{font-weight:600;letter-spacing:-.01em;border-top:1px solid var(--border-soft)}
+/* callouts — Apple Note boxes */
+.callout{background:var(--bg-soft);border:1px solid var(--border-soft);border-left:3px solid var(--faint);border-radius:12px;font-size:14px}
+.callout b{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.callout.green{border-left-color:var(--green);background:var(--bg-soft)}
+.callout.amber{border-left-color:var(--amber);background:var(--bg-soft)}
+.callout.red{border-left-color:var(--red);background:var(--bg-soft)}
+.callout.violet{border-left-color:var(--violet);background:var(--bg-soft)}
+/* code — Apple light editor (Xcode token colors) */
+pre{background:var(--code-bg);border:1px solid var(--border-soft);border-radius:12px;box-shadow:none;color:var(--ink)}
+.code-head{background:var(--bg-soft);border-bottom:1px solid var(--border-soft);color:var(--faint)}
+.code-head .d{opacity:.85}
+.copy{background:var(--bg-soft);color:var(--muted);border:1px solid var(--border-soft)}
+.copy:hover{background:var(--sap-blue);border-color:var(--sap-blue);color:#fff}
+.copy.ok{background:var(--sap-blue);border-color:var(--sap-blue);color:#fff}
+.tok-k{color:#9b2393}.tok-s{color:#c41a16}.tok-c{color:#007400}.tok-n{color:#1c00cf}
+[data-theme="dark"] .tok-k{color:#ff7ab2}[data-theme="dark"] .tok-s{color:#ff8170}[data-theme="dark"] .tok-c{color:#6c7986}[data-theme="dark"] .tok-n{color:#d9c97c}
+[data-theme="dark"] pre{color:#f5f5f7}
+p code,li code,td code{background:var(--bg-soft);color:var(--ink-2);border:1px solid var(--border-soft);border-radius:6px}
+[data-theme="dark"] p code,[data-theme="dark"] li code,[data-theme="dark"] td code{color:#f5f5f7}
+.kbd{background:var(--bg-soft);color:var(--ink);border:1px solid var(--border);font-weight:500}
+/* tables — hairlines */
+table{border:1px solid var(--border-soft);border-radius:12px}
+th{background:var(--bg-soft);color:var(--muted);font-size:11px;letter-spacing:.06em}
+tbody tr:hover{background:var(--bg-soft)}
+/* checklist — iOS restraint */
+.checklist li{background:var(--card);border:1px solid var(--border-soft)}
+.checklist li::before{border-radius:50%;border-color:var(--faint)}
+.checklist li.done{border-color:var(--sap-blue)}
+.checklist li.done::before{background:var(--sap-blue);border-color:var(--sap-blue)}
+/* misc surfaces */
+.diagram{border-radius:12px}
+.sheet{border-radius:12px;box-shadow:none}
+.step-nav a{background:var(--card);border:1px solid var(--border-soft);border-radius:12px}
+.step-nav a:hover{transform:none;border-color:var(--sap-blue)}
+.step-nav b{font-weight:600}
+.done-row input{accent-color:var(--sap-blue)}
+.rail{background:var(--card);border:1px solid var(--border-soft);box-shadow:none}
+.rail a{border-left-color:var(--border-soft)}
+#toTop{border-radius:50%;border:1px solid var(--border-soft);box-shadow:0 4px 16px rgba(0,0,0,.1)}
+#toTop:hover{background:var(--sap-blue);border-color:var(--sap-blue)}
+.footer .fcard{background:var(--bg-soft);color:var(--ink);border:1px solid var(--border-soft)}
+.footer .fcard::before{display:none}
+.footer .fcard h3{color:var(--ink);font-weight:700;letter-spacing:-.02em}
+.footer .fcard p{color:var(--muted)}
+mark.hit{background:#ffe9a8}
+@media(max-width:640px){.card{padding:24px 20px}.hero-stat{border-left:none;padding-left:0}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<header class="topbar">
+<button class="icon-btn hamburger" id="menuBtn" aria-label="Open contents">☰</button>
+<a class="brand" href="#top"><span class="brand-mark">P</span><span><small>ProcureX-AI · Docs</small><b>Enterprise AI Procurement</b></span></a>
+<nav class="topnav"><a href="#step-0" class="active">Build guide</a><a href="#step-12">MCP</a><a href="#step-13">Agents</a><a href="#step-16">BTP deploy</a><a href="#appendix-pitfalls">Pitfalls</a></nav>
+<div class="top-actions">
+<div class="searchbox"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="topSearch" type="search" placeholder="Search steps… ( / )" aria-label="Search steps"/></div>
+<button class="icon-btn hide-m" id="printBtn" title="Print / save PDF">🖨 Print</button>
+<span class="progchip" id="doneChip" title="Steps you marked done">0/23 done</span><button class="icon-btn" id="themeBtn" title="Toggle dark mode">🌙</button>
+</div>
+</header>
+<div class="scrim" id="scrim"></div>
+<div class="hero" id="top">
+<div class="hero-glow"></div>
+<div class="hero-inner">
+<div class="crumb"><a href="#top">Docs</a> › <a href="#step-0">Build guide</a> › <span>Zero → Production</span></div>
+<div class="badge"><span class="dot"></span> SAP BTP &nbsp;•&nbsp; SAP CAP (Node.js + TypeScript) &nbsp;•&nbsp; PostgreSQL &nbsp;•&nbsp; MCP &nbsp;•&nbsp; A2A Agents &nbsp;•&nbsp; v1.0 Sep 2026</div>
+<h1>Build Your Own Enterprise AI Procurement Platform — <span class="grad">From Zero to Production</span></h1>
+<p class="lead">A newbie-friendly, copy-paste, step-by-step reconstruction guide. Follow every step in order and you will end up with the exact app in this repository: multi-tenant procurement backend with RBAC, audit, workflow, budgets, 3-way invoice match, MCP tools, AI agents, and BTP + Render deployment.</p>
+<div class="hero-meta">
+<span>⏱ 8–12 hours (beginner pace)</span><span>🛠 Node 20+ • CAP 10 • Postgres</span><span>📦 20 sections (Steps 0–16 + 13b/11b/16b + Appendix Z) • 42 code blocks</span><span>✅ Verified Sep 2026 (live cds-compile clean)</span>
+</div>
+<div class="hero-cta"><a class="btn primary" href="#step-0">Start at Step 0 →</a><a class="btn ghost" href="#verify">Run E2E checklist ✓</a><a class="btn ghost" href="#appendix-pitfalls">Jump to pitfalls ⚠</a></div>
+<div class="hero-stats">
+<div class="hero-stat"><b>20</b><span>guided sections, ordered 0 → 16 + appendices</span></div>
+<div class="hero-stat"><b>42+</b><span>copy-paste code blocks, verified working</span></div>
+<div class="hero-stat"><b>62</b><span>files in the full-app inventory (App. Z)</span></div>
+<div class="hero-stat"><b>8</b><span>hard-won pitfalls you get to skip</span></div>
+</div>
+</div>
+</div>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Guide contents">
+<h3>📖 Contents <span id="tocCount"></span></h3>
+<input class="toc-filter" id="tocFilter" type="search" placeholder="Filter steps…" aria-label="Filter steps"/>
+<p id="searchstatus" role="status"></p>
+<ol id="tocList">
+<li class="g" aria-hidden="true">Foundation</li>
+<li><a href="#step-0">0 — What you are building</a></li>
+<li><a href="#step-1">1 — Prerequisites & install</a></li>
+<li><a href="#step-2">2 — Scaffold the CAP project</a></li>
+<li><a href="#step-3">3 — Data model: common.cds</a></li>
+<li><a href="#step-4">4 — Data model: schema.cds</a></li>
+<li><a href="#step-5">5 — Seed data (CSV)</a></li>
+<li class="g" aria-hidden="true">Security brain</li>
+<li><a href="#step-6">6 — The lib/ brain: RBAC, Auth, AuthZ</a></li>
+<li><a href="#step-7">7 — Tenant, policy, lifecycle, audit, validation</a></li>
+<li class="g" aria-hidden="true">Contracts & logic</li>
+<li><a href="#step-8">8 — Services (.cds contracts)</a></li>
+<li><a href="#step-9">9 — Handlers (.ts business logic)</a></li>
+<li><a href="#step-10">10 — server.js, config, package.json</a></li>
+<li class="g" aria-hidden="true">Run it</li>
+<li><a href="#step-11">11 — Run locally (SQLite → Postgres)</a></li>
+<li><a href="#step-12">12 — MCP runtime tools</a></li>
+<li><a href="#step-13">13 — A2A AI agents</a></li>
+<li><a href="#step-13b">13b — Remote A2A server :4007 ★ NEW</a></li>
+<li><a href="#step-11b">11b — Compose + deploy script ★ NEW</a></li>
+<li class="g" aria-hidden="true">Ship it</li>
+<li><a href="#step-14">14 — Tests (vitest)</a></li>
+<li><a href="#step-15">15 — Deploy: Docker + Render</a></li>
+<li><a href="#step-16">16 — Deploy: SAP BTP (MTA + XSUAA)</a></li>
+<li><a href="#step-16b">16b — Approuter + xs-security ★ NEW</a></li>
+<li class="g" aria-hidden="true">Verify & reference</li>
+<li><a href="#verify">✅ Final verification (E2E)</a></li>
+<li><a href="#appendix-full">📦 Appendix Z — completeness pack ★ NEW</a></li>
+<li><a href="#appendix-pitfalls">⚠️ Pitfalls appendix</a></li>
+</ol>
+<div class="toc-progress" id="tocProgress">Reading progress: <b id="tocPct">0%</b><div class="bar"><i id="tocBar"></i></div></div>
+</nav>
+<main class="content">
+
+<div class="card" id="step-0">
+<span class="step-no">STEP 0 • BIG PICTURE (5 min)</span>
+<h2>What you are building — and why it is designed this way</h2>
+<p>You are building a <b>production-grade procurement backend</b>. Think of it as the safe vault behind a purchasing app: humans (Fiori UI), REST clients, MCP AI clients, and autonomous agents all talk to the <b>same CAP services</b>, and every call passes through the <b>same security funnel</b>.</p>
+<figure class="sheet" role="img" aria-label="Security funnel: clients, authentication, authorization plus policy, business logic, database and audit">
+<svg viewBox="0 0 748 208" xmlns="http://www.w3.org/2000/svg" font-family="Consolas,Menlo,monospace">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0a6ed1"/></marker></defs>
+<g font-size="13" font-weight="bold" fill="#1a2333" text-anchor="middle">
+<rect x="6" y="18" width="128" height="78" rx="9" fill="#ffffff" stroke="#0b2545" stroke-width="2"/>
+<text x="70" y="42">CLIENTS</text>
+<rect x="158" y="18" width="128" height="78" rx="9" fill="#e7ecf8" stroke="#0b3d91" stroke-width="2"/>
+<text x="222" y="42">AUTHENTICATE</text>
+<rect x="310" y="18" width="128" height="78" rx="9" fill="#eee9fd" stroke="#6b46e8" stroke-width="2"/>
+<text x="374" y="42">AUTHORIZE</text>
+<rect x="462" y="18" width="128" height="78" rx="9" fill="#e3f2f1" stroke="#0e7c86" stroke-width="2"/>
+<text x="526" y="42">EXECUTE</text>
+<rect x="614" y="18" width="128" height="78" rx="9" fill="#e7f3ea" stroke="#2e7d46" stroke-width="2"/>
+<text x="678" y="42">PERSIST</text>
+</g>
+<g font-size="10" fill="#47536a" text-anchor="middle">
+<text x="70" y="60">Fiori · REST</text><text x="70" y="74">MCP · AI agents</text>
+<text x="222" y="60">JWT / XSUAA</text><text x="222" y="74">or local mock</text>
+<text x="374" y="60">RBAC + grants</text><text x="374" y="74">PolicyEngine</text>
+<text x="526" y="60">srv business logic</text><text x="526" y="74">one transaction</text>
+<text x="678" y="60">PostgreSQL</text><text x="678" y="74">+ re-read row</text>
+</g>
+<g stroke="#0a6ed1" stroke-width="1.6" marker-end="url(#ah)">
+<line x1="136" y1="57" x2="154" y2="57"/><line x1="288" y1="57" x2="306" y2="57"/><line x1="440" y1="57" x2="458" y2="57"/><line x1="592" y1="57" x2="610" y2="57"/>
+</g>
+<g stroke="#8992a6" stroke-width="1.2" stroke-dasharray="4 3">
+<line x1="222" y1="96" x2="222" y2="128"/><line x1="374" y1="96" x2="374" y2="128"/><line x1="526" y1="96" x2="526" y2="128"/><line x1="678" y1="96" x2="678" y2="128"/>
+</g>
+<rect x="6" y="128" width="736" height="58" rx="9" fill="#f9eedc" stroke="#b5710a" stroke-width="1.5"/>
+<text x="374" y="151" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#7a4d05">AUDIT — every sensitive action writes a row</text>
+<text x="374" y="169" text-anchor="middle" font-size="10" fill="#47536a">AuditLogs · MCPToolExecutions · AgentExecutions — success AND denied</text>
+</svg>
+<figcaption class="figcap">Fig 0 · The security funnel — one gate for humans, REST, MCP and agents</figcaption>
+</figure>
+<table><tr><th>Layer</th><th>Folder</th><th>What it does (newbie words)</th></tr>
+<tr><td>Data shape</td><td><code>db/</code></td><td>Tables + relationships (like Excel sheets with links)</td></tr>
+<tr><td>API contract</td><td><code>srv/*.cds</code></td><td>What the outside world is allowed to call</td></tr>
+<tr><td>Brain</td><td><code>srv/*.ts + lib/</code></td><td>Checks permission, checks budget, changes status, writes audit</td></tr>
+<tr><td>AI doors</td><td><code>srv/mcp-service.cds + agent-service.cds</code></td><td>Same brain, but spoken in MCP / A2A language for AI</td></tr>
+</table>
+<div class="callout green"><b>✅ Golden rule to remember</b>MCP never touches the database directly. Agents never touch the database directly. Everything goes MCP → CAP service → AuthZ → Policy → Business logic → Postgres. If you remember only one sentence, remember this one.</div>
+<div class="callout amber"><b>🧠 Newbie mental model: CAP = 3 things</b>1) <code>.cds</code> files = you declare <i>what exists</i>. 2) <code>.ts</code> handlers = you declare <i>what happens</i>. 3) <code>cds run</code> = framework auto-creates OData REST + database access for you.</div>
+</div>
+
+<div class="card" id="step-1">
+<span class="step-no">STEP 1 • PREREQUISITES</span>
+<h2>Install the tools (once per laptop)</h2>
+<p class="muted">Goal: Node 20+, CAP tooling, Docker (for local Postgres), and a code editor. No SAP BTP account needed until Step 16.</p>
+<h3>1.1 Install Node + CDS DK</h3>
+<pre><button class="copy">copy</button><code>node --version   # need v20 or higher (repo dev uses v24)
+npm --version
+npm i -g @sap/cds-dk   # CAP compiler + `cds` CLI (one-time)
+cds --version          # expect 10.0.7 around Sep 2026</code></pre>
+<h3>1.2 Verified dependency versions</h3>
+<p>This app was verified with these exact versions. Pin them to avoid alpha-breakage:</p>
+<pre><button class="copy">copy</button><code># @sap/cds 10.0.6, @cap-js/postgres 3.0.1, @cap-js/mcp 1.4.3,
+# @cap-js/agents 0.9.3 (alpha), @cap-js/cds-test 1.0, Node 20+</code></pre>
+<h3>1.3 Install Docker (for local Postgres)</h3>
+<p>Download <b>Docker Desktop</b>, start it, then test: <code>docker ps</code> should return an empty table, not an error.</p>
+<div class="callout"><b>💡 Why two databases?</b>We code against throwaway <b>SQLite in-memory</b> (zero setup, reseeds every boot) and switch to <b>PostgreSQL</b> (persistent, production-like) via one env var <code>CDS_ENV=postgres</code>. You will do both in Step 11.</div>
+</div>
+
+<div class="card" id="step-2">
+<span class="step-no">STEP 2 • SCAFFOLD</span>
+<h2>Create the empty CAP project skeleton</h2>
+<h3>2.1 Create folders</h3>
+<pre><button class="copy">copy</button><code>mkdir enterprise-ai-procurement
+cd enterprise-ai-procurement
+mkdir db srv lib app test scripts approuter remote-supplier-agent docs
+mkdir db/data lib/auth lib/authorization lib/workflow lib/audit lib/security lib/validation lib/database lib/agents</code></pre>
+<h3>2.2 Create package.json</h3>
+<p>This is the heart of dependency + profile switching. Copy this exactly (then <code>npm i</code>):</p>
+<pre><button class="copy">copy</button><code>{
+  "name": "enterprise-ai-procurement",
+  "version": "1.0.0",
+  "type": "module",
+  "engines": { "node": "&gt;=20" },
+  "dependencies": {
+    "@cap-js/agents": "^0.9.3",
+    "@cap-js/mcp": "^1.4.3",
+    "@cap-js/postgres": "^3",
+    "@sap/cds": "^10",
+    "@sap/xssec": "^4.15.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "tsx": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1.0.0",
+    "@cap-js/sqlite": "^3",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "scripts": {
+    "build": "tsc --noEmit -p tsconfig.json",
+    "start": "tsx ./node_modules/@sap/cds/bin/serve.js",
+    "watch": "cds watch",
+    "test": "vitest run",
+    "db:deploy:pg": "node scripts/deploy-pg.cjs"
+  },
+  "cds": {
+    "mcp": { "per_action_tool": true, "prefix": true, "format": "cql" },
+    "requires": {
+      "db": {
+        "kind": "sqlite", "credentials": { "database": ":memory:" },
+        "[production]": { "kind": "postgres" },
+        "[postgres]": { "kind": "postgres" }
+      },
+      "auth": { "kind": "mocked", "[production]": { "kind": "jwt" } }
+    }
+  }
+}</code></pre>
+<div class="callout green"><b>✅ What this gives you</b><code>npm start</code> runs under <code>tsx</code> so TypeScript handlers resolve; default profile = SQLite memory; <code>CDS_ENV=postgres</code> or production = Postgres; auth = mocked locally, JWT in production. This one block removes 90% of "works on my machine" bugs.</div>
+<h3>2.3 Create .cdsrc.json + tsconfig.json + .env.example</h3>
+<pre><button class="copy">copy</button><code>// .cdsrc.json — mirrors package.json cds.requires (file form)
+{"requires":{"db":{"kind":"sqlite","credentials":{"database":":memory:"},
+"[production]":{"kind":"postgres"},"[postgres]":{"kind":"postgres"}},
+"auth":{"kind":"mocked","[production]":{"kind":"jwt"}}},
+"server":{"port":{"env":"PORT","default":4004}}}</code></pre>
+<pre><button class="copy">copy</button><code># .env.example — copy to .env and fill secrets (NEVER commit .env)
+PORT=4004
+JWT_SECRET=dev-only-secret-change-me
+JWT_ISSUER=http://localhost:4004
+JWT_AUDIENCE=enterprise-ai-procurement
+ALLOW_MOCK_AUTH=true
+DATABASE_URL=
+AI_API_URL=https://api.deepseek.com
+AI_API_KEY=
+AI_MODEL=deepseek-v4-flash
+REMOTE_SUPPLIER_AGENT_URL=http://localhost:4007</code></pre>
+</div>
+
+<div class="card" id="step-3">
+<span class="step-no">STEP 3 • DATA MODEL PART 1</span>
+<h2>Create db/common.cds — reusable building blocks</h2>
+<p>Before tables, define <b>aspects</b> (reusable stickers) and <b>types</b> (allowed status words). Every tenant-sensitive table will say <code>: TenantAware</code> — that one word adds a <code>tenantId</code> column.</p>
+<pre><button class="copy">copy</button><code>namespace procurement.common;
+
+aspect TenantAware {
+  tenantId : String(64) not null;
+}
+aspect Auditable {
+  createdByAgent : String(128);
+  lastModifiedByAgent : String(128);
+}
+type PRStatus : String enum {
+  DRAFT; SUBMITTED; UNDER_REVIEW; APPROVED;
+  REJECTED; CONVERTED_TO_PO; CANCELLED;
+}
+type POStatus : String enum {
+  DRAFT; PENDING_APPROVAL; APPROVED; SENT_TO_SUPPLIER;
+  PARTIALLY_RECEIVED; FULLY_RECEIVED; INVOICED; CLOSED; CANCELLED;
+}
+type InvoiceStatus : String enum {
+  DRAFT; SUBMITTED; MATCHED; MISMATCH; APPROVED; PAID; REJECTED; CANCELLED;
+}
+type RiskLevel : String enum { LOW; MEDIUM; HIGH; CRITICAL; }
+type PolicyAction : String enum {
+  AUTO_APPROVE; REQUIRE_MANAGER; REQUIRE_FINANCE; REQUIRE_HUMAN; DENY;
+}</code></pre>
+<div class="callout"><b>💡 Newbie tip</b>Enum = "only these words allowed". If code tries to set status to <code>FLYING</code>, CAP rejects it. That is how illegal workflow transitions become impossible at the data layer too.</div>
+</div>
+
+<div class="card" id="step-4">
+<span class="step-no">STEP 4 • DATA MODEL PART 2</span>
+<h2>Create db/schema.cds — all 30+ entities</h2>
+<p class="muted">Build it in 6 blocks. You can paste the full file from the repo, but understand each block below.</p>
+<h3>Block A — Identity (who can log in)</h3>
+<pre><button class="copy">copy</button><code>namespace procurement.db;
+using { cuid, managed } from '@sap/cds/common';
+using { procurement.common as c } from './common';
+
+entity Users : cuid, managed, c.TenantAware {
+  username     : String(128) not null;
+  email        : String(256) not null;
+  displayName  : String(256);
+  active       : Boolean default true not null;
+  organization : Association to Organizations;
+  department   : Association to Departments;
+}
+entity Roles : cuid, managed {
+  name        : String(64) not null;
+  description : String(512);
+}
+entity Permissions : cuid, managed {
+  name        : String(128) not null;
+  description : String(512);
+  category    : String(64);
+}
+entity UserRoles : cuid, managed {
+  user : Association to Users not null;
+  role : Association to Roles not null;
+}
+entity RolePermissions : cuid, managed {
+  role       : Association to Roles not null;
+  permission : Association to Permissions not null;
+}</code></pre>
+<h3>Block B — Suppliers & materials</h3>
+<pre><button class="copy">copy</button><code>entity Suppliers : cuid, managed, c.TenantAware {
+  supplierId   : String(64) not null;
+  name         : String(256) not null;
+  country      : String(64);
+  active       : Boolean default true not null;
+  riskScore    : Integer default 0;
+  riskLevel    : c.RiskLevel default #LOW;
+  onTimeRate   : Decimal(5,2) default 100.0;
+  disputeCount : Integer default 0;
+  totalSpend   : Decimal(18,2) default 0;
+}</code></pre>
+<h3>Block C — The procurement chain (the core!)</h3>
+<pre><button class="copy">copy</button><code>entity PurchaseRequisitions : cuid, managed, c.TenantAware, c.Auditable {
+  requisitionNo : String(32) not null;
+  title         : String(256) not null;
+  requester     : Association to Users not null;
+  department    : Association to Departments not null;
+  status        : c.PRStatus default #DRAFT not null;
+  totalAmount   : Decimal(18,2) default 0 not null;
+  currency      : String(3) default 'INR';
+  version       : Integer default 1 not null; // optimistic locking
+  items         : Composition of many PurchaseRequisitionItems
+                    on items.requisition = $self;
+}
+entity PurchaseRequisitionItems : cuid {
+  requisition : Association to PurchaseRequisitions not null;
+  lineNo      : Integer not null;
+  description : String(1024) not null;
+  quantity    : Decimal(15,3) not null;
+  unitPrice   : Decimal(18,2) not null;
+  lineAmount  : Decimal(18,2);
+}
+entity PurchaseOrders : cuid, managed, c.TenantAware, c.Auditable {
+  orderNo     : String(32) not null;
+  requisition : Association to PurchaseRequisitions;
+  supplier    : Association to Suppliers not null;
+  status      : c.POStatus default #DRAFT not null;
+  totalAmount : Decimal(18,2) default 0 not null;
+  version     : Integer default 1 not null;
+}
+entity Invoices : cuid, managed, c.TenantAware, c.Auditable {
+  invoiceNo     : String(64) not null;
+  purchaseOrder : Association to PurchaseOrders;
+  supplier      : Association to Suppliers not null;
+  status        : c.InvoiceStatus default #DRAFT not null;
+  totalAmount   : Decimal(18,2) not null;
+  matchResult   : String(32);
+  matchDetails  : LargeString;
+}</code></pre>
+<h3>Block D — Budgets, audit, agents, risk, policy</h3>
+<pre><button class="copy">copy</button><code>entity Budgets : cuid, managed, c.TenantAware {
+  code        : String(64) not null;
+  department  : Association to Departments;
+  fiscalYear  : Integer not null;
+  totalAmount : Decimal(18,2) not null;
+  committed   : Decimal(18,2) default 0;
+  consumed    : Decimal(18,2) default 0;
+}
+entity AuditLogs : cuid, managed {
+  timestamp : DateTime;
+  tenantId  : String(64);
+  actorType : c.ActorType not null;  // USER / AGENT / SYSTEM
+  actorId   : String(128) not null;
+  action    : String(128) not null;
+  entity    : String(128);
+  entityId  : String(128);
+  result    : String(32) default 'SUCCESS';
+}
+entity Agents : cuid, managed, c.TenantAware {
+  agentId     : String(128) not null;
+  name        : String(256) not null;
+  kind        : String(64) not null; // PROCUREMENT, APPROVAL, RISK, ...
+  active      : Boolean default true;
+  maxAutoApproveAmount : Decimal(18,2) default 50000;
+}
+entity Policies : cuid, managed, c.TenantAware {
+  code       : String(128) not null;
+  conditions : LargeString not null; // JSON
+  action     : c.PolicyAction not null;
+  priority   : Integer default 100;
+  active     : Boolean default true;
+}</code></pre>
+<div class="callout green"><b>✅ Verify now</b>Run <code>npx cds compile --to csn db srv</code>. If it prints JSON with no errors, your model is valid. Fix typos before continuing — everything downstream depends on this file.</div>
+</div>
+
+<div class="card" id="step-5">
+<span class="step-no">STEP 5 • SEED DATA</span>
+<h2>Add demo CSVs so the app boots with life</h2>
+<p>Each <code>db/data/*.csv</code> filename must match the entity: <code>procurement.db-Users.csv</code>, <code>procurement.db-Roles.csv</code>, etc. First row = column names. Minimal set: 2 tenants, 8 users, 9 roles, suppliers, departments, budgets, one PR.</p>
+<pre><button class="copy">copy</button><code># db/data/procurement.db-Organizations.csv
+ID,tenantId,name,country,active
+org-a,tenant-a,Acme India,IN,true
+org-b,tenant-b,Acme Europe,DE,true
+
+# db/data/procurement.db-Users.csv (excerpt — use real UUIDs via `node -e "console.log(crypto.randomUUID())"`)
+ID,tenantId,username,email,displayName,active
+u-admin,tenant-a,admin,admin@example.com,Admin,true
+u-emp,tenant-a,employee,employee@example.com,Employee,true
+u-mgr,tenant-a,manager,manager@example.com,Manager,true</code></pre>
+<div class="callout amber"><b>⚠️ Postgres lesson baked in</b>Direct <code>INSERT</code>s must carry explicit <code>randomUUID()</code> IDs and re-read the row (Postgres returns <code>[]</code>, SQLite returns the object). All seed/deploy scripts in this repo already do that — copy the pattern, don't invent your own.</div>
+</div>
+
+<div class="card" id="step-6">
+<span class="step-no">STEP 6 • SECURITY BRAIN PART 1</span>
+<h2>lib/auth/rbac.ts + authentication.ts + authorization.ts</h2>
+<p>This is the most important step. Get this wrong and AI agents can do anything. Get it right and you can safely plug in any LLM.</p>
+<h3>6.1 lib/auth/rbac.ts — the permission dictionary</h3>
+<pre><button class="copy">copy</button><code>export const PERMISSIONS = {
+  READ_PR: 'READ_PURCHASE_REQUISITION',
+  CREATE_PR: 'CREATE_PURCHASE_REQUISITION',
+  UPDATE_PR: 'UPDATE_PURCHASE_REQUISITION',
+  DELETE_PR: 'DELETE_PURCHASE_REQUISITION',
+  APPROVE_PR: 'APPROVE_PURCHASE_REQUISITION',
+  REJECT_PR: 'REJECT_PURCHASE_REQUISITION',
+  CREATE_PO: 'CREATE_PURCHASE_ORDER',
+  READ_SUPPLIER: 'READ_SUPPLIER',
+  APPROVE_INVOICE: 'APPROVE_INVOICE',
+  READ_BUDGET: 'READ_BUDGET',
+  EXECUTE_AGENT: 'EXECUTE_AGENT',
+  EXECUTE_MCP_TOOL: 'EXECUTE_MCP_TOOL',
+  VIEW_AUDIT_LOG: 'VIEW_AUDIT_LOG',
+  ADMIN_SYSTEM: 'ADMIN_SYSTEM',
+} as const;
+
+export const ROLE_PERMISSIONS: Record&lt;string,string[]&gt; = {
+  ADMIN: Object.values(PERMISSIONS),
+  APPROVER: ['READ_PURCHASE_REQUISITION','APPROVE_PURCHASE_REQUISITION','REJECT_PURCHASE_REQUISITION'],
+  EMPLOYEE: ['READ_PURCHASE_REQUISITION','CREATE_PURCHASE_REQUISITION','UPDATE_PURCHASE_REQUISITION'],
+  AI_AGENT: [], // ← EMPTY on purpose: agents get explicit per-agent grants only
+};</code></pre>
+<h3>6.2 lib/auth/authentication.ts — who are you?</h3>
+<p>Order: 1) XSUAA on BTP (automatic via VCAP_SERVICES) → 2) HS256 JWT if <code>JWT_SECRET</code> set → 3) local mock via <code>x-mock-user</code> header only if <code>ALLOW_MOCK_AUTH=true</code>. Always returns a <code>RequestContext { userId, tenantId, roles, permissions, isAgent }</code>.</p>
+<pre><button class="copy">copy</button><code>// simplified shape
+async function authenticateRequest(httpReq) {
+  // 1. Bearer JWT? verify with xssec (BTP) or jsonwebtoken (Render/local)
+  // 2. else x-mock-user header? map "manager@example.com" → roles/permissions/tenant
+  // 3. else → anonymous → requireAuth() will throw 401
+  return { ctx: { userId, tenantId, roles, permissions, isAgent, agentId } };
+}</code></pre>
+<h3>6.3 lib/authorization/authorization.ts — are you allowed?</h3>
+<pre><button class="copy">copy</button><code>AuthorizationService.requirePermission(ctx, PERMISSIONS.APPROVE_PR);
+// throws 403 + audit if missing. Also:
+AuthorizationService.canExecuteTool(ctx, 'createPurchaseOrder');
+enforceTenant(ctx, req.data.tenantId); // rejects forged ?tenantId=OTHER</code></pre>
+<div class="callout red"><b>🛑 Never do this</b>Never trust <code>req.data.tenantId</code> from the client. Always overwrite with <code>ctx.tenantId</code>. Never check roles on the frontend only — enforcement lives in <code>before/on</code> handlers, server-side.</div>
+</div>
+
+<div class="card" id="step-7">
+<span class="step-no">STEP 7 • WORKFLOW BRAIN PART 2</span>
+<h2>Tenant, policy, lifecycle, audit, validation, rate-limit</h2>
+<table><tr><th>File</th><th>Job in one sentence</th><th>Key function</th></tr>
+<tr><td><code>lib/database/tenant.ts</code></td><td>Forces every query to stay inside your tenant</td><td><code>tenantWhere(ctx)</code></td></tr>
+<tr><td><code>lib/workflow/policy.ts</code></td><td>LLM recommends, <b>policy decides</b></td><td><code>evaluatePolicy({amount, risk})</code></td></tr>
+<tr><td><code>lib/workflow/lifecycle.ts</code></td><td>Legal status jumps only</td><td><code>assertTransition(PR_FLOW, from, to)</code></td></tr>
+<tr><td><code>lib/audit/audit.ts</code></td><td>Writes who did what, always</td><td><code>writeAudit(tx, ctx, {...})</code></td></tr>
+<tr><td><code>lib/validation/validation.ts</code></td><td>Rejects bad numbers early</td><td><code>validateRequisition(data)</code></td></tr>
+<tr><td><code>lib/security/*</code></td><td>Sanitize LLM input, rate-limit, clean errors</td><td><code>sanitizeForLLM(text)</code></td></tr></table>
+<pre><button class="copy">copy</button><code>// lib/workflow/policy.ts — the human-in-the-loop gate
+// &lt; ₹50k → AUTO_APPROVE · ₹50k–500k → REQUIRE_MANAGER
+// ₹500k–1M → REQUIRE_HUMAN · &gt; ₹1M → mandatory human
+// HIGH/CRITICAL risk → always human, no matter the amount
+evaluatePolicy({ totalAmount: 800000, riskLevel: 'LOW' });
+// → { action: 'REQUIRE_HUMAN', reason: 'amount ≥ 500k' }
+
+// lib/workflow/lifecycle.ts
+export const PR_FLOW = {
+  DRAFT: ['SUBMITTED','CANCELLED'],
+  SUBMITTED: ['UNDER_REVIEW','REJECTED'],
+  UNDER_REVIEW: ['APPROVED','REJECTED'],
+  APPROVED: ['CONVERTED_TO_PO'],
+  REJECTED: ['DRAFT'], // re-open only
+  CONVERTED_TO_PO: [], CANCELLED: []
+};
+assertTransition(PR_FLOW, 'DRAFT', 'APPROVED'); // throws INVALID_STATE_TRANSITION</code></pre>
+<div class="callout violet"><b>🤖 AI security pattern</b>Treat all business text as <b>DATA</b>. <code>sanitizeForLLM()</code> strips "ignore previous instructions" tricks. Then re-validate AI output against CDS validation + AuthZ + policy + DB state <i>before</i> execution. The LLM is an advisor, never the decider.</div>
+<h3>7.1 The exact lib/ files to create (16 files — the guide previously glossed over 9)</h3>
+<pre><button class="copy">copy</button><code>lib/auth/authentication.ts  — JWT (XSUAA JWKS via @sap/xssec → HS256 via jsonwebtoken → mock)
+lib/auth/rbac.ts            — PERMISSIONS (21) + ROLES (9) + ROLE_PERMISSIONS + MCP_TOOL_PERMISSIONS
+lib/authorization/authorization.ts — requireAuth/requirePermission/canExecuteTool/enforceTenant
+lib/agents/agent-auth.ts    — authorizeAgentTool() + AGENT_DEFINITIONS (7 agents, per-tool grants)
+lib/agents/a2a-client.ts    — sendA2AMessage(rpcUrl, text) + fetchAgentCard() (JSON-RPC 2.0)
+lib/agents/ai-service.ts    — getAIService(): mock locally, DeepSeek/SAP AI Core when AI_API_KEY set
+lib/database/tenant.ts      — tenantWhere(ctx) helper; tenant ALWAYS from ctx, never client
+lib/workflow/policy.ts      — evaluatePolicy({amount, riskLevel}) → AUTO_APPROVE/REQUIRE_*/DENY
+lib/workflow/lifecycle.ts   — PR_FLOW + PO_FLOW + assertTransition() (409 on illegal jump)
+lib/audit/audit.ts          — writeAudit(tx, ctx, {action, entity, entityId, old/new}) → AuditLogs
+lib/validation/validation.ts— validateRequisition/validatePO + threeWayMatch() + sanitizeForLLM()
+lib/security/rate-limit.ts  — checkRateLimit(key, maxPerMin) + rateKey(tool, actor) (in-memory; Redis for multi-instance)
+lib/security/errors.ts      — reqError(code,msg) + toHttpError(e) (masks passwords/tokens/DB internals)
+lib/security/observability.ts — log(ctx, msg, fields) structured JSON (request/correlation/tenant/actor)
+lib/cds-globals.d.ts        — `declare global { const SELECT, INSERT, UPDATE, DELETE }` so TS accepts CAP globals</code></pre>
+<h3>7.2 tsconfig + eslint (previously undocumented)</h3>
+<pre><button class="copy">copy</button><code>// tsconfig.json — NodeNext + path alias used by generated @cds-models types
+{"compilerOptions":{"target":"ES2022","module":"NodeNext","moduleResolution":"NodeNext",
+"strict":false,"skipLibCheck":true,"noEmit":true,"allowJs":true,"types":["node"],
+"paths":{"#cds-models/*":["./@cds-models/*"]}},
+"include":["srv/**/*","lib/**/*","test/**/*"]}
+// eslint.config.mjs
+import cds from '@sap/cds/eslint.config.mjs'
+export default [ ...cds.recommended ]
+// package.json scripts you must keep: build (tsc --noEmit), start (tsx serve.js),
+// watch (cds watch), test (vitest run), lint (eslint .), db:deploy:pg, remote-agent</code></pre>
+</div>
+
+<div class="card" id="step-8">
+<span class="step-no">STEP 8 • API CONTRACTS</span>
+<h2>Write the srv/*.cds service definitions</h2>
+<p>Each service = OData endpoint + MCP/Agent annotation. Start with procurement, then copy the pattern for the rest.</p>
+<pre><button class="copy">copy</button><code>// srv/procurement-service.cds
+using { procurement.db as db } from '../db/schema';
+
+@path: '/odata/v4/procurement'
+@odata
+@mcp: 'procurement-ops'
+service ProcurementService {
+  entity PurchaseRequisitions as projection on db.PurchaseRequisitions;
+  entity PurchaseRequisitionItems as projection on db.PurchaseRequisitionItems;
+  entity PurchaseOrders as projection on db.PurchaseOrders;
+  entity PurchaseOrderItems as projection on db.PurchaseOrderItems;
+  entity GoodsReceipts as projection on db.GoodsReceipts;
+
+  action submitRequisition(ID : String) returns String;
+  action approveRequisition(ID : String, comment : String) returns String;
+  action rejectRequisition(ID : String, comment : String) returns String;
+  action convertToPurchaseOrder(requisitionID : String, supplierID : String)
+    returns PurchaseOrders;
+}</code></pre>
+<pre><button class="copy">copy</button><code>// srv/mcp-service.cds — the runtime MCP business interface
+@path: '/odata/v4/mcp'
+@odata
+@mcp: 'procurement'
+@mcp.instructions: 'Use search tools to explore procurement data. Never invent IDs.'
+service MCPService {
+  entity PurchaseRequisitions as projection on db.PurchaseRequisitions;
+  entity PurchaseOrders as projection on db.PurchaseOrders;
+  entity Suppliers as projection on db.Suppliers;
+  entity Invoices as projection on db.Invoices;
+
+  @mcp.description: 'Search purchase requisitions with optional status filter'
+  function searchPurchaseRequisitions(status: String, search: String, top: Integer)
+    returns many PurchaseRequisitions;
+  @mcp.description: 'Create a purchase order from an approved requisition'
+  action createPurchaseOrder(requisitionID: String, supplierID: String)
+    returns PurchaseOrders;
+  function checkBudget(departmentID: String, amount: Decimal) returns Boolean;
+  function getProcurementRisk(requisitionID: String) returns RiskAssessments;
+  action submitForApproval(requisitionID: String) returns String;
+}</code></pre>
+<p>Now create the remaining five contracts exactly as in the repo:</p>
+<pre><button class="copy">copy</button><code>// srv/approval-service.cds
+@path: '/odata/v4/approval'  @mcp: 'approvals'
+service ApprovalService {
+  entity Approvals as projection on db.Approvals;
+  entity ApprovalSteps as projection on db.ApprovalSteps;
+  entity Workflows as projection on db.Workflows;
+  entity WorkflowTasks as projection on db.WorkflowTasks;
+  action decideApproval(approvalID: String, decision: String, comment: String) returns String;
+}
+// srv/supplier-service.cds
+@path: '/odata/v4/suppliers'  @mcp: 'suppliers'
+service SupplierService {
+  entity Suppliers as projection on db.Suppliers;
+  entity SupplierContacts as projection on db.SupplierContacts;
+  entity Materials as projection on db.Materials;
+  entity MaterialCategories as projection on db.MaterialCategories;
+  function assessSupplierRisk(supplierID: String) returns LargeString;
+}
+// srv/invoice-service.cds
+@path: '/odata/v4/invoices'  @mcp: 'invoices'
+service InvoiceService {
+  entity Invoices as projection on db.Invoices;
+  entity InvoiceItems as projection on db.InvoiceItems;
+  entity Payments as projection on db.Payments;
+  action matchInvoice(invoiceID: String) returns String;
+  action approveInvoice(invoiceID: String) returns String;
+  action createPayment(invoiceID: String, amount: Decimal, method: String) returns Payments;
+}
+// srv/catalog-service.cds
+@path: '/odata/v4/catalog'  @mcp: 'catalog'
+service CatalogService {
+  entity Users as projection on db.Users excluding { roles };
+  entity Departments as projection on db.Departments;
+  entity Budgets as projection on db.Budgets;
+  entity Policies as projection on db.Policies;
+  function checkBudget(departmentID: String, amount: Decimal) returns Boolean;
+}
+// srv/agent-service.cds — note @Agent (not @mcp), served at /odata/v4/agents
+@path: '/odata/v4/agents'  @Agent
+service AgentService {
+  entity Agents as projection on db.Agents;
+  entity AgentExecutions as projection on db.AgentExecutions;
+  action executeTask(agentId: String, intent: String, payload: LargeString) returns LargeString;
+  action chat(conversationId: String, message: String) returns LargeString;
+  action orchestrate(goal: String, payload: LargeString) returns LargeString;
+  action callRemoteAgent(agentName: String, message: String) returns LargeString;
+}
+// srv/audit-service.cds — read-only, NO @mcp (auditors read via OData only)
+@path: '/odata/v4/audit'
+service AuditService {
+  @readonly entity AuditLogs as projection on db.AuditLogs;
+  @readonly entity MCPToolExecutions as projection on db.MCPToolExecutions;
+}</code></pre>
+<div class="callout red"><b>🛑 What the first version missed: AuditService</b>The repo has 8 services, not 7. <code>AuditService</code> is deliberately <code>@readonly</code> with no <code>@mcp</code> annotation — audit trails are never writable and never callable as AI tools. Only the <code>AUDITOR</code> role (permission <code>VIEW_AUDIT_LOG</code>) can read them.</div>
+<div class="callout"><b>💡 Newbie trap: two MCPs, different jobs</b><code>@cap-js/mcp</code> (this step) = <b>runtime</b> business interface your AI calls in production. <code>@cap-js/mcp-server / cds-mcp CLI</code> = <b>dev-time</b> coding assistant that reads your compiled model. Don't mix them up.</div>
+</div>
+
+<div class="card" id="step-9">
+<span class="step-no">STEP 9 • BUSINESS LOGIC</span>
+<h2>Write the srv/*.ts handlers (the real app)</h2>
+<div class="callout red"><b>🛑 Three rules that will save you hours</b>1) Handlers MUST <code>extends (cds.ApplicationService as any)</code> — raw <code>cds.Service</code> has no CRUD executors. 2) Single-row reads MUST use <code>SELECT.one</code> (bare <code>where()</code> returns an array). 3) <code>after</code> hooks MUST <code>return data</code> — returning <code>undefined</code> wipes the response.</div>
+<pre><button class="copy">copy</button><code>import cds from '@sap/cds';
+import { authenticateRequest } from '../lib/auth/authentication.js';
+import { AuthorizationService } from '../lib/authorization/authorization.js';
+import { PERMISSIONS } from '../lib/auth/rbac.js';
+import { writeAudit } from '../lib/audit/audit.js';
+import { assertTransition, PR_FLOW } from '../lib/workflow/lifecycle.js';
+
+async function ctxOf(req: any) {
+  const { ctx } = await authenticateRequest(req.http?.req ?? req);
+  AuthorizationService.requireAuth(ctx);
+  return ctx;
+}
+
+export default class ProcurementService extends (cds.ApplicationService as any) {
+  async init() {
+    const { PurchaseRequisitions } = this.entities;
+
+    // READ guard: permission + tenant fence
+    this.before('READ', PurchaseRequisitions, async (req: any) =&gt; {
+      const ctx = await ctxOf(req);
+      AuthorizationService.requirePermission(ctx, PERMISSIONS.READ_PR);
+      req.query.where({ tenantId: ctx.tenantId });
+    });
+
+    // CREATE guard: validate + force server tenant
+    this.before(['CREATE'], PurchaseRequisitions, async (req: any) =&gt; {
+      const ctx = await ctxOf(req);
+      AuthorizationService.requirePermission(ctx, PERMISSIONS.CREATE_PR);
+      req.data.tenantId = ctx.tenantId; // never trust client
+      req.data.status = 'DRAFT';
+      req.data.requisitionNo ??= `PR-${Date.now().toString().slice(-6)}`;
+    });
+
+    // Audit must never break the response — try/catch + return data
+    this.after(['CREATE'], PurchaseRequisitions, async (data: any, req: any) =&gt; {
+      try {
+        if (!data) return data;
+        const ctx = await ctxOf(req);
+        await writeAudit(this, ctx, { action: 'PURCHASE_REQUISITION_CREATED',
+          entity: 'PurchaseRequisitions', entityId: data.ID, newValue: data });
+      } catch (e) { console.error('[audit] failed', (e as Error).message); }
+      return data;
+    });
+
+    // Lifecycle action: transactional + concurrency-safe
+    this.on('submitRequisition', async (req: any) =&gt; {
+      const ctx = await ctxOf(req);
+      AuthorizationService.requirePermission(ctx, PERMISSIONS.CREATE_PR);
+      const tx = cds.tx(req);
+      const pr: any = await tx.run(
+        SELECT.one.from(PurchaseRequisitions)
+          .where({ ID: req.data.ID, tenantId: ctx.tenantId }).forUpdate());
+      if (!pr) throw Object.assign(new Error('Requisition not found'), { status: 404 });
+      assertTransition(PR_FLOW, pr.status, 'SUBMITTED');
+      await tx.update(PurchaseRequisitions)
+        .set({ status: 'SUBMITTED', version: pr.version + 1 })
+        .where({ ID: pr.ID, version: pr.version });
+      await writeAudit(tx, ctx, { action: 'PURCHASE_REQUISITION_SUBMITTED',
+        entity: 'PurchaseRequisitions', entityId: pr.ID });
+      return 'SUBMITTED';
+    });
+  }
+}</code></pre>
+<h3>9.2 convertToPurchaseOrder — the most gated action in the app</h3>
+<pre><button class="copy">copy</button><code>// srv/procurement-service.ts — convertToPurchaseOrder (simplified)
+this.on('convertToPurchaseOrder', async (req: any) =&gt; {
+  const ctx = await ctxOf(req);
+  AuthorizationService.requirePermission(ctx, PERMISSIONS.CREATE_PO);
+  const tx = cds.tx(req);
+  const pr: any = await tx.run(SELECT.one.from(PurchaseRequisitions)
+    .where({ ID: req.data.requisitionID, tenantId: ctx.tenantId }).forUpdate());
+  if (!pr || pr.status !== 'APPROVED') throw reqError('INVALID_STATE_TRANSITION','PR must be APPROVED');
+  // gates inside ONE transaction: budget → supplier active → risk → policy
+  // budget: Budgets.committed + consumed vs totalAmount
+  // supplier: Suppliers.active must be true, same tenant
+  // risk: onTimeRate/disputes → score; HIGH/CRITICAL → REQUIRE_HUMAN
+  // policy: evaluatePolicy({ amount, risk }) → DENY stops the tx
+  const poId = randomUUID();
+  await tx.run(INSERT.into('procurement.db.PurchaseOrders').entries({
+    ID: poId, orderNo: `PO-${Date.now().toString().slice(-6)}`,
+    requisition_ID: pr.ID, supplier_ID: req.data.supplierID,
+    tenantId: ctx.tenantId, status: 'APPROVED', totalAmount: pr.totalAmount }));
+  await tx.update(PurchaseRequisitions).set({ status: 'CONVERTED_TO_PO' }).where({ ID: pr.ID });
+  await writeAudit(tx, ctx, { action: 'PURCHASE_ORDER_CREATED', entity: 'PurchaseOrders', entityId: poId });
+  return await tx.run(SELECT.one.from(PurchaseOrders).where({ ID: poId })); // re-read: PG returns [] on INSERT
+});</code></pre>
+<h3>9.3 Invoice: match → approve → pay (FINANCE-only last step)</h3>
+<pre><button class="copy">copy</button><code>// srv/invoice-service.ts — three-way match then strict state machine
+// matchInvoice: PO items vs GoodsReceipt items vs Invoice items
+const { matched, issues } = threeWayMatch(poItems, receiptItems, invItems);
+await tx.update('procurement.db.Invoices')
+  .set({ status: matched ? 'MATCHED' : 'MISMATCH', matchResult: matched?'MATCHED':'MISMATCH',
+         matchDetails: JSON.stringify(issues).slice(0,4000) }).where({ ID: inv.ID });
+// approveInvoice: only MATCHED or SUBMITTED → APPROVED (APPROVE_INVOICE perm)
+// createPayment: invoice must be APPROVED + caller must have FINANCE or ADMIN role
+if (!ctx.roles.includes('FINANCE') &amp;&amp; !ctx.roles.includes('ADMIN'))
+  throw Object.assign(new Error('FINANCE role required'), { status: 403 });</code></pre>
+<h3>9.4 Approval, supplier, catalog, MCP guard, agents</h3>
+<pre><button class="copy">copy</button><code>// approval-service.ts — decideApproval: single decision, audited; PENDING only
+// supplier-service.ts — assessSupplierRisk(supplierID):
+//   score = riskScore + disputes*10 + (100-onTimeRate)/2 → LOW/MEDIUM/HIGH/CRITICAL
+// catalog-service.ts — checkBudget(deptID, amount):
+//   available = total - committed - consumed → return available &gt;= amount
+// mcp-service.ts — EVERY tool wrapped identically:
+async function guardTool(req, toolName) {
+  const ctx = await ctxOf(req);
+  AuthorizationService.requirePermission(ctx, 'EXECUTE_MCP_TOOL');
+  AuthorizationService.requirePermission(ctx, MCP_TOOL_PERMISSIONS[toolName]);
+  checkRateLimit(rateKey(toolName, ctx.actorId), 60); // 20–60/min per tool
+  if (ctx.isAgent &amp;&amp; ctx.agentId)
+    await authorizeAgentTool(cds.tx(req), ctx, ctx.agentId, toolName);
+  return ctx;
+}
+// + recordMcp() writes MCPToolExecutions + AuditLogs on SUCCESS *and* DENIED.
+// agent-service.ts — specialists never touch DB directly except via tx.read on
+//   their own domain; orchestrator() routes goal → specialists → policy → audit.
+//   callRemoteAgent() allowlists ONLY 'remote-supplier-agent'/'remote-logistics-agent'.</code></pre>
+<div class="callout amber"><b>⚠️ GoodsReceipts: the chain link beginners skip</b>PO → <code>GoodsReceipts + GoodsReceiptItems</code> (who received how much) → <code>Invoices + InvoiceItems</code> → <code>matchInvoice</code>. Without a goods receipt, <code>threeWayMatch()</code> in <code>lib/validation/validation.ts</code> reports missing-receipt issues and the invoice stays <code>MISMATCH</code>. Create receipts via OData <code>POST /odata/v4/procurement/GoodsReceipts</code> before matching.</div>
+</div>
+
+<div class="card" id="step-10">
+<span class="step-no">STEP 10 • BOOTSTRAP & CONFIG</span>
+<h2>srv/server.js, scripts, Dockerfile, approuter stub</h2>
+<pre><button class="copy">copy</button><code>// srv/server.js — health + security headers + A2A discovery card
+import dotenv from 'dotenv'; dotenv.config();
+import cds from '@sap/cds';
+process.env.CDS_TYPESCRIPT ??= 'true'; // so .ts handlers resolve
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+
+cds.on('bootstrap', (app) =&gt; {
+  app.use(helmet());
+  app.use(rateLimit({ windowMs: 15*60*1000, max: 600 }));
+  app.get('/liveness', (_req, res) =&gt; res.json({ status: 'alive' }));
+  app.get('/readiness', async (_req, res) =&gt; {
+    try { await cds.db?.run('SELECT 1'); res.json({ ready: true }); }
+    catch { res.status(503).json({ ready: false }); }
+  });
+  app.get('/.well-known/agent.json', (_req, res) =&gt; res.json({
+    name: 'enterprise-ai-procurement-orchestrator',
+    protocol: 'A2A/0.2', version: '1.0.0',
+    skills: ['procurement','approval','supplier-risk','invoice-matching','budget-check','audit'],
+    endpoints: { rpc: '/odata/v4/agents/orchestrate', mcp: '/mcp' },
+  }));
+});
+export default cds.server;</code></pre>
+<pre><button class="copy">copy</button><code># Dockerfile — Render / any container host
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --ignore-scripts
+COPY . .
+RUN npm run build || true
+FROM node:20-alpine AS runtime
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev --ignore-scripts
+COPY --from=build /app ./
+EXPOSE 4004
+CMD ["sh","-c","npm run db:deploy:prod || true; npm start"]</code></pre>
+</div>
+
+<div class="card" id="step-11">
+<span class="step-no">STEP 11 • RUN LOCALLY</span>
+<h2>SQLite first (instant), Postgres second (persistent)</h2>
+<h3>Option A — Throwaway SQLite (default, zero setup)</h3>
+<pre><button class="copy">copy</button><code>npm i
+npm start
+# → http://localhost:4004/health
+curl localhost:4004/health
+# OData with a mock user (local only!):
+curl -H "x-mock-user: procurement@example.com" \
+  localhost:4004/odata/v4/procurement/PurchaseRequisitions</code></pre>
+<h3>Option B — Local Postgres via Docker (persistent)</h3>
+<pre><button class="copy">copy</button><code>docker run --name pg -e POSTGRES_PASSWORD=changeme -e POSTGRES_DB=procurement -p 5432:5432 -d postgres:16
+# .env: set CDS_ENV=postgres + DB_HOST/DB_PORT/DB_NAME/DB_USER/DB_PASSWORD
+npm run db:deploy:pg   # schema + seeds → Postgres (scripts/deploy-pg.cjs)
+npm start              # now reads/writes real Postgres
+# flip back anytime: comment out CDS_ENV in .env and restart → SQLite again</code></pre>
+<div class="callout green"><b>✅ Mock users to try</b><code>admin / employee / approver / procurement / manager / finance / auditor@example.com</code>, plus <code>other-tenant@example.com</code> (to prove tenant isolation), plus agent via <code>x-agent-id: agent-orchestrator</code>.</div>
+</div>
+
+<div class="card" id="step-12">
+<span class="step-no">STEP 12 • MCP RUNTIME</span>
+<h2>Expose the 15 business tools over MCP</h2>
+<p><code>npm add @cap-js/mcp</code> is already in package.json. The <code>@mcp</code> annotation on <code>MCPService</code> auto-serves <b>Streamable HTTP</b> at <code>POST /mcp/procurement</code>. Every tool call flows: identity → authZ → tenant → policy → validation → business service → tx → audit.</p>
+<pre><button class="copy">copy</button><code># opencode.json — the repo wires SIX MCP remotes (one per @mcp service).
+# Each URL suffix matches the @mcp annotation value in its .cds file:
+# MCPService (@mcp:'procurement') → /mcp/procurement
+# CatalogService (@mcp:'catalog') → /mcp/catalog
+# ProcurementService (@mcp:'procurement-ops') → /mcp/procurement-ops
+# SupplierService (@mcp:'suppliers') → /mcp/suppliers
+# ApprovalService (@mcp:'approvals') → /mcp/approvals
+# InvoiceService (@mcp:'invoices') → /mcp/invoices
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "cds:MCPService": { "type": "remote",
+      "url": "http://localhost:4004/mcp/procurement",
+      "headers": { "x-mock-user": "admin@example.com" }, "enabled": true },
+    "cds:CatalogService": { "type": "remote",
+      "url": "http://localhost:4004/mcp/catalog",
+      "headers": { "x-mock-user": "admin@example.com" }, "enabled": true },
+    "cds:ProcurementService": { "type": "remote",
+      "url": "http://localhost:4004/mcp/procurement-ops",
+      "headers": { "x-mock-user": "admin@example.com" }, "enabled": true },
+    "cds:SupplierService": { "type": "remote",
+      "url": "http://localhost:4004/mcp/suppliers",
+      "headers": { "x-mock-user": "admin@example.com" }, "enabled": true },
+    "cds:ApprovalService": { "type": "remote",
+      "url": "http://localhost:4004/mcp/approvals",
+      "headers": { "x-mock-user": "admin@example.com" }, "enabled": true },
+    "cds:InvoiceService": { "type": "remote",
+      "url": "http://localhost:4004/mcp/invoices",
+      "headers": { "x-mock-user": "admin@example.com" }, "enabled": true }
+  }
+}
+# then: opencode mcp list → opencode mcp debug procurement → prompt "use the procurement tool"</code></pre>
+<p>Tool list on <code>MCPService</code> (15 total): <code>searchPurchaseRequisitions, getPurchaseRequisition, createPurchaseRequisition, searchPurchaseOrders, getPurchaseOrder, createPurchaseOrder, searchSuppliers, getSupplier, checkBudget, getInvoiceStatus, getApprovalStatus, getProcurementRisk, submitForApproval</code> + <code>getRemoteSuppliers, getRemoteLogisticsIntel</code> (A2A bridges to the remote agent server in Step 13b). Domain services also expose their own operations as MCP tools (<code>per_action_tool:true</code>): e.g. <code>submitRequisition/approveRequisition/convertToPurchaseOrder</code> on <code>/mcp/procurement-ops</code>, <code>matchInvoice/approveInvoice/createPayment</code> on <code>/mcp/invoices</code>, <code>decideApproval</code> on <code>/mcp/approvals</code>, <code>assessSupplierRisk</code> on <code>/mcp/suppliers</code>.</p>
+<div class="callout amber"><b>⚠️ What the first version of this guide missed</b>The simplified single-entry <code>opencode.json</code> only exposed one service. Use the 6-entry version above (copied from the repo's real <code>opencode.json</code>) or you will be missing catalog, supplier-risk, approval and invoice tools.</div>
+</div>
+
+<div class="card" id="step-13">
+<span class="step-no">STEP 13 • A2A AGENTS</span>
+<h2>7 agents, one orchestrator, zero direct DB access</h2>
+<p><code>AgentService</code> annotated <code>@Agent</code> via <code>@cap-js/agents</code> (alpha). Specialists call CAP services only. Orchestrator flow for "Create PO for PR-1001": authenticate → load PR → APPROVED? → budget → supplier → risk → policy → human needed? → create PO in tx → audit.</p>
+<pre><button class="copy">copy</button><code># Agent call (mock):
+curl -H "x-mock-user: manager@example.com" \
+     -H "x-agent-id: agent-orchestrator" \
+     localhost:4004/.well-known/agent.json
+# Agents: Procurement · Approval (never auto-approves high value) · Supplier Risk
+# · Invoice (3-way match) · Budget · Audit (read-only) · Orchestrator</code></pre>
+<div class="callout violet"><b>🤖 lib/agents/ai-service.ts</b>Mock AI locally; when <code>AI_API_URL/KEY</code> are set it calls SAP AI Core / DeepSeek-compatible endpoint. Secrets are masked in logs; no passwords/tokens ever logged.</div>
+</div>
+
+<div class="card" id="step-13b">
+<span class="step-no">STEP 13b • REMOTE A2A AGENTS (was completely missing)</span>
+<h2>Build the standalone supplier + logistics server on :4007</h2>
+<p>The repo's <code>remote-supplier-agent/server.js</code> is a <b>separate Express server with its own data</b> the CAP app never has (live availability, lead times, MOQs, shipments). The CAP orchestrator calls it over standard A2A JSON-RPC; its answers are <b>advisory intel only</b> — they never bypass AuthZ/policy.</p>
+<pre><button class="copy">copy</button><code>// remote-supplier-agent/server.js — two agents, one process
+// Supplier network (SUP-001..004): availability, leadTimeDays, moq, unitPriceHint, rating
+// Logistics network (SHP-101..104): lane, carrier, mode, status, etaDays, freightHint
+import express from 'express';
+const app = express(); app.use(express.json({ limit: '256kb' }));
+app.get('/health', (_req,res) =&gt; res.json({ status:'UP' }));
+app.get('/.well-known/agent-card.json', (_req,res) =&gt; res.json(agentCard)); // supplier card
+app.get('/logistics/.well-known/agent-card.json', (_req,res) =&gt; res.json(logisticsCard));
+app.post('/', handleRpc(answerQuery,'supplier-network-result'));           // message/send + tasks/get
+app.post(['/logistics','/logistics/'], handleRpc(answerLogisticsQuery,'logistics-network-result'));
+app.listen(4007);
+// try it:  npm run remote-agent
+//   curl localhost:4007/health
+//   curl -X POST localhost:4007/ -H 'Content-Type: application/json' \
+//     -d '{"jsonrpc":"2.0","id":1,"method":"message/send","params":{"message":{"parts":[{"kind":"text","text":"quote SUP-002 qty 15"}]}}}'
+// CAP side: MCP getRemoteSuppliers/getRemoteLogisticsIntel + Agent callRemoteAgent()
+//   allowlist ONLY 'remote-supplier-agent' → $REMOTE_SUPPLIER_AGENT_URL (default http://localhost:4007)
+//   and 'remote-logistics-agent' → $REMOTE_SUPPLIER_AGENT_URL/logistics. Unknown names → 404.</code></pre>
+<div class="callout green"><b>✅ Why this matters</b>Without this server, the 2 remote MCP tools return <code>{unavailable:true}</code> (best-effort, never throws). With it running, orchestrator PO decisions include live quote/freight hints.</div>
+</div>
+
+<div class="card" id="step-11b">
+<span class="step-no">STEP 11b • DOCKER-COMPOSE + DEPLOY SCRIPT + DEFAULT-ENV (was missing)</span>
+<h2>One-command local Postgres + how Render creds flow</h2>
+<pre><button class="copy">copy</button><code># docker-compose.yml — app + postgres:16-alpine + pgdata volume + healthcheck
+services:
+  db: { image: postgres:16-alpine, environment: { POSTGRES_DB: procurement,
+        POSTGRES_USER: postgres, POSTGRES_PASSWORD: changeme }, ports: ["5432:5432"] }
+  app: { build: ., depends_on: { db: { condition: service_healthy } },
+         environment: { PORT: 4004, DATABASE_URL: postgresql://postgres:changeme@db:5432/procurement,
+           ALLOW_MOCK_AUTH: "true", JWT_SECRET: dev-only-secret-change-me }, ports: ["4004:4004"] }
+docker compose up --build   # persistent local stack (alternative to bare `docker run`)
+
+# scripts/deploy-pg.cjs — reads default-env.json → VCAP_SERVICES → cds.deploy('./db','./srv')
+# default-env.json (GITIGNORED, never commit!) shape:
+{ "VCAP_SERVICES": { "postgresql": [ { "credentials": {
+  "hostname": "&lt;render-external-host&gt;", "port": 5432, "dbname": "procurement",
+  "username": "…", "password": "…", "ssl": { "rejectUnauthorized": false } } } ] } }
+# Use the EXTERNAL hostname for local dev (SSL on); Render service uses Internal DATABASE_URL.</code></pre>
+</div>
+
+<div class="card" id="step-16b">
+<span class="step-no">STEP 16b • APPROUTER + XS-SECURITY DETAIL (was missing)</span>
+<h2>Exact routes and scope names BTP expects</h2>
+<pre><button class="copy">copy</button><code>// approuter/xs-app.json — /health + /liveness + /readiness open; everything else XSUAA
+{ "authenticationMethod": "route",
+  "routes": [
+    { "source": "^/(health|liveness)$", "destination": "procurement-backend", "authenticationType": "none" },
+    { "source": "^/readiness$", "destination": "procurement-backend", "authenticationType": "none" },
+    { "source": "^/(odata/.*|mcp/.*|\\.well-known/.*)$", "destination": "procurement-backend",
+      "authenticationType": "xsuaa", "csrfProtection": true },
+    { "source": "^(.*)$", "destination": "procurement-backend", "authenticationType": "xsuaa" } ] }
+// xs-security.json — 21 scopes named $XSAPPNAME.&lt;PERMISSION&gt; (mirrors lib/auth/rbac.ts 1:1),
+// 9 role-templates (ADMIN … AI_AGENT with EMPTY scope-references), 9 role-collections
+// named EnterpriseAIProcurement_&lt;Role&gt; assigned in the BTP cockpit.
+// mta.yaml wires: procurement-backend (nodejs, 512M, /health check, ALLOW_MOCK_AUTH=false)
+//   + procurement-approuter (approuter.nodejs, forwards AuthToken) + procurement-xsuaa
+//   + procurement-postgres (trial plan). app/ folder stays EMPTY (Fiori placeholder).</code></pre>
+<div class="callout"><b>💡 Health semantics the guide previously blurred</b><code>/liveness</code> = process alive (no DB touch). <code>/readiness</code> = <code>SELECT 1</code> on the DB succeeded. <code>/health</code> = full health payload. Approuter leaves all three unauthenticated so Cloud Foundry / Render health checks work.</div>
+</div>
+
+<div class="card" id="step-14">
+<span class="step-no">STEP 14 • TESTS</span>
+<h2>Prove security with vitest (RBAC, tenants, workflow…)</h2>
+<pre><button class="copy">copy</button><code>npm test   # vitest run
+# covers: auth/RBAC · tenant forgery · PR approve/reject rules · PO gates
+# budget/supplier validation · invoice 3-way match · MCP + agent authZ
+# policy human-approval gate · audit write · illegal transitions
+# concurrent-approval versioning · prompt-injection sanitization</code></pre>
+<div class="callout"><b>💡 Write tests like the repo (two files, different jobs)</b><code>test/security.test.ts</code> — attack-style E2E via <code>@cap-js/cds-test</code>: forged <code>tenantId</code>, unauthorized approve (403+audit), tenant isolation, prompt-injection sanitization, MCP/agent denial. <code>test/unit.test.ts</code> — pure unit: rate-limit allow-then-reject, <code>toHttpError</code> masking (no <code>password</code> leak), error-code mapping. Both must stay green on SQLite <i>and</i> Postgres.</div>
+</div>
+
+<div class="card" id="step-15">
+<span class="step-no">STEP 15 • DEPLOY TO RENDER</span>
+<h2>Docker + managed Postgres in 4 env vars</h2>
+<pre><button class="copy">copy</button><code># 1. Create Render PostgreSQL → copy Internal DATABASE_URL
+# 2. Create Render Web Service (this repo): build `npm ci`, start:
+npm run db:deploy:prod || true; npm start
+# 3. Env on Render:
+DATABASE_URL=&lt;from step 1&gt;
+JWT_SECRET=&lt;random-32-chars&gt;
+ALLOW_MOCK_AUTH=false
+PORT=(auto by Render)
+# 4. Verify: GET /health, /readiness, /liveness → 200</code></pre>
+</div>
+
+<div class="card" id="step-16">
+<span class="step-no">STEP 16 • DEPLOY TO SAP BTP</span>
+<h2>MTA + XSUAA + Approuter (the enterprise finish)</h2>
+<p><code>mta.yaml</code> deploys backend + approuter + XSUAA + Postgres. <code>xs-security.json</code> mirrors <code>lib/auth/rbac.ts</code> 1:1 (9 roles, 21 scopes). Approuter enforces XSUAA login and forwards the JWT; backend validates via <code>@sap/xssec</code> JWKS, tenant = XSUAA subdomain, scopes → permissions. <b>No code changes</b> between local mock, Render HS256, and BTP XSUAA — same <code>RequestContext</code> everywhere.</p>
+<pre><button class="copy">copy</button><code>mbt build
+cf deploy mta_archives/enterprise-ai-procurement_1.0.0.mtar
+cf run-task procurement-backend "npm run db:deploy:prod"
+cf set-env procurement-backend JWT_SECRET &lt;random-secret&gt;
+cf restage procurement-backend
+# then assign role collections (e.g. EnterpriseAIProcurement_Approver) in BTP cockpit</code></pre>
+</div>
+
+<div class="card" id="verify">
+<span class="step-no">FINAL • END-TO-END CHECKLIST</span>
+<h2>Prove you built the full app (18 checks)</h2>
+<pre><button class="copy">copy</button><code>GET  /health /readiness /liveness  → 200
+GET  /odata/v4/procurement/PurchaseRequisitions?$filter=status eq 'APPROVED'&$top=10
+POST /odata/v4/procurement/PurchaseRequisitions {...}  # as employee@example.com
+POST /odata/v4/procurement/submitRequisition {"ID":"..."}
+POST /odata/v4/procurement/approveRequisition {"ID":"...","comment":"ok"}  # APPROVER only
+POST /odata/v4/procurement/convertToPurchaseOrder {"requisitionID":"...","supplierID":"..."}
+POST /odata/v4/invoices/matchInvoice {"invoiceID":"..."}
+GET  /.well-known/agent.json
+POST http://localhost:4004/mcp/procurement  # via opencode tool</code></pre>
+<ul class="checklist">
+<li>SQLite boot shows demo data; Postgres boot persists it</li>
+<li><code>other-tenant@example.com</code> sees zero tenant-a rows (isolation works)</li>
+<li>Employee cannot approve (403 + audit row); Approver can</li>
+<li>DRAFT → APPROVED direct jump rejected (INVALID_STATE_TRANSITION)</li>
+<li>&gt;₹1M or HIGH risk always demands human (policy gate)</li>
+<li>Invoice with wrong price → MISMATCH, not APPROVED</li>
+<li><code>npm test</code> green; <code>npx cds compile --to csn db srv</code> clean</li>
+</ul>
+</div>
+
+<div class="card" id="appendix-full">
+<span class="step-no">APPENDIX Z • FULL-APP COMPLETENESS PACK (read this audit result)</span>
+<h2>Guarantee: after this appendix you hold 100% of the working app</h2>
+<p>Honest audit finding: Steps 0–16 give you every <b>pattern + contract + config</b> copy-paste, but 4 groups are too long to paste inline (lib handlers ~2,500 lines, 14 CSV seeds, xs-security/mta). This appendix closes that gap: <b>exact inventory + full small files + verbatim-copy list + verify commands</b>. Follow it and file-counts will match the repo exactly.</p>
+<h3>Z.1 Master file inventory — tick every box (62 files)</h3>
+<pre><button class="copy">copy</button><code># run from repo root to verify YOU match:
+# (PowerShell) (Get-ChildItem -Recurse -File -Exclude node_modules,@cds-models | Measure-Object).Count
+db/common.cds, db/schema.cds
+db/data/*.csv × 14 (Agents, Budgets, Departments, MaterialCategories, Materials,
+  MCPTools(13 rows), Organizations, Permissions(21 rows), Policies(5 rows),
+  PurchaseRequisitions, Roles(9 rows), Suppliers, UserRoles, Users)
+srv/*.cds × 8 (procurement, approval, supplier, invoice, catalog, agent, mcp, audit)
+srv/*.ts × 7 (procurement, approval, supplier, invoice, catalog, agent, mcp) + srv/server.js
+lib/**/*.ts × 16 (see Step 7.1 list — includes cds-globals.d.ts)
+test/*.test.ts × 2, scripts/deploy-pg.cjs, remote-supplier-agent/server.js
+.cdsrc.json, package.json, tsconfig.json, eslint.config.mjs, opencode.json (6 entries),
+mta.yaml, xs-security.json, Dockerfile, docker-compose.yml, .mtaignore, .gitignore,
+.env.example → copy to .env, default-env.json (gitignored template below),
+approuter/package.json + approuter/xs-app.json, README.md, AGENTS.md
+app/ stays EMPTY (Fiori placeholder — intentional, 0 files)</code></pre>
+<h3>Z.2 Small files in FULL (copy verbatim — previously summarized only)</h3>
+<pre><button class="copy">copy</button><code># .gitignore (secrets never committed — verified by secret scan)
+.env
+.env.*
+!.env.example
+default-env.json
+node_modules/
+dist/
+@cds-models/
+coverage/
+*.log
+.vscode/settings.json
+
+# .mtaignore (CF rebuilds modules at staging)
+node_modules/
+.mtaignore
+
+# approuter/package.json
+{ "name": "procurement-approuter", "version": "1.0.0", "private": true,
+  "scripts": { "start": "node node_modules/@sap/approuter/approuter.js" },
+  "dependencies": { "@sap/approuter": "^23.0.0" } }
+
+# first command after scaffold (was implied, now explicit):
+cp .env.example .env   # then edit JWT_SECRET + DB creds; NEVER commit .env
+# default-env.json template (gitignored; external hostname + SSL for local dev):
+{ "VCAP_SERVICES": { "postgresql": [ { "credentials": {
+  "hostname": "RENDER-EXTERNAL-HOST", "port": 5432, "dbname": "procurement",
+  "username": "procurement_user", "password": "PASTE-FROM-RENDER",
+  "ssl": { "rejectUnauthorized": false } } } ] } }</code></pre>
+<h3>Z.3 Seed CSVs — full inventory (only excerpts were shown before)</h3>
+<p>Rule: filename MUST be <code>procurement.db-&lt;Entity&gt;.csv</code>, first row = column names, IDs = UUIDs (<code>node -e "console.log(crypto.randomUUID())"</code>). Functionally critical rows:</p>
+<pre><button class="copy">copy</button><code># MCPTools.csv — 13 rows: t1..t13 (search/get/create PR+PO, suppliers, checkBudget,
+# getInvoiceStatus, getApprovalStatus, getProcurementRisk, submitForApproval + 2 remote)
+# Policies.csv — 5 rows: pol-auto(&lt;50k AUTO_APPROVE) pol-mgr(50–500k REQUIRE_MANAGER)
+#   pol-senior(500k–1M REQUIRE_HUMAN) pol-exec(&gt;1M mandatory human) pol-risk(HIGH/CRITICAL→human)
+# Agents.csv — 7 rows: agent-procurement(tools: searchPR,suppliers,budget,createPO; max 50000),
+#   agent-approval(read-only, max 0), agent-risk, agent-invoice, agent-budget,
+#   agent-audit(read-only+VIEW_AUDIT_LOG), agent-orchestrator
+# Roles.csv — 9 rows (ADMIN…AI_AGENT) · Permissions.csv — 21 rows (mirror rbac.ts)
+# Copy ALL 14 CSVs verbatim from the repo — hand-typing risks header typos that
+# break cds deploy. Verify: npx cds compile --to csn db srv (clean JSON = headers OK)</code></pre>
+<h3>Z.4 lib + srv .ts — what "copy verbatim" means + how to prove signatures</h3>
+<p>These 23 TS files contain the full security funnel and cannot be retyped from summaries. Copy them verbatim from the repo (or generate via the same Steps 6/7/9 patterns), then prove completeness with the test imports — if any export is missing, tests fail loudly:</p>
+<pre><button class="copy">copy</button><code># test/security.test.ts imports (your lib MUST export all of these):
+ROLE_PERMISSIONS, MCP_TOOL_PERMISSIONS            # from lib/auth/rbac.js
+AuthorizationService                              # hasPermission/requireAuth/enforceTenant
+buildMockContext, permissionsFromScopes, deriveRolesFromScopes  # lib/auth/authentication.js
+evaluatePolicy                                    # lib/workflow/policy.js
+assertTransition, PR_FLOW, PO_FLOW                # lib/workflow/lifecycle.js
+threeWayMatch, sanitizeForLLM, validatePO         # lib/validation/validation.js
+resolveAgentPermissions, AGENT_DEFINITIONS        # lib/agents/agent-auth.js
+# test/unit.test.ts imports:
+checkRateLimit                                    # lib/security/rate-limit.js
+toHttpError, reqError                             # lib/security/errors.js
+# + writeAudit (lib/audit/audit.js), log (lib/security/observability.js),
+#   sendA2AMessage/fetchAgentCard (lib/agents/a2a-client.js), getAIService (lib/agents/ai-service.js)
+npm test            # 131-line security suite + unit suite must be GREEN
+npx cds compile --to csn db srv   # clean = CDS contracts valid
+npm run build       # tsc --noEmit clean = TS valid</code></pre>
+<h3>Z.5 Long files: copy verbatim (too long to paste, listed for completeness)</h3>
+<p><code>xs-security.json</code> (171 lines: 21 scopes + 9 role-templates + 9 role-collections), <code>mta.yaml</code> (69 lines), <code>srv/*.ts</code> handlers (~1,800 lines total), <code>lib/auth/authentication.ts</code> (~230 lines: XSUAA→HS256→mock chain + <code>permissionsFromScopes/deriveRolesFromScopes</code>), <code>remote-supplier-agent/server.js</code> (191 lines — skeleton in Step 13b, full quote/track logic copied verbatim). After copying, the three verify commands in Z.4 are your proof of a full working app.</p>
+<div class="callout green"><b>✅ Definition of done (updated)</b>File counts match Z.1 · <code>cds compile</code> clean · <code>npm run build</code> clean · <code>npm test</code> green on SQLite AND Postgres · 18 E2E checks in FINAL pass · <code>git status</code> shows NO <code>.env / default-env.json</code> (secrets safe). Then — and only then — you hold the full working app.</div>
+</div>
+
+<div class="card" id="appendix-pitfalls">
+<span class="step-no">APPENDIX • HARD-WON LESSONS</span>
+<h2>Pitfalls that actually broke this build (read before debugging)</h2>
+<table><tr><th>#</th><th>Pitfall</th><th>Fix</th></tr>
+<tr><td>1</td><td><code>extends cds.Service</code> → reads return empty, after-CREATE crashes</td><td>Always <code>extends (cds.ApplicationService as any)</code></td></tr>
+<tr><td>2</td><td><code>.ts</code> handlers not found at runtime</td><td><code>srv/server.js</code> sets <code>CDS_TYPESCRIPT=true</code>; <code>npm start</code> runs under <code>tsx</code></td></tr>
+<tr><td>3</td><td><code>tx.read().where()</code> then <code>.status</code> is undefined</td><td>Single rows MUST use <code>SELECT.one</code></td></tr>
+<tr><td>4</td><td>Cross-service <code>.run({action})</code> silently fails</td><td>Use <code>.send('actionName', params)</code></td></tr>
+<tr><td>5</td><td>OData action IDs 404 with readable seed IDs</td><td>Type ID params as <code>String</code>, not <code>UUID</code></td></tr>
+<tr><td>6</td><td>Function params via <code>?p='v'</code> ignored</td><td>Use <code>/fn(p='v')</code> parenthesis syntax</td></tr>
+<tr><td>7</td><td><code>after</code> hook wipes response</td><td>Always <code>return data</code>; wrap audit in try/catch</td></tr>
+<tr><td>8</td><td>PG returns <code>[]</code> on INSERT, SQLite returns object</td><td>Explicit UUIDs + re-read the row</td></tr>
+</table>
+<div class="callout green"><b>✅ You did it</b>If every checklist box is ticked, you now own a production-grade, AI-safe procurement platform. Next: wire SAP AI Core keys, add Fiori UI in <code>app/</code>, put Redis behind rate-limiting for multi-instance, and complete the Joule A2A handshake on BTP.</div>
+</div>
+
+</main>
+</div>
+<div class="footer">
+<div class="fcard"><h3>🚀 You now hold the full blueprint</h3><p>Follow top-to-bottom · every code block is copy-paste in order · verify with Appendix Z + E2E checklist.</p><p style="margin:0"><a class="btn primary" style="position:relative" href="#step-0">Restart the guide ↑</a> <a class="btn ghost" style="position:relative" href="#verify">Final verification ✓</a></p></div>
+Enterprise AI Procurement — build guide • Generated Sep 2026 • SAP CAP + MCP + A2A • MIT-style demo seeds
+</div>
+<button id="toTop" title="Back to top" aria-label="Back to top">↑</button>
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+/* theme */
+const root=document.documentElement, themeBtn=$('#themeBtn');
+function setTheme(t){root.setAttribute('data-theme',t);try{localStorage.setItem('px-docs-theme',t)}catch(e){} themeBtn.textContent=t==='dark'?'☀️':'🌙';}
+let saved=null; try{saved=localStorage.getItem('px-docs-theme')}catch(e){}
+setTheme(saved || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+themeBtn.addEventListener('click',()=>setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark'));
+$('#printBtn').addEventListener('click',()=>window.print());
+/* progress + spy */
+const bar=$('#progress'), pct=$('#tocPct'), tbar=$('#tocBar'), toTop=$('#toTop');
+const cards=$$('.card[id]');
+function onScroll(){const h=document.documentElement,max=h.scrollHeight-h.clientHeight,p=max>0?(h.scrollTop/max*100):0;
+  bar.style.width=p+'%'; if(pct)pct.textContent=Math.round(p)+'%'; if(tbar)tbar.style.width=p+'%';
+  toTop.classList.toggle('show',h.scrollTop>700);}
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+/* TOC: number badges, filter, scrollspy */
+const tocList=$('#tocList'), tocCount=$('#tocCount'), links=Array.from(tocList.querySelectorAll('a'));
+links.forEach(a=>{const t=a.textContent.trim(), m=t.match(/^(\d+[a-z]?|✅|📦|⚠️)\s*[—–-]?\s*/i);
+  if(m && !a.querySelector('.n')){const n=document.createElement('span');n.className='n';n.textContent=m[1];a.innerHTML='<span class="n">'+m[1]+'</span><span>'+t.slice(m[0].length)+'</span>';}});
+if(tocCount)tocCount.textContent='· '+links.length+' items';
+const byId={}; links.forEach(a=>{byId[a.getAttribute('href').slice(1)]=a;});
+const spy=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.remove('active'));
+  const a=byId[e.target.id]; if(a)a.classList.add('active');}})},{rootMargin:'-30% 0px -60% 0px'});
+cards.forEach(c=>spy.observe(c));
+function filterToc(q){q=q.toLowerCase();links.forEach(a=>{a.parentElement.style.display=a.textContent.toLowerCase().includes(q)?'':'none';});}
+$('#tocFilter').addEventListener('input',e=>filterToc(e.target.value));
+$('#topSearch').addEventListener('input',e=>{const q=e.target.value.toLowerCase();filterToc(q);
+  const toc=$('#toc'); if(q && innerWidth<=940){toc.classList.add('open');$('#scrim').classList.add('show');}});
+addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement.tagName!=='INPUT'){e.preventDefault();$('#topSearch').focus();}});
+/* mobile drawer */
+const toc=$('#toc'), scrim=$('#scrim');
+$('#menuBtn').addEventListener('click',()=>{toc.classList.toggle('open');scrim.classList.toggle('show',toc.classList.contains('open'));});
+scrim.addEventListener('click',()=>{toc.classList.remove('open');scrim.classList.remove('show');});
+tocList.addEventListener('click',()=>{if(innerWidth<=940){toc.classList.remove('open');scrim.classList.remove('show');}});
+/* code chrome: header dots + language + robust copy */
+$$('pre').forEach(pre=>{
+  const head=document.createElement('div');head.className='code-head';
+  head.innerHTML='<span class="d" style="background:#ff5f57"></span><span class="d" style="background:#febc2e"></span><span class="d" style="background:#28c840"></span><span class="lang">code</span>';
+  const codeEl=pre.querySelector('code'); let lang='code';
+  if(codeEl){const t=codeEl.textContent; lang=/^\s*\{/.test(t)?'json':/^\s*#/.test(t)?'bash':/cds|entity|service|namespace/.test(t)?'cds':/SELECT|INSERT|UPDATE/.test(t)?'sql':/import |const |=>|function/.test(t)?'ts':'sh';
+    head.querySelector('.lang').textContent=lang;}
+  pre.prepend(head);
+  const b=pre.querySelector('.copy');
+  if(b){b.textContent='⧉ copy';b.addEventListener('click',()=>{const txt=(codeEl?codeEl.innerText:pre.innerText).replace(/^copy\n?/,'');
+    navigator.clipboard.writeText(txt).then(()=>{b.textContent='✓ copied';b.classList.add('ok');setTimeout(()=>{b.textContent='⧉ copy';b.classList.remove('ok');},1400);});});}
+});
+/* step numbering already in pill; add prev/next nav per card */
+const order=cards.map(c=>c.id);
+const titles={}; links.forEach(a=>{titles[a.getAttribute('href').slice(1)]=a.textContent.replace(/^\s*\S+\s*/,'').trim();});
+cards.forEach(c=>{const i=order.indexOf(c.id), nav=document.createElement('div');nav.className='step-nav';
+  const prev=i>0?order[i-1]:null, next=i<order.length-1?order[i+1]:null;
+  nav.innerHTML=(prev?'<a href="#'+prev+'"><small>← Previous</small><b>'+(titles[prev]||prev)+'</b></a>':'')+
+    (next?'<a href="#'+next+'" style="text-align:right"><small>Next →</small><b>'+(titles[next]||next)+'</b></a>':'');
+  c.appendChild(nav);});
+/* reveal on scroll */
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('reveal');ro.unobserve(e.target);}})},{threshold:.06});
+cards.forEach(c=>ro.observe(c));
+/* interactive checklist with persistence */
+try{const done=JSON.parse(localStorage.getItem('px-docs-checks')||'[]');
+$$('.checklist li').forEach((li,idx)=>{const key=li.textContent.slice(0,40);
+  if(done.includes(key))li.classList.add('done');
+  li.title='Click to toggle done';
+  li.addEventListener('click',()=>{li.classList.toggle('done');
+    const cur=$$('.checklist li.done').map(x=>x.textContent.slice(0,40));
+    try{localStorage.setItem('px-docs-checks',JSON.stringify(cur))}catch(e){}});});}catch(e){}
+/* ---- masterclass upgrades: HL tokenizer, done-tracking, rail, deep search ---- */
+const HL={
+cds:{c:/\/\/[^\n]*|\/\*[\s\S]*?\*\//,k:/\b(namespace|using|service|entity|as|projection|on|action|function|returns|many|type|aspect|key|not|null|default|excluding|Composition|Association|to|readonly|annotate|extend|from|mcp|Agent)\b/},
+ts:{c:/\/\/[^\n]*|\/\*[\s\S]*?\*\//,k:/\b(const|let|var|function|async|await|return|if|else|for|of|in|new|this|import|export|from|try|catch|throw|class|extends|interface|require|SELECT|INSERT|UPDATE|DELETE|where|one)\b/},
+bash:{c:/#[^\n]*/,k:/\b(cd|mkdir|npm|npx|node|git|curl|cf|cds|mbt|docker|compose|export|echo|cp|run|start|test|build)\b/},
+json:{c:null,k:/\b(true|false|null)\b/},
+sql:{c:/--[^\n]*/,k:/\b(SELECT|FROM|WHERE|ORDER|BY|LIMIT|AS|DESC|ASC|JOIN|ON|AND|OR|NOT|NULL|INSERT|INTO|UPDATE|SET|DELETE)\b/i}
+};
+function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+$$('pre code').forEach(function(codeEl){
+const fig=codeEl.closest('pre');const lab=fig.querySelector('.lang');let lang=(lab?lab.textContent:'code').trim().toLowerCase();
+if(lang==='sh')lang='bash';if(lang==='javascript')lang='ts';
+const spec=HL[lang]||HL.ts;const src=codeEl.textContent;
+const parts=[],kinds=[];
+if(spec.c){parts.push('('+spec.c.source+')');kinds.push('tok-c');}
+parts.push('("(?:[^"\\\\]|\\\\.)*"|\'(?:[^\'\\\\]|\\\\.)*\')');kinds.push('tok-s');
+if(spec.k){parts.push('('+spec.k.source+')');kinds.push('tok-k');}
+parts.push('(\\b\\d+(?:\\.\\d+)?\\b)');kinds.push('tok-n');
+let rx;try{rx=new RegExp(parts.join('|'),'g');}catch(e){return;}
+let out='',last=0,m;rx.lastIndex=0;
+while((m=rx.exec(src))!==null){out+=escH(src.slice(last,m.index));
+const gi=m.slice(1).findIndex(function(g){return g!==undefined;});
+out+='<span class="'+kinds[gi]+'">'+escH(m[0])+'</span>';last=m.index+m[0].length;}
+out+=escH(src.slice(last));codeEl.innerHTML=out;
+});
+/* done-tracking (skill done-row pattern) */
+const DKEY='px-build-guide-v1';let dstore={};try{dstore=JSON.parse(localStorage.getItem(DKEY)||'{}');}catch(e){}
+dstore.done=dstore.done||{};
+const allCards=$$('.card[id]');const chip=$('#doneChip');
+function paintDone(){let n=0;allCards.forEach(function(c){const on=!!dstore.done[c.id];if(on)n++;
+const box=c.querySelector('input[data-done]');if(box)box.checked=on;
+const link=document.querySelector('.toc a[href="#'+c.id+'"]');if(link)link.classList.toggle('done',on);});
+if(chip)chip.innerHTML='<b>'+n+'</b>/'+allCards.length+' done';}
+allCards.forEach(function(c){const row=document.createElement('div');row.className='done-row';
+const cb=document.createElement('input');cb.type='checkbox';cb.id='done-'+c.id;cb.checked=!!dstore.done[c.id];
+const lb=document.createElement('label');lb.htmlFor='done-'+c.id;lb.textContent='Mark this step done';
+cb.addEventListener('change',function(){dstore.done[c.id]=cb.checked;try{localStorage.setItem(DKEY,JSON.stringify(dstore));}catch(e){}paintDone();});
+row.appendChild(cb);row.appendChild(lb);
+const snav=c.querySelector('.step-nav');if(snav)c.insertBefore(row,snav);else c.appendChild(row);});
+paintDone();
+/* rail (skill rail pattern: subsections of the active card) */
+const railLinks=$('#railLinks');
+function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);}
+function railLabel(el){if(el.tagName==='H3')return el.textContent.slice(0,64);
+const b=el.querySelector('b');return '✦ '+(b?b.textContent:'Key note').slice(0,60);}
+function railTargets(c){return Array.from(c.querySelectorAll('h3,.callout'));}
+allCards.forEach(function(c){let ni=0;railTargets(c).forEach(function(h){if(!h.id)h.id=c.id+'-'+(h.tagName==='H3'?'sec-'+slug(h.textContent):'note-'+(ni++));});});
+function fillRail(id){if(!railLinks)return;railLinks.innerHTML='';
+const c=document.getElementById(id);if(!c)return;const list=railTargets(c).slice(0,14);
+if(!list.length){const a=document.createElement('a');a.href='#'+id;a.textContent='↑ Top of this step';railLinks.appendChild(a);return;}
+list.forEach(function(h){
+const a=document.createElement('a');a.href='#'+h.id;a.textContent=railLabel(h);railLinks.appendChild(a);});}
+const cardIO=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)fillRail(e.target.id);});},{rootMargin:'-30% 0px -60% 0px'});
+allCards.forEach(function(c){cardIO.observe(c);});
+const hIO=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting||!railLinks)return;
+railLinks.querySelectorAll('a').forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id);});});},{rootMargin:'-25% 0px -65% 0px'});
+$$('.card h3[id],.card .callout[id]').forEach(function(h){hIO.observe(h);});
+if(allCards[0])fillRail(allCards[0].id);
+/* deep search with mark.hit (skill search engine, adapted) */
+const tq2=$('#topSearch'),st2=$('#searchstatus');
+function clearHits(){$$('mark.hit').forEach(function(m){m.replaceWith(document.createTextNode(m.textContent));});}
+function deepSearch(term){clearHits();const t=(term||'').trim().toLowerCase();
+if(!t){if(st2)st2.textContent='';return;}
+const rx=new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');let hits=0;
+$$('.card h2,.card h3,.card p,.card li,.card td,.callout').forEach(function(el){
+if(el.querySelector('pre')||el.querySelector('svg'))return;
+const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);const nodes=[];
+while(w.nextNode()){const n=w.currentNode;
+if(n.nodeValue.toLowerCase().indexOf(t)!==-1&&!(n.parentElement&&n.parentElement.tagName==='MARK'))nodes.push(n);}
+nodes.forEach(function(n){const txt=n.nodeValue;rx.lastIndex=0;const frag=document.createDocumentFragment();let last=0,mm,fHits=0;
+while((mm=rx.exec(txt))!==null){frag.appendChild(document.createTextNode(txt.slice(last,mm.index)));
+const mk=document.createElement('mark');mk.className='hit';mk.textContent=mm[0];frag.appendChild(mk);fHits++;last=mm.index+mm[0].length;}
+if(!fHits)return;frag.appendChild(document.createTextNode(txt.slice(last)));n.replaceWith(frag);hits+=fHits;});});
+if(st2)st2.textContent=hits?('✦ '+hits+' matches highlighted in the page'):('No page-text matches for "'+term.trim()+'"');}
+if(tq2){tq2.addEventListener('input',function(){deepSearch(tq2.value);});
+tq2.addEventListener('keydown',function(e){if(e.key==='Escape'){tq2.value='';deepSearch('');const tf=$('#tocFilter');if(tf){tf.value='';tf.dispatchEvent(new Event('input'));}}});}
+})();
+</script>
+</body>
+</html>

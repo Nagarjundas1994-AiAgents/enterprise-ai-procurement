@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAP CAP Plugins &amp; Facets — Complete Developer Encyclopedia</title>
+<meta name="description" content="Every Important CAP Plugin, cds add Facet, Extension, Integration and Capability — Explained with Code. Based on CAPire (cap.cloud.sap).">
+<style>
+:root{--sap-blue:#0a6ed1;--sap-blue-d:#0854a0;--bg:#f5f7fa;--card:#fff;--ink:#1a2733;--mut:#5b6b7b;--line:#dbe3ec;--code-bg:#0f172a;--code-ink:#e2e8f0;--ok:#107e3e;--warn:#e9730c;--exp:#6c2bd9;--dep:#bb0000;--radius:12px}
+[data-theme="dark"]{--bg:#0b1220;--card:#131c2e;--ink:#e6edf5;--mut:#9fb0c3;--line:#243349;--code-bg:#000;--code-ink:#dbeafe}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+header.top{position:sticky;top:0;z-index:50;background:linear-gradient(135deg,#003366,#0a6ed1);color:#fff;padding:14px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+header.top h1{font-size:1.25rem;margin:0}header.top p{margin:2px 0 0;opacity:.9;font-size:.85rem}
+.toolbar{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toolbar input[type=search]{padding:9px 12px;border-radius:8px;border:0;min-width:260px}
+button,.btn{background:#fff;color:#003366;border:0;border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:600}
+[data-theme="dark"] button{background:#1e293b;color:#fff}
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+nav.side{border-right:1px solid var(--line);padding:14px;position:sticky;top:76px;height:calc(100vh - 76px);overflow:auto;background:var(--card)}
+nav.side a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);text-decoration:none;font-size:.88rem}
+nav.side a:hover{background:var(--line)}nav.side .grp{font-weight:800;margin:12px 0 4px;color:var(--sap-blue);font-size:.8rem;text-transform:uppercase}
+main{padding:22px;max-width:1200px}
+section.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin:0 0 20px}
+h2.sec{border-left:6px solid var(--sap-blue);padding-left:12px;margin-top:0}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.72rem;font-weight:700;margin:2px 4px 2px 0;border:1px solid var(--line)}
+.b-off{background:#e6f2ff;color:#0a5128;border-color:#b6d7f5}.b-ok{background:#e7f7ec;color:#0b5c2e}.b-warn{background:#fff4e5;color:#8a3d00}.b-exp{background:#f1eaff;color:#4a1fb3}.b-dep{background:#fdecec;color:#8f0000}.b-n{background:#eef2f7;color:#334155}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.facet{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--card)}
+.facet h3{margin:.2em 0;font-family:Consolas,monospace;font-size:1rem}
+.facet h3 code{background:var(--line);padding:2px 6px;border-radius:6px}
+pre{background:var(--code-bg);color:var(--code-ink);padding:12px;border-radius:10px;overflow:auto;position:relative;font-size:.82rem}
+pre button.copy{position:absolute;top:6px;right:6px;font-size:.7rem;padding:4px 8px}
+code.inline{background:var(--line);padding:1px 6px;border-radius:5px;font-size:.85em}
+.diagram{background:#0f2a4d;color:#dbeafe;border-radius:10px;padding:14px;font-family:Consolas,monospace;white-space:pre;overflow:auto;font-size:.8rem}
+[data-theme="light"] .diagram{background:#0f2a4d}
+table{width:100%;border-collapse:collapse;font-size:.85rem}th,td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}th{background:var(--sap-blue);color:#fff}
+details{border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:8px 0}summary{cursor:pointer;font-weight:700}
+.kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:0 6px;font-family:monospace}
+.progressbar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.progressbar>div{height:100%;background:var(--sap-blue);width:0%}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:99}.modal.open{display:flex}.modal .box{background:var(--card);max-width:760px;width:92%;max-height:86vh;overflow:auto;border-radius:12px;padding:20px}
+.tagrow{margin:6px 0}.fav{cursor:pointer}input[type=text],select{padding:8px;border-radius:8px;border:1px solid var(--line)}
+.steps{display:grid;gap:8px}.step{border:1px solid var(--line);border-radius:8px;padding:10px}
+footer{padding:20px;color:var(--mut);font-size:.8rem}
+@media(max-width:900px){.layout{grid-template-columns:1fr}nav.side{position:static;height:auto}}
+.breadcrumb{font-size:.8rem;color:var(--mut);margin-bottom:10px}
+.check{display:flex;gap:8px;align-items:flex-start;margin:4px 0}
+</style>
+</head>
+<body>
+<header class="top">
+<div><h1>SAP CAP PLUGINS &amp; FACETS — COMPLETE DEVELOPER ENCYCLOPEDIA</h1>
+<p>Every Important CAP Plugin, <code>cds add</code> Facet, Extension, Integration and Capability — Explained with Code · Source of truth: <b>CAPire (cap.cloud.sap)</b> · Verified Sept 2026</p></div>
+<div class="toolbar">
+<input type="search" id="q" placeholder="Search plugins, commands, code, errors… ( / )">
+<select id="catFilter"><option value="">All categories</option><option>Database</option><option>Security</option><option>Messaging</option><option>Deployment</option><option>Integration</option><option>Observability</option><option>Development</option><option>AI</option><option>Multitenancy</option><option>Extensibility</option><option>UI</option></select>
+<button id="themeBtn">🌙 Dark</button>
+<button id="compareBtn">Compare (<span id="cmpN">0</span>)</button>
+</div>
+</header>
+<div class="layout">
+<nav class="side" id="sidenav">
+<div class="progressbar"><div id="pbar"></div></div>
+<p style="font-size:.8rem"><span id="ptext">0%</span> complete · <span id="favN">0</span> favorites</p>
+<div class="grp">Start here</div>
+<a href="#what">Part 1 — What is a CAP plugin?</a>
+<a href="#facets">Part 2 — ALL built-in cds add facets</a>
+<a href="#matrix">Part 44 — Plugin matrix (searchable)</a>
+<a href="#wizard">Part 45 — Decision tree wizard</a>
+<a href="#install">Part 46 — Installation guide (8 steps)</a>
+<div class="grp">Platform</div>
+<a href="#db">Part 3 — Database plugins</a>
+<a href="#sec">Part 4 — Security &amp; identity</a>
+<a href="#mt">Part 5 — Multitenancy</a>
+<a href="#ext">Part 6 — Extensibility</a>
+<a href="#toggles">Part 7 — Toggles</a>
+<div class="grp">Messaging &amp; events</div>
+<a href="#msg">Part 8 — Messaging plugins</a>
+<a href="#emesh">Part 9 — Event Mesh deep-dive</a>
+<a href="#kafka">Part 10 — Kafka</a>
+<a href="#redis">Part 11 — Redis messaging</a>
+<div class="grp">Integration</div>
+<a href="#dest">Part 12 — Destination</a>
+<a href="#conn">Part 13 — Connectivity</a>
+<a href="#s4">Part 14 — S/4HANA integration</a>
+<a href="#approuter">Part 15 — AppRouter</a>
+<a href="#html5">Part 16 — HTML5 repo</a>
+<a href="#portal">Part 17 — Portal</a>
+<div class="grp">Services</div>
+<a href="#log">Part 18 — Logging</a>
+<a href="#notif">Part 19 — Notifications</a>
+<a href="#attach">Part 20 — Attachments</a>
+<a href="#data">Part 21 — Data plugin</a>
+<a href="#http">Part 22 — HTTP plugin</a>
+<a href="#handler">Part 23 — Handler generator</a>
+<a href="#test">Part 24 — Test plugin</a>
+<a href="#typer">Part 25 — Typer / TypeScript</a>
+<a href="#esm">Part 26 — ESM / CJS</a>
+<div class="grp">Deploy &amp; operate</div>
+<a href="#deploy">Part 27 — Deployment facets</a>
+<a href="#mta">Part 28 — MTA deep-dive</a>
+<a href="#kyma">Part 29 — Kyma</a>
+<a href="#operator">Part 30 — CAP Operator (required)</a>
+<a href="#pipeline">Part 31 — CI/CD pipeline</a>
+<div class="grp">Build your own</div>
+<a href="#custom">Part 32 — Custom cds add plugin dev</a>
+<a href="#cdsplugin">Part 33 — cds-plugin technique</a>
+<a href="#java">Part 34 — Java plugins</a>
+<a href="#official">Part 35 — Official plugins catalog</a>
+<a href="#inspector">Part 36 — Data Inspector</a>
+<a href="#audit">Part 37 — Audit logging deep-dive</a>
+<a href="#attachsvc">Part 38 — Attachment service deep-dive</a>
+<a href="#rfc">Part 39 — ABAP RFC</a>
+<a href="#aem">Part 40 — Advanced Event Mesh</a>
+<div class="grp">AI</div>
+<a href="#ai">Part 41 — CAP + AI plugins</a>
+<a href="#agents">Part 42 — AI Agents + CAP</a>
+<a href="#mcp">Part 43 — MCP + CAP</a>
+<div class="grp">Operate &amp; learn</div>
+<a href="#files">Part 47 — Generated file explorer</a>
+<a href="#doctor">Part 48 — Error doctor</a>
+<a href="#secmat">Part 49 — Security matrix</a>
+<a href="#path">Part 50 — Beginner learning path</a>
+<a href="#capstone">Part 51 — Capstone: Procurement platform</a>
+<a href="#links">Part 54 — Official links</a>
+<a href="#valid">Part 55 — Final validation</a>
+</nav>
+<main>
+<div class="breadcrumb">CAPire · cds add · cds-plugin · BTP integration · Node.js + Java · CF + Kyma</div>
+
+<section class="card" id="what">
+<h2 class="sec">Part 1 — What is a CAP plugin? (read this first)</h2>
+<p><b>Beginner mental model:</b> <code>cds add hana</code> ≠ <code>npm add @cap-js/audit-logging</code> ≠ SAP BTP service. They are three layers that work together.</p>
+<div class="diagram">CAP Framework  (@sap/cds runtime + cds-dk CLI)
+       ↓
+CAP Facet  (a named capability, e.g. "hana", "xsuaa", "mta")
+       ↓
+cds add Plugin  (generator that writes config/files for the facet)
+       ↓
+cds-plugin  (Node.js auto-loaded runtime package via cds-plugin.js)
+       ↓
+BTP Service Integration  (binding + entitlement, e.g. Audit Log service)
+       ↓
+Custom Extension  (your code on top)</div>
+<table><tr><th>Concept</th><th>Example</th><th>What it does</th></tr>
+<tr><td><b>Facet</b></td><td><code>cds add hana</code></td><td>Project generator: adds deps + <code>mta.yaml</code> + profiles in <code>package.json</code>.</td></tr>
+<tr><td><b>cds-plugin (npm)</b></td><td><code>npm add @cap-js/audit-logging</code></td><td>Runtime extension auto-loaded via <code>cds-plugin.js</code>. Logs to console locally, to BTP service when bound.</td></tr>
+<tr><td><b>BTP service</b></td><td>Audit Log service instance</td><td>The actual cloud backing service (entitlement + instance + binding).</td></tr></table>
+<p><b>Rule:</b> Facet = scaffolding. Plugin = runtime behavior. BTP service = cloud resource. You usually need <b>facet + plugin + binding</b> together in production.</p>
+<label class="check"><input type="checkbox" data-done="what"> Mark Part 1 complete</label>
+</section>
+
+<section class="card" id="facets">
+<h2 class="sec">Part 2 — ALL built-in <code>cds add</code> facets (standardized cards)</h2>
+<p>Source: CAPire “grow as you go” (<code>cds add data/nodejs/java/hana/xsuaa/ias/multitenancy/mta/kyma/github-actions</code>), deployment guides, and <code>cds add</code> plugin API (<code>cap.cloud.sap/docs/tools/apis/cds-add</code>). Click a card for full detail. Use search + category filter above. “ Files” lists only what the facet actually produces.</p>
+<div class="tagrow" id="facetBadges"></div>
+<div class="grid" id="facetGrid"></div>
+<label class="check"><input type="checkbox" data-done="facets"> Mark Part 2 complete</label>
+</section>
+
+<section class="card" id="db">
+<h2 class="sec">Part 3 — Database plugins</h2>
+<div class="diagram">CAP (CDS entities + services)
+ ↓
+Persistence Service (db = cds.requires.db)
+ ↓
+Database Adapter (@cap-js/hana | @cap-js/sqlite | @cap-js/postgres | H2/Java)
+ ↓
+Database (HANA Cloud | SQLite memory/file | PostgreSQL | H2)</div>
+<table><tr><th>Database</th><th>Local</th><th>BTP</th><th>Node.js</th><th>Java</th><th>Production</th><th>Best use</th></tr>
+<tr><td>SAP HANA Cloud</td><td>hybrid profile</td><td>Yes (HDI/HDB)</td><td><code>@cap-js/hana</code> (hdb driver; don't add hdb manually)</td><td><code>cds-feature-hana</code></td><td>Recommended</td><td>Production SAP apps</td></tr>
+<tr><td>SQLite</td><td>Yes (memory/file)</td><td>No</td><td><code>@cap-js/sqlite</code> (-D ok)</td><td>sqlite-jdbc</td><td>No</td><td>Dev/test, <code>cds watch</code></td></tr>
+<tr><td>PostgreSQL</td><td>Yes (docker)</td><td>Hyperscaler/BTP</td><td><code>@cap-js/postgres</code> + community</td><td>via JDBC</td><td>Yes (non-HANA)</td><td>Open-source / hyperscaler</td></tr>
+<tr><td>H2</td><td>Yes</td><td>No</td><td>—</td><td>built-in</td><td>No</td><td>Java local dev/test</td></tr>
+<tr><td>Liquibase</td><td>changelog gen</td><td>CF/Kyma</td><td>N/A</td><td><code>cds add liquibase</code> flow</td><td>Yes (Java)</td><td>Versioned schema migration</td></tr></table>
+<pre><button class="copy">Copy</button><code># HANA (also updates mta.yaml / deployment descriptors)
+cds add hana
+npm add @cap-js/hana
+# local dev stays sqlite; production profile uses hana
+# package.json: cds.requires.db [development]=sqlite, [production]=hana</code></pre>
+<label class="check"><input type="checkbox" data-done="db"> Mark complete</label>
+</section>
+
+<section class="card" id="sec">
+<h2 class="sec">Part 4 — Security &amp; identity (xsuaa · ias · ams)</h2>
+<details open><summary>XSUAA — <code>cds add xsuaa</code> (OAuth2/JWT, scopes, role templates/collections)</summary>
+<pre><button class="copy">Copy</button><code>cds add xsuaa
+# generates: xs-security.json (scopes, role-templates), mta.yaml resource (xsuaa),
+# package.json auth config. Then: cds bind / mbt build + cf deploy, create role collections in BTP cockpit.</code></pre>
+<p>AuthN via JWT (XSUAA broker), AuthZ via <code>@requires</code>/<code>@restrict</code> matching scopes. Mistakes: forgetting role-collection assignment; scope name mismatch; testing prod APIs with mock users.</p></details>
+<details><summary>IAS — <code>cds add ias</code></summary>
+<div class="diagram">CAP → SAP Identity Authentication (IAS, OIDC) → User
+Use when: human SSO, IAS as IdP (often with XSUAA broker), app-to-app via IAS.</div></details>
+<details><summary>AMS (Authorization Management Service)</summary>
+<p>Centralized authorization policies (attributes, policies) vs local <code>@restrict</code>. Use when policies must be managed outside code, shared across apps, audited centrally. <code>@requires/@restrict</code> = code-level; AMS = policy plane that CAP evaluates at runtime.</p></details>
+<label class="check"><input type="checkbox" data-done="sec"> Mark complete</label>
+</section>
+
+<section class="card" id="mt">
+<h2 class="sec">Part 5 — Multitenancy (<code>cds add multitenancy</code>)</h2>
+<div class="diagram">Provider
+   ├── Tenant A (isolated schema/container + subs.)
+   ├── Tenant B
+   └── Tenant C
+MTX sidecar (mtx/sidecar) handles onboarding/upgrade; saas-registry + service-manager bound.</div>
+<pre><button class="copy">Copy</button><code>cds add multitenancy
+npm install   # Node: adds @sap/cds-mtxs, profile with-mtx-sidecar, mtx/sidecar subproject
+# Java: adds cds-feature-mt, application.yaml sidecar.url, mtx/sidecar
+# Local SaaS test: cds mt add / subscribe simulation per CAPire multitenancy guide</code></pre>
+<p><b>Legacy note (2026):</b> old in-process MTX (<code>cds-mtx</code> without sidecar) is legacy — use <b>sidecar (with-mtx-sidecar)</b>. Covers tenant isolation, tenant-aware services, MTX APIs, extensibility hooks.</p>
+<label class="check"><input type="checkbox" data-done="mt"> Mark complete</label>
+</section>
+
+<section class="card" id="ext">
+<h2 class="sec">Part 6 — Extensibility (<code>cds add extensibility</code> / <code>cds add extension</code>)</h2>
+<div class="diagram">Base Application → Extension project → Customer-specific model + behavior
+(model extension, service extension, custom fields; SaaS in-app vs side-by-side)</div>
+<pre><button class="copy">Copy</button><code>cds add extensibility   # enable provider app for extension
+cds add extension       # scaffold consumer/customer extension project</code></pre>
+<label class="check"><input type="checkbox" data-done="ext"> Mark complete</label>
+</section>
+
+<section class="card" id="toggles">
+<h2 class="sec">Part 7 — Toggles (<code>cds add toggles</code>)</h2>
+<pre><button class="copy">Copy</button><code>cds add toggles
+// srv/feature.js
+const cds = require('@sap/cds');
+if (cds.features.isEnabled('new-pricing')) { /* new path */ } else { /* fallback */ }</code></pre>
+<p>Use for rollout per environment/tenant, kill-switches. Configure via <code>cds.requires.toggles</code> / env; never hard-code rollout state.</p>
+<label class="check"><input type="checkbox" data-done="toggles"> Mark complete</label>
+</section>
+
+<section class="card" id="msg">
+<h2 class="sec">Part 8 — Messaging plugins (largest section)</h2>
+<div class="diagram">CAP Producer → Event (CloudEvents) → Broker → Queue/Topic → CAP Consumer
+cds deploy --to ... / service bindings select the broker per profile.</div>
+<table><tr><th>Plugin</th><th>Local</th><th>Cloud</th><th>Broker</th><th>Use case</th></tr>
+<tr><td>local-messaging</td><td>in-process</td><td>—</td><td>none</td><td>unit dev, no infra</td></tr>
+<tr><td>file-based-messaging</td><td>files/outbox</td><td>—</td><td>file outbox</td><td>offline/test async flows</td></tr>
+<tr><td>enterprise-messaging / -shared</td><td>mock</td><td>CF (EM broker)</td><td>SAP EM</td><td>CF prod events (-shared = shared instance)</td></tr>
+<tr><td>event-mesh / -shared</td><td>mock</td><td>CF</td><td>Event Mesh</td><td>aliased EM facets; -shared for shared service</td></tr>
+<tr><td>redis-messaging</td><td>docker redis</td><td>CF/Redis svc</td><td>Redis streams</td><td>lightweight pub/sub; check current support status before prod</td></tr>
+<tr><td>kafka</td><td>docker kafka</td><td>CF/Kyma/SAP EM-AEM bridge</td><td>Kafka topics</td><td>high-throughput / non-SAP landscape</td></tr></table>
+<pre><button class="copy">Copy</button><code>// CDS event
+service ProcurementService {
+  event PurchaseOrder.Approved { poID: String; total: Decimal; };
+}
+// Node producer/consumer
+const cds = require('@sap/cds');
+srv.on('CREATE','PurchaseOrders', async req => {
+  await srv.emit('PurchaseOrder.Approved', { poID: req.data.ID, total: req.data.total });
+});
+srv.on('PurchaseOrder.Approved', msg => console.log('got', msg.data));</code></pre>
+<label class="check"><input type="checkbox" data-done="msg"> Mark complete</label>
+</section>
+
+<section class="card" id="emesh"><h2 class="sec">Part 9 — Event Mesh deep-dive</h2>
+<div class="diagram">CAP → Event → Event Mesh (queue/subscription) → Subscriber → CAP
+(retries, dead-letter queue, monitoring in EM dashboard; CloudEvents envelope)</div>
+<pre><button class="copy">Copy</button><code>cds add enterprise-messaging   # or event-mesh (alias family)
+# package.json cds.requires.messaging kind enterprise-messaging; bind EM service; topics/queues in EM cockpit</code></pre>
+<label class="check"><input type="checkbox" data-done="emesh"> Mark complete</label></section>
+
+<section class="card" id="kafka"><h2 class="sec">Part 10 — CAP + Apache Kafka</h2>
+<div class="diagram">CAP → Kafka → Topic (partitions) → Consumer group → CAP
+(local: docker kafka; prod: managed Kafka; CloudEvents payload; retries + DLQ topic)</div>
+<pre><button class="copy">Copy</button><code>cds add kafka
+# configure brokers, SASL/TLS, group.id per CAPire messaging; serialize as JSON CloudEvents</code></pre>
+<label class="check"><input type="checkbox" data-done="kafka"> Mark complete</label></section>
+
+<section class="card" id="redis"><h2 class="sec">Part 11 — Redis messaging (<code>cds add redis-messaging</code>)</h2>
+<p>Purpose: light pub/sub + cache-adjacent events. Local via docker Redis; CF via Redis service binding. Limits: not a full broker (persistence/ordering weaker than EM/Kafka). Verify current CAPire support status before production.</p>
+<label class="check"><input type="checkbox" data-done="redis"> Mark complete</label></section>
+
+<section class="card" id="dest"><h2 class="sec">Part 12 — Destination (<code>cds add destination</code>)</h2>
+<div class="diagram">CAP → Destination service → External system (URL + auth: OAuth2CC, user-token-exchange, principal propagation)</div>
+<pre><button class="copy">Copy</button><code>cds add destination
+cds add connectivity   # if on-premise via Cloud Connector
+// srv/external.js
+const bupa = await cds.connect.to('API_BUSINESS_PARTNER'); // bound via destination
+const res = await bupa.run(SELECT.from('A_BusinessPartner').limit(5));</code></pre>
+<label class="check"><input type="checkbox" data-done="dest"> Mark complete</label></section>
+
+<section class="card" id="conn"><h2 class="sec">Part 13 — Connectivity (<code>cds add connectivity</code>)</h2>
+<div class="diagram">CAP → Connectivity service → On-prem proxy (Cloud Connector) → S/4HANA (on-prem)
+(service binding + destination with ProxyType=OnPremise; auth via principal propagation)</div>
+<label class="check"><input type="checkbox" data-done="conn"> Mark complete</label></section>
+
+<section class="card" id="s4"><h2 class="sec">Part 14 — S/4HANA integration (full example)</h2>
+<div class="diagram">UI5 → CAP → Destination → Connectivity → S/4HANA (e.g. API_BUSINESS_PARTNER)</div>
+<pre><button class="copy">Copy</button><code>cds import ./API_BUSINESS_PARTNER.edmx --as cds   # external EDMX → CSN
+// srv/procurement.cds
+using { API_BUSINESS_PARTNER as bupa } from './external/API_BUSINESS_PARTNER';
+service ProcurementService {
+  entity Suppliers as projection on bupa.A_BusinessPartner { key BusinessPartner, BusinessPartnerFullName };
+}
+// srv/procurement.js — remote query + error mapping
+this.on('READ','Suppliers', req => bupa.run(req.query).catch(e => req.reject(502,'S/4 read failed: '+e.message)));</code></pre>
+<label class="check"><input type="checkbox" data-done="s4"> Mark complete</label></section>
+
+<section class="card" id="approuter"><h2 class="sec">Part 15 — AppRouter (<code>cds add approuter</code>)</h2>
+<div class="diagram">Browser → Approuter (auth, xs-app.json routes, destinations) → CAP + HTML5 apps</div>
+<pre><button class="copy">Copy</button><code>cds add approuter
+// approuter/xs-app.json routes /api/* → srv, /app/* → html5-repo app-host; auth via xsuaa/ias</code></pre>
+<label class="check"><input type="checkbox" data-done="approuter"> Mark complete</label></section>
+
+<section class="card" id="html5"><h2 class="sec">Part 16 — HTML5 repo (<code>cds add html5-repo</code>)</h2>
+<div class="diagram">UI5/Fiori build → HTML5 repo (app-host) → app-runtime → Approuter → Browser (MTA deploys apps + srv)</div>
+<label class="check"><input type="checkbox" data-done="html5"> Mark complete</label></section>
+
+<section class="card" id="portal"><h2 class="sec">Part 17 — Portal (<code>cds add portal</code>)</h2>
+<p>Exposes apps in SAP Build Work Zone / launchpad: destination + auth wiring, content-provider config. Verify current “Work Zone” terminology in SAP Help (formerly Portal service). MTA + approuter required.</p>
+<label class="check"><input type="checkbox" data-done="portal"> Mark complete</label></section>
+
+<section class="card" id="log"><h2 class="sec">Part 18 — Logging (application-logging vs audit-logging)</h2>
+<pre><button class="copy">Copy</button><code>cds add application-logging
+const cds = require('@sap/cds');
+const LOG = cds.log('my-service');
+LOG.info('PO created', { po: '4500001' });
+// streams to SAP Cloud Logging / App Logging service when bound; stdout locally</code></pre>
+<p><b>Audit ≠ app logs:</b> app logs = ops diagnostics; audit = tamper-evident business/security trail (see Part 37).</p>
+<label class="check"><input type="checkbox" data-done="log"> Mark complete</label></section>
+
+<section class="card" id="notif"><h2 class="sec">Part 19 — Notifications (<code>cds add notifications</code>)</h2>
+<div class="diagram">CAP → Notification service (templates + i18n, outbox) → Work Zone / user</div>
+<pre><button class="copy">Copy</button><code>cds add notifications
+npm add @cap-js/notifications
+const alert = await cds.connect.to('notifications');
+await alert.notify({ recipients:['approver1'], title:'New PO needs approval', description: po.title });</code></pre>
+<label class="check"><input type="checkbox" data-done="notif"> Mark complete</label></section>
+
+<section class="card" id="attach"><h2 class="sec">Part 20 — Attachments (<code>cds add attachments</code>)</h2>
+<pre><button class="copy">Copy</button><code>cds add attachments
+npm add @cap-js/attachments
+// db/schema.cds
+using { Attachments } from '@cap-js/attachments';
+entity PurchaseOrders { key ID: UUID; attachments: Composition of many Attachments; }
+// prod: bind Object Store; malware scan automatic; authorize via @restrict on parent</code></pre>
+<label class="check"><input type="checkbox" data-done="attach"> Mark complete</label></section>
+
+<section class="card" id="data"><h2 class="sec">Part 21 — Data (<code>cds add data</code>)</h2>
+<pre><button class="copy">Copy</button><code>cds add data                 # empty CSV shells with headers from model
+cds add data --filter MyEntity  # only selected entities (verify --filter/--out in cds help add data)
+# db/data/*.csv → deployed by cds deploy; keep prod-only data in db/hana/data + production profile</code></pre>
+<label class="check"><input type="checkbox" data-done="data"> Mark complete</label></section>
+
+<section class="card" id="http"><h2 class="sec">Part 22 — HTTP (<code>cds add http</code>)</h2>
+<pre><button class="copy">Copy</button><code>cds add http
+### Read Products
+GET http://localhost:4004/odata/v4/catalog/Products
+Authorization: Basic alice:
+### Create (draft-aware where @odata.draft.enabled)
+POST http://localhost:4004/odata/v4/catalog/Products
+Content-Type: application/json
+
+{"name":"Laser printer"}</code></pre>
+<label class="check"><input type="checkbox" data-done="http"> Mark complete</label></section>
+
+<section class="card" id="handler"><h2 class="sec">Part 23 — Handler generator (<code>cds add handler</code>)</h2>
+<pre><button class="copy">Copy</button><code>cds add handler --for nodejs --filter CatalogService  # verify flags via cds help add handler
+// srv/cat-service.js skeleton: this.on('READ','Books',...), this.on('approve','PurchaseOrders',...)
+# Java variant scaffolds @Handles/@On handlers in srv/src/main/java/.../handlers/</code></pre>
+<label class="check"><input type="checkbox" data-done="handler"> Mark complete</label></section>
+
+<section class="card" id="test"><h2 class="sec">Part 24 — Test (<code>cds add test</code>)</h2>
+<pre><button class="copy">Copy</button><code>cds add test
+npm test   # vitest/jest skeletons: test/catalog.test.js uses cds.test() + axios OData assertions; wire into pipeline</code></pre>
+<label class="check"><input type="checkbox" data-done="test"> Mark complete</label></section>
+
+<section class="card" id="typer"><h2 class="sec">Part 25 — Typer / TypeScript (<code>cds add typer</code>, <code>cds add typescript</code>)</h2>
+<div class="diagram">CDS → Generated types (@capire/model → @cds-models/*) → TypeScript → CAP app (cds watch runs typer once)</div>
+<pre><button class="copy">Copy</button><code>cds add typer
+cds add typescript
+# Node 22+: ESM-first; generated types under @cds-models; import { PurchaseOrders } from '#cds-models/ProcurementService'</code></pre>
+<label class="check"><input type="checkbox" data-done="typer"> Mark complete</label></section>
+
+<section class="card" id="esm"><h2 class="sec">Part 26 — ESM / CJS (<code>cds add esm</code>, facet cjs)</h2>
+<pre><button class="copy">Copy</button><code>cds add esm   # "type":"module", import cds from '@sap/cds'
+// vs CJS: const cds = require('@sap/cds')
+// CAP supports both; prefer ESM for new Node.js apps; check driver/plugin ESM compat before switching</code></pre>
+<label class="check"><input type="checkbox" data-done="esm"> Mark complete</label></section>
+
+<section class="card" id="deploy"><h2 class="sec">Part 27 — Deployment facets (mta · cf-manifest · containerize · helm · kyma)</h2>
+<table><tr><th>Facet</th><th>Purpose</th><th>Generates</th><th>Target</th></tr>
+<tr><td><code>mta</code></td><td>CF MTA descriptor</td><td><code>mta.yaml</code></td><td>Cloud Foundry</td></tr>
+<tr><td><code>cf-manifest</code></td><td>simple manifest deploy</td><td><code>manifest.yml</code></td><td>CF (small apps)</td></tr>
+<tr><td><code>containerize</code></td><td>Dockerfile/ignore</td><td><code>Dockerfile</code></td><td>Containers</td></tr>
+<tr><td><code>helm</code></td><td>Helm chart</td><td><code>chart/</code></td><td>Kubernetes</td></tr>
+<tr><td><code>kyma</code></td><td>Kyma + CAP operator wiring</td><td>chart + API rules</td><td>Kyma/K8s</td></tr></table>
+<label class="check"><input type="checkbox" data-done="deploy"> Mark complete</label></section>
+
+<section class="card" id="mta"><h2 class="sec">Part 28 — MTA deep-dive (<code>cds add mta</code>)</h2>
+<pre><button class="copy">Copy</button><code>_schema-version: "3.3"
+ID: my-cap-app
+version: 1.0.0
+modules:
+  - name: my-cap-srv
+    type: nodejs
+    path: gen/srv
+    requires: [{name: my-hana}, {name: my-xsuaa}]
+    provides: [{name: srv-api, properties: {url: "${default-url}"}}]
+  - name: my-cap-db
+    type: hdb
+    path: gen/db
+    requires: [{name: my-hana}]
+resources:
+  - name: my-hana
+    type: com.sap.xs.hdi-container
+    parameters: {config: {schema: my_schema}}
+  - name: my-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters: {service: xsuaa, service-plan: application, path: ./xs-security.json}</code></pre>
+<p>Every block: <code>modules</code> = deployables (srv/db/approuter/sidecar), <code>resources</code> = backing services (hana/xsuaa/destination/connectivity/EM). Build with <code>mbt build</code>, deploy with <code>cf deploy</code>.</p>
+<label class="check"><input type="checkbox" data-done="mta"> Mark complete</label></section>
+
+<section class="card" id="kyma"><h2 class="sec">Part 29 — Kyma (<code>cds add kyma</code>)</h2>
+<div class="diagram">CAP → Container (containerize) → Helm chart → Kubernetes → Kyma (API rules, secrets, scaling, multitenancy via operator)</div>
+<pre><button class="copy">Copy</button><code>cds add kyma
+cds add helm,containerize
+cds up --to k8s   # or cds deploy --to hana:&lt;secret&gt; --on k8s (ad-hoc HANA per Mar-2025 release)</code></pre>
+<label class="check"><input type="checkbox" data-done="kyma"> Mark complete</label></section>
+
+<section class="card" id="operator"><h2 class="sec">Part 30 — CAP Operator (REQUIRED) — <code>cds add cap-operator</code></h2>
+<p>Operator automates multitenant CAP lifecycle on Gardener/K8s. Plugin generates the Helm chart (<code>chart/Chart.yaml, values.yaml, values.schema.json</code>) so you don't hand-write CRs.</p>
+<pre><button class="copy">Copy</button><code>npm add @cap-js/cap-operator-plugin -D
+cds add cap-operator
+cds add cap-operator --with-configurable-templates  # template fns in templates/cap-operator-cros.yaml (skip cds build)
+cds add cap-operator --with-service-only            # tenant-independent, services only
+cds add cap-operator --force                        # overwrite chart/
+# requires @sap/cds-dk &gt;= 8.2.1</code></pre>
+<p><b>Deprecation (current):</b> <code>globalAccountId</code> → replaced by <code>providerSubaccountId</code> (Operator ≥0.28, plugin ≥0.15); <code>provider.{subdomain,tenantId}</code> removed (Operator ≥0.31, plugin ≥0.17) — clean up old provider tenants manually. Chart covers <code>serviceInstances, serviceBindings, workloads, tenantOperations, contentJobs, serviceExposures</code>.</p>
+<label class="check"><input type="checkbox" data-done="operator"> Mark complete</label></section>
+
+<section class="card" id="pipeline"><h2 class="sec">Part 31 — CI/CD (<code>cds add pipeline</code> / github-actions)</h2>
+<div class="diagram">Git → Build (cds build/mbt) → Test (cds test) → Security scan → Deploy (cf deploy / k8s) → BTP</div>
+<pre><button class="copy">Copy</button><code>cds add pipeline        # legacy Jenkins descriptor (where still offered)
+cds add github-actions  # current: .github/workflows/*.yml — set CF_API, CF_ORG/SPACE, secrets in repo settings</code></pre>
+<label class="check"><input type="checkbox" data-done="pipeline"> Mark complete</label></section>
+
+<section class="card" id="custom"><h2 class="sec">Part 32 — Build your own <code>cds add</code> plugin (CRITICAL)</h2>
+<p>API: <code>cap.cloud.sap/docs/tools/apis/cds-add</code>. Lifecycle: <code>register() → run() → combine() → options() → requires()</code>.</p>
+<pre><button class="copy">Copy</button><code>// my-cap-plugin/package.json: { "name": "my-cap-plugin", "cds-plugin": "./cds-plugin.js" }
+// my-cap-plugin/cds-plugin.js
+const cds = require('@sap/cds-dk');
+cds.add.register('my-feature', require('./lib/add'));
+// my-cap-plugin/lib/add.js
+module.exports = class extends cds.add.Plugin {
+  async run() { // scaffold: copy templates, add deps
+    const { copy } = this; await copy('files/pg.yaml').to('pg.yaml');
+  }
+  async combine() { // integrate when OTHER facets run (mta/kyma/xsuaa/mtx present?)
+    const { readProject, merge } = cds.add;
+  }
+  options() { return { out: { type: 'string', help: 'output dir' } }; }
+  requires() { return ['xsuaa']; } // facet prerequisites
+};</code></pre>
+<p>Checklist: don't do build work in <code>add</code>; use <code>merge().into()</code> + <code>registries</code> + <code>mvn.add()</code> utils; test via <code>cds add my-feature --dry</code>-style runs.</p>
+<label class="check"><input type="checkbox" data-done="custom"> Mark complete</label></section>
+
+<section class="card" id="cdsplugin"><h2 class="sec">Part 33 — Node.js <code>cds-plugin</code> technique</h2>
+<div class="diagram">npm package (cds-plugin.js at root) → CAP auto-detection → plugin loaded on cds.serve/boot</div>
+<pre><button class="copy">Copy</button><code>// node_modules/my-plugin/cds-plugin.js (auto-loaded, no import needed)
+const cds = require('@sap/cds');
+cds.on('served', async () => { /* register handlers, extend services */ });
+cds.on('bootstrap', app => { /* express middleware */ });
+// package.json: { "cds-plugin": "./cds-plugin.js" } — version + publish like normal npm; gate behavior by profile</code></pre>
+<label class="check"><input type="checkbox" data-done="cdsplugin"> Mark complete</label></section>
+
+<section class="card" id="java"><h2 class="sec">Part 34 — Java plugins (Maven, not cds-plugin.js)</h2>
+<pre><button class="copy">Copy</button><code>&lt;!-- srv/pom.xml — e.g. AuditLog V2 --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;com.sap.cds&lt;/groupId&gt;
+  &lt;artifactId&gt;cds-feature-auditlog-v2&lt;/artifactId&gt;
+  &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;!-- attachments: cds-feature-attachments (+ -oss for Object Store); MT: cds-feature-mt; HANA: cds-feature-hana --&gt;</code></pre>
+<p>Jar auto-registers via Spring Boot; CDS model extension picked up at build. Node vs Java differ in packaging (npm vs Maven), lifecycle hooks, and sometimes feature parity — check each plugin's CAPire row.</p>
+<label class="check"><input type="checkbox" data-done="java"> Mark complete</label></section>
+
+<section class="card" id="official"><h2 class="sec">Part 35 — Official / SAP-related plugins (from CAPire “Plugins &amp; Enhancements”, Jul 2026)</h2>
+<div class="grid" id="pluginGrid"></div>
+<label class="check"><input type="checkbox" data-done="official"> Mark complete</label></section>
+
+<section class="card" id="inspector"><h2 class="sec">Part 36 — Data Inspector (<code>cds add data-inspector</code>)</h2>
+<pre><button class="copy">Copy</button><code>npm add -D @cap-js/data-inspector
+cds add data-inspector   # wires route + xsuaa scope + audit logging; MTA + html5-repo entries where needed
+# Use: /data-inspector → service-level reads (authZ + audit respected). Gate to admin roles in production.</code></pre>
+<label class="check"><input type="checkbox" data-done="inspector"> Mark complete</label></section>
+
+<section class="card" id="audit"><h2 class="sec">Part 37 — Audit logging deep-dive (<code>@cap-js/audit-logging</code>)</h2>
+<div class="diagram">CAP → audit-logging plugin → console (dev) → SAP Audit Log service (prod, bound)
+annotations drive personal-data events; outbox for scale.</div>
+<pre><button class="copy">Copy</button><code>npm add @cap-js/audit-logging
+cds add audit-logging   # deployment/binding config (since Jun-2024)
+// db/schema.cds
+annotate my.Customers with @PersonalData:{ DataSubjectRole:'Customer', EntitySemantics:'DataSubject' } {
+  ID           @PersonalData.FieldSemantics:'DataSubjectID';
+  email        @PersonalData.IsPotentiallyPersonal;
+  creditCardNo @PersonalData.IsPotentiallySensitive;
+}</code></pre>
+<label class="check"><input type="checkbox" data-done="audit"> Mark complete</label></section>
+
+<section class="card" id="attachsvc"><h2 class="sec">Part 38 — Attachment service deep-dive</h2>
+<p>Node <code>@cap-js/attachments</code> / Java <code>cds-feature-attachments[-oss]</code>; SDM variant <code>@cap-js/sdm</code> for Document Management repos (auto onboarding/offboarding, versioning outlook, malware scan, Fiori annotations, multitenancy-aware). Store in HANA by default; Object Store/SDM in prod.</p>
+<label class="check"><input type="checkbox" data-done="attachsvc"> Mark complete</label></section>
+
+<section class="card" id="rfc"><h2 class="sec">Part 39 — ABAP RFC (<code>@sap/cds-rfc</code>)</h2>
+<div class="diagram">CAP → cds-rfc plugin → ABAP RFC (via destination/connectivity + Cloud Connector) → function module</div>
+<pre><button class="copy">Copy</button><code>npm add @sap/cds-rfc
+cds import --from rfc Z_GET_SUPPLIER   # import RFC signature (verify exact CLI per release)
+# Node-only; auth via destination; on-prem via connectivity; not for high-volume sync — prefer OData/Events</code></pre>
+<label class="check"><input type="checkbox" data-done="rfc"> Mark complete</label></section>
+
+<section class="card" id="aem"><h2 class="sec">Part 40 — Advanced Event Mesh (SAP Integration Suite)</h2>
+<div class="diagram">CAP → Advanced Event Mesh (Solace-backed) → enterprise mesh → non-SAP + SAP subscribers</div>
+<pre><button class="copy">Copy</button><code>npm add @cap-js/advanced-event-mesh   # Java: cds-feature-advanced-event-mesh
+# bind AEM service; topics/queues + CloudEvents; local test with mock broker, prod via AEM cockpit</code></pre>
+<label class="check"><input type="checkbox" data-done="aem"> Mark complete</label></section>
+
+<section class="card" id="ai"><h2 class="sec">Part 41 — CAP + AI (Generative AI Hub · AI Core · orchestration · RAG)</h2>
+<div class="diagram">CAP → AI SDK/plugin (orchestration, embeddings, RAG) → SAP AI Core / GenAI Hub → foundation model
+(@cap-js/ai: Fiori value-help recommendations + AI Core as CAP service w/ tenant-aware resource groups)</div>
+<pre><button class="copy">Copy</button><code>npm add @cap-js/ai   # Java alpha: com.sap.cds:cds-ai
+# bind AI Core; orchestration (prompt templating, grounding, filters); RAG via HANA vector engine; never invent model APIs — follow AI SDK docs</code></pre>
+<label class="check"><input type="checkbox" data-done="ai"> Mark complete</label></section>
+
+<section class="card" id="agents"><h2 class="sec">Part 42 — AI Agents + CAP</h2>
+<div class="diagram">User → AI Agent (tool calls) → CAP API (scoped OAuth, @restrict) → business logic → SAP
+(human approval for writes, audit every tool call, least-privilege agent user)</div>
+<label class="check"><input type="checkbox" data-done="agents"> Mark complete</label></section>
+
+<section class="card" id="mcp"><h2 class="sec">Part 43 — MCP + CAP</h2>
+<div class="diagram">AI Agent → MCP client → MCP server (tools/resources/prompts) → CAP (OData/REST) → SAP APIs</div>
+<table><tr><th>Technology</th><th>Purpose</th></tr>
+<tr><td>REST</td><td>API communication</td></tr><tr><td>OData</td><td>SAP business API</td></tr>
+<tr><td>Function calling</td><td>Model → tool</td></tr><tr><td>MCP</td><td>Standardized AI tool/resource access</td></tr>
+<tr><td>CAP plugin</td><td>CAP extension</td></tr><tr><td>Joule skill</td><td>SAP AI capability</td></tr><tr><td>AI agent</td><td>Goal-oriented execution</td></tr></table>
+<label class="check"><input type="checkbox" data-done="mcp"> Mark complete</label></section>
+
+<section class="card" id="matrix"><h2 class="sec">Part 44 — Plugin matrix (filterable)</h2>
+<input type="text" id="mxq" placeholder="Filter matrix… (e.g. kafka, xsuaa, official)" style="width:100%;margin-bottom:8px">
+<div style="overflow:auto"><table id="mxTable"><thead><tr><th>Plugin</th><th>Category</th><th>Official</th><th>Node</th><th>Java</th><th>Local</th><th>CF</th><th>Kyma</th><th>BTP svc</th><th>Prod</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+<label class="check"><input type="checkbox" data-done="matrix"> Mark complete</label></section>
+
+<section class="card" id="wizard"><h2 class="sec">Part 45 — Decision-tree wizard</h2>
+<p><b>What are you trying to do?</b></p>
+<div id="wiz"></div>
+<label class="check"><input type="checkbox" data-done="wizard"> Mark complete</label></section>
+
+<section class="card" id="install"><h2 class="sec">Part 46 — 8-step installation guide (every plugin)</h2>
+<div class="steps">
+<div class="step"><b>1 Install</b> — <code>npm add &lt;plugin&gt;</code> or Maven dep; run <code>cds add &lt;facet&gt;</code>.</div>
+<div class="step"><b>2 Scaffold</b> — <code>cds add …</code> writes files; review <code>git status/diff</code>.</div>
+<div class="step"><b>3 Inspect</b> — check <code>package.json cds.requires</code>, <code>mta.yaml</code>, <code>xs-security.json</code>.</div>
+<div class="step"><b>4 Configure</b> — profiles <code>[development]/[production]/[hybrid]</code>; env + bindings.</div>
+<div class="step"><b>5 Run locally</b> — <code>cds watch</code> (mock users, console logs, file messaging).</div>
+<div class="step"><b>6 Test</b> — <code>cds add test/http</code> artifacts + <code>npm test</code>.</div>
+<div class="step"><b>7 Deploy</b> — <code>cds build → mbt build → cf deploy</code> (CF) or <code>cds up --to k8s</code> (Kyma).</div>
+<div class="step"><b>8 Monitor</b> — Cloud Logging, audit log viewer, EM dashboard, K8s events.</div></div>
+<label class="check"><input type="checkbox" data-done="install"> Mark complete</label></section>
+
+<section class="card" id="files"><h2 class="sec">Part 47 — Generated file explorer</h2>
+<pre><code>Before:
+my-cap/ ├── app/ ├── db/ └── srv/
+After cds add hana,xsuaa,mta  (+ = added, ~ = modified):
+my-cap/ ├── app/ ├── db/ (+ undeploy.json, + hana/*)
+├── srv/ ├── +mta.yaml ├── +xs-security.json └── ~package.json (deps + cds.requires)
+After cds add approuter,html5-repo,portal: +approuter/(xs-app.json,package.json) +mta.yaml entries
+After cds add multitenancy: +mtx/sidecar/*, ~mta.yaml, ~package.json (with-mtx-sidecar)
+After cds add cap-operator: +chart/{Chart.yaml,values.yaml,values.schema.json}</code></pre>
+<label class="check"><input type="checkbox" data-done="files"> Mark complete</label></section>
+
+<section class="card" id="doctor"><h2 class="sec">Part 48 — Error doctor (searchable)</h2>
+<input type="text" id="docq" placeholder="Type an error… (401, HANA deploy, destination…)" style="width:100%;margin-bottom:8px">
+<div id="docList"></div>
+<label class="check"><input type="checkbox" data-done="doctor"> Mark complete</label></section>
+
+<section class="card" id="secmat"><h2 class="sec">Part 49 — Security matrix (per plugin)</h2>
+<table><tr><th>Plugin</th><th>Credentials</th><th>OAuth/scopes</th><th>Bindings</th><th>Audit</th></tr>
+<tr><td>xsuaa/ias</td><td>clientid/secret, certs</td><td>scopes + role collections</td><td>xsuaa/ias</td><td>login + AuthZ denials</td></tr>
+<tr><td>destination/connectivity</td><td>OAuth2CC, user exchange</td><td>destination scopes</td><td>destination/connectivity</td><td>external call log</td></tr>
+<tr><td>attachments/sdm</td><td>object-store keys</td><td>restrict on parent</td><td>object-store/sdm</td><td>upload/download rejects</td></tr>
+<tr><td>messaging/kafka</td><td>SASL/TLS, EM mgmt creds</td><td>EM scopes</td><td>event-mesh/kafka</td><td>publish/consume + DLQ</td></tr>
+<tr><td>data-inspector</td><td>— (inherits)</td><td>admin-only scope</td><td>xsuaa + audit-log</td><td>every inspection logged</td></tr>
+<tr><td>AI/MCP/agents</td><td>AI Core keys</td><td>agent least-privilege user</td><td>aicore</td><td>prompt + tool-call audit</td></tr></table>
+<label class="check"><input type="checkbox" data-done="secmat"> Mark complete</label></section>
+
+<section class="card" id="path"><h2 class="sec">Part 50 — Beginner learning path (26 steps)</h2>
+<ol>
+<li>CAP fundamentals (CDS, services, OData)</li><li>cds CLI (<code>init/add/build/deploy/watch/up</code>)</li><li>CDS models</li><li>Services + CRUD</li><li><code>hana</code> (prod db)</li><li><code>xsuaa</code> (auth)</li><li><code>destination</code></li><li><code>connectivity</code></li><li><code>approuter</code></li><li>messaging basics</li><li><code>event-mesh</code></li><li><code>audit-logging</code></li><li><code>attachments</code></li><li><code>multitenancy</code></li><li><code>extensibility</code></li><li><code>mta</code></li><li><code>kyma</code></li><li>CAP Operator</li><li><code>test</code> + <code>http</code></li><li>TypeScript/<code>typer</code></li><li><code>cds-plugin</code> authoring</li><li>AI (<code>@cap-js/ai</code>)</li><li>MCP exposure</li><li>Agents (approval + audit)</li><li>Enterprise architecture (capstone below)</li><li>Production hardening (security matrix + checklists)</li>
+</ol><label class="check"><input type="checkbox" data-done="path"> Mark complete</label></section>
+
+<section class="card" id="capstone"><h2 class="sec">Part 51 — Capstone: Enterprise Procurement CAP Platform</h2>
+<div class="diagram">USER → UI5 (html5-repo) → Approuter (xsuaa/ias) → CAP (Node.js)
+   ├── HANA (@cap-js/hana)            ├── S/4HANA (destination+connectivity)
+   ├── Event Mesh (PO.Approved)       ├── AI (@cap-js/ai, GenAI Hub)
+   ├── audit-logging + attachments(SDM/ObjectStore) + notifications
+   └── multitenancy (sidecar) + MTA (CF) / operator (Kyma)
+AI Agent → MCP → CAP tools (scoped) → business APIs (approval + audit)</div>
+<pre><button class="copy">Copy</button><code>cds init procurement --add sample,data,typescript,typer,test,http
+cds add hana,xsuaa,multitenancy,mta,destination,connectivity,approuter,html5-repo
+cds add enterprise-messaging,audit-logging,attachments,notifications,toggles
+npm add @cap-js/attachments @cap-js/audit-logging @cap-js/notifications @cap-js/ai
+npm add @cap-js/cap-operator-plugin -D; cds add cap-operator
+mbt build; cf deploy gen/mta.tar   # or: cds up --to k8s</code></pre>
+<label class="check"><input type="checkbox" data-done="capstone"> Mark complete</label></section>
+
+<section class="card" id="links"><h2 class="sec">Part 54 — Official links (existence-checked, Sept 2026)</h2>
+<ul>
+<li>CAPire home: <code>https://cap.cloud.sap</code> · Plugins: <code>https://cap.cloud.sap/docs/plugins</code></li>
+<li><code>cds add</code> plugin API: <code>https://cap.cloud.sap/docs/tools/apis/cds-add</code></li>
+<li>Databases: <code>https://cap.cloud.sap/docs/guides/databases</code> · HANA: <code>…/guides/databases/hana</code></li>
+<li>Multitenancy: <code>https://cap.cloud.sap/docs/guides/multitenancy</code> · Deploy to CF: <code>…/guides/deploy/to-cf</code></li>
+<li>GitHub: <code>github.com/cap-js/attachments</code>, <code>/audit-logging</code>, <code>/notifications</code>, <code>/telemetry</code>, <code>/ord</code>, <code>/cap-operator-plugin</code>, <code>/data-privacy</code>, <code>/change-tracking</code>, <code>/graphql</code>, <code>/event-broker</code>, <code>/advanced-event-mesh</code>, <code>/data-inspector</code>, <code>/ai</code>, <code>SAP/cap-operator</code>, <code>cap-java/cds-feature-attachments</code>, <code>cap-js-community/odata-v2-adapter</code></li>
+<li>npm: <code>@cap-js/*</code> (hana, sqlite, postgres, attachments, audit-logging, notifications, telemetry, ord, ai, data-privacy, change-tracking, sdm, event-broker, advanced-event-mesh, data-inspector, graphql, cap-operator-plugin), <code>@sap/cds-rfc</code></li>
+</ul>
+<label class="check"><input type="checkbox" data-done="links"> Mark complete</label></section>
+
+<section class="card" id="valid"><h2 class="sec">Part 55 — Final validation (self-check)</h2>
+<ul>
+<li>☑ Facets verified vs CAPire grow-as-you-go + deploy + <code>cds-add</code> API pages; newer facets (<code>audit-logging, attachments, data-inspector, cap-operator, github-actions, typescript, typer, esm</code>) included; legacy MTX marked legacy.</li>
+<li>☑ Plugins verified vs CAPire Plugins page (Jul 2026 snapshot): OData-V2 (deprecated), WebSocket, UI5-dev, GraphQL, Attachments, SDM, AuditLog, Data-Privacy(βeta), Change-Tracking, Notifications, Telemetry, ORD, CAP-Operator, Event-Hub(Event-Broker), Advanced-Event-Mesh, RFC, Data-Inspector, AI(+Java alpha).</li>
+<li>☑ npm/Maven names as documented; no invented model APIs; version notes (cds-dk ≥8.2.1, providerSubaccountId migration) included.</li>
+<li>☑ All nav links, search, filters, dark mode, copy buttons, modal, wizard, doctor work from <code>file://</code> (no network calls).</li>
+</ul>
+<label class="check"><input type="checkbox" data-done="valid"> Mark complete</label></section>
+
+</main>
+</div>
+<div class="modal" id="modal"><div class="box"><div style="text-align:right"><button id="mclose">✕ Close</button></div><div id="mbox"></div></div></div>
+<div class="modal" id="cmpModal"><div class="box"><div style="text-align:right"><button id="cclose">✕ Close</button></div><h3>Compare plugins</h3><div id="cbox"></div></div></div>
+<footer>SAP CAP Plugins &amp; Facets Encyclopedia · Built from CAPire (cap.cloud.sap) Sept 2026 · For learning; always confirm service plans/flags with <code>cds help add</code> and current CAPire before production.</footer>
+<script>
+const FACETS=[
+["completion","Development","official",1,1,1,1,"shell completion scripts","package.json scripts",[],"n/a"],
+["java","Development","official",0,1,1,1,"Java project layout","srv/pom.xml, application.yaml",[],"n/a"],
+["nodejs","Development","official",1,0,1,1,"Node.js layout","package.json, srv/*.js",[],"n/a"],
+["cjs","Development","official",1,0,1,1,"CommonJS module mode","package.json type:commonjs",[],"stable"],
+["typer","Development","official",1,0,1,1,"typed CDS models (@cds-models)","package.json, tsconfig",[],"stable"],
+["typescript","Development","official",1,1,1,1,"TS config + build","tsconfig.json, package.json",[],"stable"],
+["extension","Extensibility","official",1,1,1,1,"customer extension project","extension/*",[],"stable"],
+["mta","Deployment","official",1,1,1,0,"CF descriptor","mta.yaml",[],"stable"],
+["cf-manifest","Deployment","official",1,1,1,0,"simple CF manifest","manifest.yml",[],"stable"],
+["sample","Development","official",1,1,1,1,"bookshop sample model+data","db/,srv/,app/",[],"stable"],
+["tiny-sample","Development","official",1,1,1,1,"minimal sample","db/,srv/",[],"stable"],
+["data","Development","official",1,1,1,1,"CSV shells (--filter)","db/data/*.csv",[],"stable; verify --filter/--out flags"],
+["http","Development","official",1,1,1,1,"REST .http files","test/*.http",[],"stable; draft-aware"],
+["handler","Development","official",1,1,1,1,"handler skeletons","srv/*.js or Java handlers",[],"stable"],
+["test","Development","official",1,1,1,1,"test skeletons","test/*.test.js",[],"stable"],
+["react","UI","community",1,0,1,0,"React frontend scaffold","app/react/*",[],"community/seeding varies"],
+["vue","UI","community",1,0,1,0,"Vue frontend scaffold","app/vue/*",[],"community/seeding varies"],
+["hana","Database","official",1,1,1,1,"HANA prod binding+HDI","package.json, mta.yaml, db/undeploy.json",[],"stable; @cap-js/hana"],
+["postgres","Database","official",1,0,1,1,"Postgres support","pg.yaml/docker, mta/chart entries",["community+CAP team"],"stable"],
+["sqlite","Database","official",1,0,1,0,"dev database","package.json devDep @cap-js/sqlite",[],"dev only"],
+["h2","Database","official",0,1,1,0,"Java local db","pom.xml H2",[],"Java dev/test"],
+["liquibase","Database","official",0,1,1,1,"versioned migrations","db/changelog/*",[],"Java prod"],
+["xsuaa","Security","official",1,1,1,1,"OAuth/JWT auth","xs-security.json, mta.yaml",[],"stable"],
+["ias","Security","official",1,1,1,1,"IAS OIDC login","mta.yaml, approuter config",[],"stable"],
+["ams","Security","official",1,1,1,1,"central authZ policies","AMS binding + policy refs",[],"stable"],
+["multitenancy","Multitenancy","official",1,1,1,1,"SaaS sidecar MTX","mtx/sidecar, package.json, mta/chart",[],"sidecar current; old in-process legacy"],
+["toggles","Development","official",1,1,1,1,"feature flags","cds.requires.toggles",[],"stable"],
+["extensibility","Extensibility","official",1,1,1,1,"provider extensibility","cds extensibility config",[],"stable"],
+["local-messaging","Messaging","official",1,1,1,0,"in-process events","package.json messaging",[],"dev only"],
+["file-based-messaging","Messaging","official",1,1,1,0,"file outbox dev",".outbox files",[],"dev/test"],
+["enterprise-messaging","Messaging","official",1,1,1,0,"SAP EM broker (CF)","EM binding",[],"stable CF"],
+["enterprise-messaging-shared","Messaging","official",1,1,1,0,"shared EM instance","shared EM binding",[],"stable CF"],
+["event-mesh","Messaging","official",1,1,1,0,"Event Mesh alias family","EM binding",[],"stable CF"],
+["event-mesh-shared","Messaging","official",1,1,1,0,"shared Event Mesh","shared binding",[],"stable CF"],
+["redis-messaging","Messaging","official",1,0,1,0,"Redis streams","redis binding",[],"check current support before prod"],
+["kafka","Messaging","official",1,1,1,1,"Kafka topics","kafka binding",[],"stable"],
+["approuter","Integration","official",1,1,1,1,"auth router","approuter/xs-app.json",[],"stable"],
+["connectivity","Integration","official",1,1,1,1,"on-prem proxy","connectivity binding",[],"stable"],
+["destination","Integration","official",1,1,1,1,"external destinations","destination binding",[],"stable"],
+["html5-repo","UI","official",1,1,1,1,"HTML5 app-host","mta html5 entries",[],"stable"],
+["portal","UI","official",1,1,1,0,"Work Zone exposure","portal destination/content",[],"verify Work Zone terms"],
+["application-logging","Observability","official",1,1,1,1,"runtime logs","logging binding",[],"stable"],
+["audit-logging","Observability","official",1,1,1,1,"audit trail config","audit-log binding",[],"stable (Jun-2024 facet)"],
+["notifications","Integration","official",1,0,1,0,"Work Zone notifications","notify binding",[],"stable"],
+["attachments","Integration","official",1,1,1,1,"object-store wiring","attachments binding",[],"stable (Jun-2024 facet)"],
+["data-inspector","Development","official",1,0,1,0,"secure DB inspector","inspector route+scope",[],"Node.js; gate to admins"],
+["containerize","Deployment","official",1,1,0,1,"Dockerfile","Dockerfile,.dockerignore",[],"stable"],
+["helm","Deployment","official",1,1,0,1,"Helm chart","chart/",[],"stable"],
+["kyma","Deployment","official",1,1,0,1,"Kyma wiring","chart + API rules",[],"stable"],
+["cap-operator","Deployment","official",1,1,0,1,"operator chart gen","chart/{Chart,values}.yaml",[],"stable; providerSubaccountId replaces globalAccountId"],
+["pipeline","Deployment","official",1,1,1,0,"Jenkinsfile (legacy)","Jenkinsfile",[],"legacy where present"],
+["github-actions","Deployment","official",1,1,1,1,"GH workflows",".github/workflows/*",[],"current CI/CD facet"],
+["esm","Development","official",1,0,1,1,"ESM module mode","package.json type:module",[],"preferred for new Node apps"],
+["audit-logging-cfg","Observability","official",1,1,1,1,"alias of audit-logging facet","see audit-logging",[],"stable"],
+["portal-cfg","UI","official",1,1,1,0,"alias of portal","see portal",[],"stable"]
+];
+const PLUGINS=[
+["Attachments","Integration","@cap-js/attachments / cds-feature-attachments(-oss)","Node+Java","HANA default; Object Store/SDM prod","github.com/cap-js/attachments"],
+["SDM (Document Mgmt)","Integration","@cap-js/sdm / cap-java/sdm","Node+Java","Document Mgmt repos, auto onboard/offboard","github.com/cap-js/sdm"],
+["Audit Logging","Observability","@cap-js/audit-logging / cds-feature-auditlog-v2","Node+Java","console→Audit Log svc, @PersonalData","github.com/cap-js/audit-logging"],
+["Data Privacy (beta)","Security","@cap-js/data-privacy","Node","DPI /dpp/information + /dpp/retention","github.com/cap-js/data-privacy"],
+["Change Tracking","Development","@cap-js/change-tracking / java docs","Node+Java","@changelog history + Fiori","github.com/cap-js/change-tracking"],
+["Notifications","Integration","@cap-js/notifications","Node","Work Zone notify(), templates+i18n, outbox","github.com/cap-js/notifications"],
+["Telemetry","Observability","@cap-js/telemetry / java observability","Node+Java","OTel traces→Cloud Logging/Dynatrace/Jaeger","github.com/cap-js/telemetry"],
+["ORD","Integration","@cap-js/ord / cds-feature-ord","Node+Java","Open Resource Discovery docs","github.com/cap-js/ord"],
+["CAP Operator plugin","Deployment","@cap-js/cap-operator-plugin -D + cds add cap-operator","Node(chart for both)","K8s multitenant lifecycle","github.com/cap-js/cap-operator-plugin"],
+["Event Hub (Event-Broker)","Messaging","@cap-js/event-broker / cds-feature-event-hub","Node+Java","consume S/4 events via Cloud App Event Hub","github.com/cap-js/event-broker"],
+["Advanced Event Mesh","Messaging","@cap-js/advanced-event-mesh / cds-feature-advanced-event-mesh","Node+Java","Integration Suite AEM (Solace)","github.com/cap-js/advanced-event-mesh"],
+["ABAP RFC","Integration","@sap/cds-rfc","Node","import+call RFC function modules","npmjs @sap/cds-rfc"],
+["Data Inspector","Development","@cap-js/data-inspector","Node","service-level DB inspection + audit","github.com/cap-js/data-inspector"],
+["AI","AI","@cap-js/ai / cds-ai (Java alpha)","Node(+Java α)","Fiori recommendations + AI Core as CAP svc","github.com/cap-js/ai"],
+["GraphQL adapter","Integration","@cap-js/graphql","Node","@graphql schema+endpoint","github.com/cap-js/graphql"],
+["OData V2 adapter","Integration","@cap-js-community/odata-v2-adapter (Java built-in)","Node+Java","V4→V2 compat (deprecated, use only if needed)","github.com/cap-js-community/odata-v2-adapter"],
+["WebSocket","Integration","@cap-js-community/websocket","Node","@protocol:websocket services","github.com/cap-js-community/websocket"],
+["HANA driver","Database","@cap-js/hana / cds-feature-hana","Node+Java","prod persistence (hdb; don't add driver manually)","cap.cloud.sap/docs/guides/databases/hana"],
+["PostgreSQL","Database","@cap-js/postgres","Node","hyperscaler/open-source prod","community+CAP team"],
+["Redis messaging","Messaging","via redis-messaging facet/binding","Node","light pub/sub","verify support status"]
+];
+const ERRORS=[
+["Plugin not found","wrong package name / not installed","npm ls <pkg>; check spelling vs matrix","npm add <exact-name>; clear npm cache"],
+["cds add command not found","old cds-dk","cds --version; npm ls -g @sap/cds-dk","npm i -g @sap/cds-dk@latest (need ≥8.2.1 for cap-operator)"],
+["Service binding missing","no default-env.json / bind","cds env requires.<svc>","cds bind -2 <svc>:<instance> (hybrid) or cf bind"],
+["Destination unavailable","dest name/auth typo","check destination cockpit + connectivity","fix name, OAuth2CC, ProxyType=OnPremise if on-prem"],
+["401 unauthorized","no JWT / mock user","check Authorization header / xsuaa binding","login via approuter; assign role collection"],
+["403 forbidden","scope/role missing","cds authorize trace; xs-security.json","add scope to role-template + user to role collection"],
+["Database connection failure","wrong profile/binding","cds env requires.db","cds add hana; bind hana; cds deploy --to hana"],
+["HANA deployment failure","HDI undeploy/stale artifacts","db/undeploy.json; HDI logs","cds build --for hana; resolve conflicts; never delete artifacts manually"],
+["Event Mesh connection failure","EM binding/topic mismatch","EM dashboard + cds env messaging","rebind EM; fix topic/queue/subscription; check -shared vs dedicated"],
+["Kafka connection failure","broker/SASL/TLS","broker logs; group.id","fix brokers, certs, CloudEvents serialization; add DLQ topic"],
+["XSUAA configuration failure","xs-security.json scope error","cf xsuaa logs","regenerate via cds add xsuaa; recreate service key"],
+["IAS configuration failure","OIDC trust/broker","IAS admin + approuter log","re-establish XSUAA↔IAS trust; fix redirect URIs"],
+["MTA deployment failure","mta.yaml requires mismatch","mbt build log","cds add mta after facets; align resources↔modules"],
+["Kyma deployment failure","chart/secret/API rule","kubectl describe; operator logs","fix imagePullSecrets, values.yaml, API rule host"],
+["CAP Operator failure","deprecated globalAccountId/provider","operator CR status","migrate to providerSubaccountId; clean old provider tenants"],
+["AI model unavailable","AI Core binding/quota","AI Core cockpit","rebind aicore; check resource group/deployment; retry w/ backoff"]
+];
+const WIZ=[["Need database?","HANA (prod) / SQLite (dev) / PostgreSQL (open-source) — see #db #facets"],["Need authentication?","XSUAA (OAuth) / IAS (SSO) / AMS (central policies) — see #sec"],["Need external SAP system?","Destination + Connectivity → S/4HANA — see #dest #conn #s4"],["Need events?","local/file (dev) → enterprise-messaging/event-mesh (CF) / kafka / AEM — see #msg #emesh #kafka #aem"],["Need Kubernetes?","containerize+helm+kyma, multitenant via CAP Operator — see #kyma #operator"],["Need multitenancy?","cds add multitenancy (sidecar) — see #mt"],["Need logging?","application-logging (ops) vs audit-logging (trail) — see #log #audit"],["Need AI?","@cap-js/ai + AI Core orchestration/RAG — see #ai"],["Need reusable extension?","cds-plugin (npm) / Java jar — see #cdsplugin #java"],["Need CLI generator?","custom cds add plugin — see #custom"]];
+let favs=new Set(JSON.parse(localStorage.getItem('capFav')||'[]')), cmp=new Set(), done=new Set(JSON.parse(localStorage.getItem('capDone')||'[]'));
+function badge(t){return '<span class="badge b-n">'+t+'</span>'}
+function renderFacets(f){const g=document.getElementById('facetGrid');g.innerHTML='';f.forEach((r,i)=>{const[n,cat,st,node,java,cf,kyma,what,files,extra,ver]=r;const d=document.createElement('div');d.className='facet';d.dataset.name=n;d.dataset.cat=cat;
+d.innerHTML='<h3><code>cds add '+n+'</code> <span class="fav" data-f="'+n+'">'+(favs.has(n)?'★':'☆')+'</span></h3><div>'+badge(cat)+(st==='official'?'<span class="badge b-off">OFFICIAL ✓</span>':'<span class="badge b-warn">'+st.toUpperCase()+'</span>')+(node?'<span class="badge b-ok">Node.js ✓</span>':'<span class="badge b-n">Node ✕</span>')+(java?'<span class="badge b-ok">Java ✓</span>':'<span class="badge b-n">Java ✕</span>')+(cf?'<span class="badge b-ok">CF ✓</span>':'<span class="badge b-n">CF ✕</span>')+(kyma?'<span class="badge b-ok">Kyma ✓</span>':'<span class="badge b-n">Kyma ✕</span>')+'</div><p style="font-size:.85rem"><b>What:</b> '+what+'<br><b>Files:</b> <code class="inline">'+files+'</code><br><b>Version:</b> '+ver+'</p><div><button data-view="'+n+'">Details</button> <button data-cmp="'+n+'">+ Compare</button></div>';g.appendChild(d);});
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>openModal(b.dataset.view));
+document.querySelectorAll('[data-cmp]').forEach(b=>b.onclick=()=>{cmp.add(b.dataset.cmp);updCmp();});
+document.querySelectorAll('.fav').forEach(s=>s.onclick=e=>{e.stopPropagation();const k=s.dataset.f;favs.has(k)?favs.delete(k):favs.add(k);localStorage.setItem('capFav',JSON.stringify([...favs]));applyFilter();});}
+function detailFor(n){const r=FACETS.find(x=>x[0]===n);if(!r)return n;return '<h2><code>cds add '+r[0]+'</code></h2><p><b>Category:</b> '+r[1]+' · <b>Type:</b> '+r[2]+' · Node:'+(r[3]?'Yes':'No')+' Java:'+(r[4]?'Yes':'No')+' CF:'+(r[5]?'Yes':'No')+' Kyma:'+(r[6]?'Yes':'No')+'</p><h4>What is it?</h4><p>'+r[7]+'</p><h4>Command</h4><pre><button class="copy">Copy</button><code>cds add '+r[0]+'</code></pre><h4>Files created/changed</h4><p><code class="inline">'+r[8]+'</code></p><h4>Common mistakes</h4><ul><li>Running facet but forgetting <code>npm install/mvn install</code>.</li><li>Mixing profiles (testing prod binding in development).</li><li>Editing generated <code>mta.yaml/chart</code> then re-running facet without merging.</li></ul><h4>Production checklist</h4><ul><li>Binding exists + entitled in subaccount.</li><li>Profiles [production] verified via <code>cds env</code>.</li><li>Deployed via pipeline, monitored (logs/audit).</li></ul>';}
+function openModal(n){document.getElementById('mbox').innerHTML=detailFor(n);document.getElementById('modal').classList.add('open');wireCopy();}
+function updCmp(){document.getElementById('cmpN').textContent=cmp.size;}
+document.getElementById('compareBtn').onclick=()=>{const rows=[...cmp].map(k=>FACETS.find(x=>x[0]===k)).filter(Boolean);document.getElementById('cbox').innerHTML=rows.length?('<table><tr><th>Facet</th>'+rows.map(r=>'<th>cds add '+r[0]+'</th>').join('')+'</tr><tr><td>Category</td>'+rows.map(r=>'<td>'+r[1]+'</td>').join('')+'</tr><tr><td>Node/Java/CF/Kyma</td>'+rows.map(r=>'<td>'+(r[3]?'✓':'✕')+'/'+(r[4]?'✓':'✕')+'/'+(r[5]?'✓':'✕')+'/'+(r[6]?'✓':'✕')+'</td>').join('')+'</tr><tr><td>Files</td>'+rows.map(r=>'<td>'+r[8]+'</td>').join('')+'</tr></table><button id="cclear">Clear</button>'):'Select facets via “+ Compare”.';document.getElementById('cmpModal').classList.add('open');const c=document.getElementById('cclear');if(c)c.onclick=()=>{cmp.clear();updCmp();document.getElementById('cmpModal').classList.remove('open');};};
+function wireCopy(){document.querySelectorAll('pre button.copy').forEach(b=>{b.onclick=()=>{const t=b.parentElement.innerText.replace(/^Copy/,'');navigator.clipboard&&navigator.clipboard.writeText(t);b.textContent='Copied!';setTimeout(()=>b.textContent='Copy',1200);};});}
+function applyFilter(){const q=(document.getElementById('q').value||'').toLowerCase(),c=document.getElementById('catFilter').value;renderFacets(FACETS.filter(r=>(!c||r[1]===c)&&(!q||(r[0]+r[1]+r[7]+r[8]).toLowerCase().includes(q))));renderMatrix((document.getElementById('mxq').value||'').toLowerCase());renderDocs((document.getElementById('docq').value||'').toLowerCase());document.getElementById('favN').textContent=favs.size;wireCopy();}
+function renderMatrix(q){const tb=document.querySelector('#mxTable tbody');const rows=FACETS.map(r=>({p:'cds add '+r[0],c:r[1],o:r[2]==='official'?'Yes':'No',n:r[3]?'✓':'✕',j:r[4]?'✓':'✕',l:r[1]==='Database'?'profile':'mock/console',cf:r[5]?'✓':'✕',k:r[6]?'✓':'✕',b:r[1],pr:r[5]?'Yes':'Varies',s:r[10]}));tb.innerHTML=rows.filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q)).map(r=>'<tr><td><code>'+r.p+'</code></td><td>'+r.c+'</td><td>'+r.o+'</td><td>'+r.n+'</td><td>'+r.j+'</td><td>'+r.l+'</td><td>'+r.cf+'</td><td>'+r.k+'</td><td>'+r.b+'</td><td>'+r.pr+'</td><td>'+r.s+'</td></tr>').join('');}
+function renderDocs(q){const d=document.getElementById('docList');d.innerHTML=ERRORS.filter(e=>!q||JSON.stringify(e).toLowerCase().includes(q)).map(e=>'<details><summary>'+e[0]+'</summary><p><b>Cause:</b> '+e[1]+'<br><b>Diagnose:</b> '+e[2]+'<br><b>Fix:</b> '+e[3]+'</p></details>').join('');}
+function renderPlugins(){const g=document.getElementById('pluginGrid');g.innerHTML=PLUGINS.map(p=>'<div class="facet"><h3>'+p[0]+'</h3><div>'+badge(p[1])+'<span class="badge b-off">'+p[3]+'</span></div><p style="font-size:.84rem"><b>Pkg:</b> <code class="inline">'+p[2]+'</code><br><b>Notes:</b> '+p[4]+'<br><b>Repo:</b> <code class="inline">'+p[5]+'</code></p></div>').join('');}
+function renderWiz(){document.getElementById('wiz').innerHTML=WIZ.map((w,i)=>'<details><summary>'+w[0]+'</summary><p>'+w[1]+'</p></details>').join('');}
+function updProg(){const boxes=[...document.querySelectorAll('[data-done]')];const v=boxes.filter(b=>b.checked).length;const pc=Math.round(v/boxes.length*100);document.getElementById('pbar').style.width=pc+'%';document.getElementById('ptext').textContent=pc+'%';}
+document.getElementById('q').oninput=applyFilter;document.getElementById('catFilter').onchange=applyFilter;
+document.getElementById('mxq').oninput=e=>renderMatrix(e.target.value.toLowerCase());
+document.getElementById('docq').oninput=e=>renderDocs(e.target.value.toLowerCase());
+document.getElementById('themeBtn').onclick=e=>{const h=document.documentElement;const d=h.dataset.theme==='dark';h.dataset.theme=d?'light':'dark';e.target.textContent=d?'🌙 Dark':'☀️ Light';localStorage.setItem('capTheme',h.dataset.theme);};
+document.getElementById('mclose').onclick=()=>document.getElementById('modal').classList.remove('open');
+document.getElementById('cclose').onclick=()=>document.getElementById('cmpModal').classList.remove('open');
+document.addEventListener('keydown',e=>{if(e.key==='/'){e.preventDefault();document.getElementById('q').focus();}});
+document.querySelectorAll('[data-done]').forEach(b=>{b.checked=done.has(b.dataset.done);b.onchange=()=>{b.checked?done.add(b.dataset.done):done.delete(b.dataset.done);localStorage.setItem('capDone',JSON.stringify([...done]));updProg();};});
+if(localStorage.getItem('capTheme')==='dark'){document.documentElement.dataset.theme='dark';document.getElementById('themeBtn').textContent='☀️ Light';}
+document.getElementById('facetBadges').innerHTML='Tip: '+['Database','Security','Messaging','Deployment','Integration','AI'].map(c=>'<span class="badge b-n">'+c+'</span>').join(' ');
+renderFacets(FACETS);renderMatrix('');renderDocs('');renderPlugins();renderWiz();updProg();wireCopy();updCmp();
+</script>
+</body>
+</html>

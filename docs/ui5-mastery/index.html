@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#ffffff"/>
+<title>Master SAPUI5 — Beginner to Professional</title>
+<style>
+:root{
+  --blue:#0071e3; --bg:#ffffff; --bg-soft:#f5f5f7; --card:#ffffff;
+  --ink:#1d1d1f; --ink2:#424245; --muted:#6e6e73; --faint:#86868b;
+  --border:#d2d2d7; --bsoft:#e8e8ed; --code-bg:#f5f5f7;
+  --green:#1d8127; --amber:#b25000; --red:#c8102e; --violet:#6e56cf; --teal:#0e7c86;
+  --r:14px; --topbar-h:52px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Inter,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+[data-theme="dark"]{
+  --blue:#0a84ff; --bg:#000000; --bg-soft:#1d1d1f; --card:#1d1d1f;
+  --ink:#f5f5f7; --ink2:#d4d4d8; --muted:#a1a1a6; --faint:#86868b;
+  --border:#38383a; --bsoft:#2c2c2e; --code-bg:#161617;
+  --green:#30d158; --amber:#ff9f0a; --red:#ff453a; --violet:#bf5af2; --teal:#40c8e0;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 14px)}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}::selection{background:#0071e333}:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+#readbar{position:fixed;top:0;left:0;height:3px;width:0;z-index:200;background:var(--blue)}
+.topbar{position:sticky;top:0;z-index:100;height:var(--topbar-h);display:flex;align-items:center;gap:12px;padding:0 18px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bsoft)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand-mark{width:30px;height:30px;border-radius:8px;background:#1d1d1f;color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px}
+[data-theme="dark"] .brand-mark{background:#f5f5f7;color:#000}
+.brand b{font-size:14px;display:block;line-height:1.1}.brand small{font-size:10px;color:var(--faint);display:block}
+.topnav{display:flex;gap:2px;margin-left:6px}
+.topnav a{text-decoration:none;color:var(--muted);font-size:12.5px;padding:7px 10px;border-radius:8px}
+.topnav a:hover{color:var(--ink);background:var(--bg-soft)}
+@media(max-width:1150px){.topnav{display:none}}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.searchbox{position:relative}
+.searchbox input{width:200px;max-width:34vw;background:var(--bg-soft);border:1px solid transparent;color:var(--ink);border-radius:8px;padding:7px 10px 7px 32px;font-size:13px;font-family:inherit;outline:none}
+.searchbox input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #0071e322}
+.searchbox svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.5}
+.ibtn{display:inline-flex;align-items:center;gap:6px;border:1px solid transparent;background:var(--bg-soft);color:var(--ink);border-radius:8px;padding:7px 11px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.ibtn:hover{color:var(--blue)}.ibtn.on{color:var(--blue);box-shadow:inset 0 0 0 1.5px var(--blue)}
+.burger{display:none}@media(max-width:960px){.burger{display:inline-flex}}
+.hero{border-bottom:1px solid var(--bsoft);background:linear-gradient(180deg,color-mix(in srgb,var(--blue) 8%,var(--bg)),var(--bg) 72%)}
+.hero-inner{max-width:1280px;margin:0 auto;padding:50px 28px 30px}
+.eyebrow{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,transparent);padding:5px 12px;border-radius:999px;margin-bottom:12px}
+.hero h1{font-size:clamp(30px,4.2vw,50px);letter-spacing:-.025em;margin:0 0 10px;font-weight:700}
+.hero p.lead{color:var(--muted);font-size:17px;max-width:820px;margin:0}
+.dash{max-width:1280px;margin:0 auto;padding:20px 28px 6px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:900px){.dash{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--card);border:1px solid var(--bsoft);border-radius:var(--r);padding:16px 18px}
+.stat b{font-size:26px;letter-spacing:-.02em;display:block}
+.stat span{font-size:12px;color:var(--muted)}
+.pbar{height:8px;background:var(--bg-soft);border-radius:99px;margin-top:10px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--violet));border-radius:99px;transition:.3s}
+.layout{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:290px minmax(0,1fr);gap:26px;padding:20px 28px;align-items:start}
+@media(max-width:960px){.layout{grid-template-columns:1fr}.sidenav{position:fixed!important;left:0;top:var(--topbar-h);bottom:0;width:300px;z-index:90;border-radius:0!important;transform:translateX(-105%);transition:.22s}.sidenav.open{transform:none;box-shadow:0 20px 60px rgba(0,0,0,.25)}.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:80;opacity:0;pointer-events:none;transition:.22s}.scrim.show{opacity:1;pointer-events:auto}}
+.sidenav{position:sticky;top:calc(var(--topbar-h) + 14px);max-height:calc(100vh - var(--topbar-h) - 28px);overflow:auto;background:var(--card);border:1px solid var(--bsoft);border-radius:var(--r);padding:14px 10px;font-size:13px}
+.sidenav details{margin:1px 0}
+.sidenav summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;color:var(--ink2);font-weight:600}
+.sidenav summary::-webkit-details-marker{display:none}
+.sidenav summary:hover{background:var(--bg-soft)}
+.sidenav summary .pc{margin-left:auto;font-size:11px;color:var(--faint);font-family:var(--mono)}
+.sidenav .sub{padding:2px 0 6px 14px}
+.sidenav .sub a{display:block;color:var(--muted);text-decoration:none;padding:4px 8px;border-radius:7px;font-weight:400}
+.sidenav .sub a:hover{background:var(--bg-soft);color:var(--ink)}
+.sidenav .sub a.done{color:var(--faint);text-decoration:line-through}
+section.card{background:var(--card);border:1px solid var(--bsoft);border-radius:18px;padding:32px 34px;margin-bottom:20px;scroll-margin-top:calc(var(--topbar-h) + 14px);min-width:0}
+@media(max-width:640px){section.card{padding:22px 18px}.layout{padding:12px}}
+.kicker{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin:0 0 6px}
+h2.st{font-size:clamp(22px,2.6vw,30px);letter-spacing:-.02em;margin:0 0 8px;font-weight:700}
+h3.sh{font-size:18px;margin:24px 0 8px;font-weight:650;border-top:1px solid var(--bsoft);padding-top:16px}
+p.muted{color:var(--muted)}
+.lvl{font-size:10.5px;font-weight:800;letter-spacing:.08em;padding:3px 10px;border-radius:999px;margin-left:8px;vertical-align:middle}
+.lvl.BEGINNER{background:color-mix(in srgb,var(--green) 12%,transparent);color:var(--green)}
+.lvl.INTERMEDIATE{background:color-mix(in srgb,var(--amber) 13%,transparent);color:var(--amber)}
+.lvl.ADVANCED{background:color-mix(in srgb,var(--red) 9%,transparent);color:var(--red)}
+.lvl.PRO{background:color-mix(in srgb,var(--violet) 12%,transparent);color:var(--violet)}
+.topic{border:1px solid var(--bsoft);border-radius:12px;padding:14px 16px;margin:10px 0}
+.topic header{display:flex;gap:10px;align-items:flex-start}
+.topic h4{margin:0;font-size:15.5px;flex:1}
+.tstate{flex:none;border:1px solid var(--border);background:var(--card);border-radius:8px;font-size:11.5px;font-weight:700;padding:5px 10px;cursor:pointer;color:var(--muted);font-family:inherit;min-width:104px}
+.tstate.s1{color:var(--amber);border-color:var(--amber)}
+.tstate.s2{color:var(--green);border-color:var(--green)}
+.topic .body{font-size:14px;color:var(--ink2)}
+.topic .body b.k{display:block;margin:10px 0 2px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.flow span{background:var(--bg-soft);border:1px solid var(--bsoft);border-radius:8px;padding:4px 11px;font-size:12.5px;font-family:var(--mono)}
+.flow i{color:var(--faint);font-style:normal}
+pre{background:var(--code-bg);border:1px solid var(--bsoft);border-radius:12px;padding:0;margin:12px 0;overflow:hidden;font-size:12.8px;line-height:1.65}
+.chead{display:flex;align-items:center;gap:7px;padding:9px 13px;background:color-mix(in srgb,var(--muted) 7%,transparent);border-bottom:1px solid var(--bsoft);font-size:10.5px;color:var(--faint);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em}
+.chead .d{width:10px;height:10px;border-radius:50%}.chead .lang{margin-left:auto}
+pre code{display:block;padding:14px 16px;font-family:var(--mono);overflow:auto}
+code{font-family:var(--mono);font-size:.87em}
+p code,li code,td code{background:var(--bg-soft);border:1px solid var(--bsoft);padding:1px 6px;border-radius:6px;font-size:.85em}
+pre code{background:none;border:none}
+.cwrap{position:relative}
+.cbtn{position:absolute;top:40px;right:10px;background:var(--bg-soft);color:var(--muted);border:1px solid var(--bsoft);border-radius:7px;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit;z-index:2}
+.cbtn:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+.tok-k{color:#9b2393}.tok-s{color:#c41a16}.tok-c{color:#007400;font-style:italic}.tok-n{color:#1c00cf}
+[data-theme="dark"] .tok-k{color:#ff7ab2}[data-theme="dark"] .tok-s{color:#ff8170}[data-theme="dark"] .tok-c{color:#6c7986}[data-theme="dark"] .tok-n{color:#d9c97c}
+[data-theme="dark"] pre{color:#f5f5f7}
+.co{border-radius:10px;padding:10px 14px;margin:10px 0;font-size:13.5px;border:1px solid var(--bsoft)}
+.co b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.co.concept{background:color-mix(in srgb,var(--blue) 7%,transparent);border-left:3px solid var(--blue)}
+.co.warn{background:color-mix(in srgb,var(--amber) 9%,transparent);border-left:3px solid var(--amber)}
+.co.good{background:color-mix(in srgb,var(--green) 8%,transparent);border-left:3px solid var(--green)}
+.co.fire{background:color-mix(in srgb,var(--violet) 9%,transparent);border-left:3px solid var(--violet)}
+.co.bug{background:color-mix(in srgb,var(--red) 7%,transparent);border-left:3px solid var(--red)}
+.co.prod{background:color-mix(in srgb,var(--teal) 9%,transparent);border-left:3px solid var(--teal)}
+.co.ex{background:var(--bg-soft)}
+.quiz{border:1px solid var(--bsoft);border-radius:12px;padding:14px 16px;margin:10px 0;background:color-mix(in srgb,var(--violet) 4%,transparent)}
+.quiz h5{margin:0 0 8px;font-size:14px}
+.quiz label{display:block;font-size:13.5px;padding:6px 10px;border-radius:8px;cursor:pointer}
+.quiz label:hover{background:var(--bg-soft)}
+.quiz .res{font-size:13px;margin-top:8px;font-weight:600}
+.quiz .why{font-size:12.5px;color:var(--muted);font-weight:400}
+.qbtn{background:var(--blue);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:13px;padding:8px 18px;cursor:pointer;font-family:inherit;margin-top:8px}
+table.mx{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;margin:12px 0;border:1px solid var(--bsoft);border-radius:12px;overflow:hidden;display:block;overflow-x:auto}
+table.mx th,table.mx td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--bsoft);white-space:nowrap}
+table.mx th{background:var(--bg-soft);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+table.mx tr:last-child td{border-bottom:none}
+details.more{border-top:1px solid var(--bsoft);margin-top:8px}
+details.more summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--blue);padding:10px 0;list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+.fbtns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.sbtn{border:1px solid var(--border);background:var(--card);color:var(--ink);border-radius:8px;font-size:12px;font-weight:600;padding:6px 12px;cursor:pointer;font-family:inherit}
+.sbtn:hover{border-color:var(--blue);color:var(--blue)}
+.sbtn.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.chip{border:1px solid var(--border);background:var(--card);color:var(--muted);border-radius:999px;font-size:12px;font-weight:600;padding:5px 13px;cursor:pointer;font-family:inherit}
+.chip.on{background:#1d1d1f;color:#fff;border-color:#1d1d1f}
+[data-theme="dark"] .chip.on{background:#f5f5f7;color:#000;border-color:#f5f5f7}
+.flash{border:1px solid var(--bsoft);border-radius:16px;padding:34px 26px;text-align:center;min-height:190px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;background:var(--bg-soft);margin:12px 0}
+.flash .fq{font-size:19px;font-weight:650}
+.flash .fa{font-size:15px;color:var(--muted);margin-top:10px}
+.flash .hint{font-size:11px;color:var(--faint);margin-top:12px}
+textarea.notes{width:100%;min-height:90px;font-family:inherit;font-size:13.5px;border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:var(--card);color:var(--ink);margin-top:8px;resize:vertical}
+.skill td .sk{display:flex;gap:4px}
+.skill td .sk button{border:1px solid var(--border);background:var(--card);border-radius:6px;font-size:11px;padding:3px 9px;cursor:pointer;color:var(--muted);font-family:inherit}
+.skill td .sk button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.diagram{font-family:var(--mono);font-size:12.5px;background:var(--bg-soft);border:1px solid var(--bsoft);border-radius:12px;padding:16px;overflow-x:auto;white-space:pre;line-height:1.7;margin:12px 0}
+footer.site{border-top:1px solid var(--bsoft);color:var(--muted);font-size:12.5px;text-align:center;padding:28px}
+#toTop{position:fixed;right:18px;bottom:18px;width:42px;height:42px;border-radius:50%;border:1px solid var(--bsoft);background:var(--card);color:var(--ink);font-size:17px;cursor:pointer;opacity:0;pointer-events:none;transition:.25s;z-index:90}
+#toTop.show{opacity:1;pointer-events:auto}
+mark.hit{background:#ffe9a8;border-radius:3px}[data-theme="dark"] mark.hit{background:#6b5b00;color:#fff}
+.ivc{border:1px solid var(--bsoft);border-radius:12px;padding:14px 16px;margin:10px 0}
+.ivc h4{margin:0 0 4px;font-size:15px}
+.ivc .trap{font-size:13px;color:var(--amber);margin-top:6px}
+@media print{.topbar,.sidenav,#toTop{display:none!important}.layout{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="readbar"></div>
+<header class="topbar">
+<button class="ibtn burger" id="menuBtn">☰</button>
+<a class="brand" href="#top"><span class="brand-mark">5</span><span><b>Master SAPUI5</b><small>beginner → professional</small></span></a>
+<nav class="topnav"><a href="#dash">Dashboard</a><a href="#mods">Modules</a><a href="#projects">Projects</a><a href="#flashsec">Flashcards</a><a href="#interview">Interview</a><a href="#cheats">Cheat sheets</a></nav>
+<div class="top-actions">
+<div class="searchbox"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="q" type="search" placeholder="Search anything… ( / )" aria-label="Search"/></div>
+<button class="ibtn" id="bmBtn" title="My bookmarks">★ <span id="bmN">0</span></button>
+<button class="ibtn" id="themeBtn" title="Toggle theme">🌙</button>
+</div>
+</header>
+<div class="scrim" id="scrim"></div>
+<div class="hero" id="top"><div class="hero-inner">
+<div class="eyebrow">Interactive course · 21 modules · UI5 1.x + 2.x ready</div>
+<h1>Master SAPUI5</h1>
+<p class="lead">From JavaScript fundamentals to production-ready SAP Fiori applications — concepts, real code, quizzes, flashcards, projects and interview prep in one file.</p>
+</div></div>
+<div class="dash" id="dash">
+<div class="stat"><b id="stProg">0%</b><span>overall progress</span><div class="pbar"><i id="stProgBar"></i></div></div>
+<div class="stat"><b id="stMods">0 / 21</b><span>modules completed</span><div class="pbar"><i id="stModsBar"></i></div></div>
+<div class="stat"><b id="stQuiz">—</b><span>average quiz score</span><div class="pbar"><i id="stQuizBar"></i></div></div>
+<div class="stat"><b id="stLevel">Novice</b><span>skill level · <span id="stProj">0/3 projects</span></span><div class="pbar"><i id="stProjBar"></i></div></div>
+</div>
+<div class="layout">
+<nav class="sidenav" id="sidenav" aria-label="Roadmap"></nav>
+<main id="mods">
+<section class="card" id="howto"><p class="kicker">How to use this course</p><h2 class="st">Learn in loops, not lines</h2>
+<p>Each module: read the concept → study the code (note <b>file location</b>) → do the mini exercise → take the quiz → mark topics <b>Not started → In progress → Done</b>. Everything persists in this browser. Shortcut: <code>/</code> focuses search, <code>Esc</code> clears.</p>
+<p class="muted">Recommended order: M01 → M21, then projects, then interview prep. OData V2 before V4 on purpose — most SAP backends you will meet are still V2.</p></section>
+<div id="modRoot"></div>
+<section class="card" id="projects"><p class="kicker">Module 20 · Build</p><h2 class="st">Real projects</h2>
+<div class="topic"><header><h4>Project 1 — Product CRUD Application</h4></header><div class="body">
+<p>List + search + filter + sort + growing, create/edit dialog (fragment), delete with confirmation, validation, busy states, MessageBox errors, routing to detail. Build it in V2, then port to V4.</p>
+<pre data-lang="sh"><code>webapp/
+├── controller/Main.controller.js   # list: search/filter/sort
+├── controller/Detail.controller.js # bindElement + save/delete
+├── view/Main.view.xml              # m.Table, growing, SearchField
+├── view/Detail.view.xml            # SimpleForm, editable
+├── fragment/ProductDialog.fragment.xml
+├── model/formatter.js              # pure price/status formatters
+├── service/ProductService.js       # V2 + V4 variants
+└── i18n/i18n.properties</code></pre>
+<label style="font-size:13px"><input type="checkbox" data-proj="p1"/> Shipped (deployed + tested + demoable)</label></div></div>
+<div class="topic"><header><h4>Project 2 — Employee Management</h4></header><div class="body">
+<p>Dashboard with counts (IconTabBar), employee list + department filter + search, detail page, full CRUD, responsive FCL layout, reusable avatar/status controls, OData backend or MockServer.</p>
+<pre data-lang="sh"><code>webapp/
+├── controller/Dashboard.controller.js  # counts via $count
+├── controller/Employees.controller.js  # filters, FCL navigation
+├── control/AvatarStatus.js             # custom control
+└── test/integration/                   # OPA journey: hire → verify</code></pre>
+<label style="font-size:13px"><input type="checkbox" data-proj="p2"/> Shipped (deployed + tested + demoable)</label></div></div>
+<div class="topic"><header><h4>Project 3 — Fiori Business Application</h4></header><div class="body">
+<p>Fiori-shell purchase-order app: List Report (FilterBar + table), Object Page (header + sections), FCL navigation, business actions (Approve/Reject with confirmation), validation, error handling, keyboard + screen-reader pass, horizon theme, launchpad-ready.</p>
+<pre data-lang="sh"><code>webapp/
+├── view/ListReport.view.xml   # FilterBar + m.Table
+├── view/ObjectPage.view.xml   # ObjectPageLayout sections
+├── service/POService.js       # approve/reject actions
+└── test/ (qunit + opa + a11y checklist)</code></pre>
+<label style="font-size:13px"><input type="checkbox" data-proj="p3"/> Shipped (deployed + tested + demoable)</label></div></div>
+</section>
+<section class="card" id="flashsec"><p class="kicker">Memory</p><h2 class="st">Flashcards</h2>
+<p class="muted">Click the card to flip, or step through the deck. <span id="flCount"></span></p>
+<div class="flash" id="flashCard" role="button" tabindex="0" aria-label="Flashcard"></div>
+<div class="fbtns"><button class="sbtn" id="flPrev">← Prev</button><button class="sbtn" id="flNext">Next →</button><button class="sbtn" id="flShuf">Shuffle</button></div>
+</section>
+<section class="card" id="interview"><p class="kicker">Module 21 · Career</p><h2 class="st">Interview preparation</h2>
+<div class="chips" id="ivChips"><button class="chip on" data-lvl="">All</button><button class="chip" data-lvl="Beginner">Beginner</button><button class="chip" data-lvl="Intermediate">Intermediate</button><button class="chip" data-lvl="Advanced">Advanced</button><button class="chip" data-lvl="Senior">Senior</button><button class="chip" data-lvl="Architect">Architect</button></div>
+<div id="ivGrid"></div>
+</section>
+<section class="card" id="cheats"><p class="kicker">Reference</p><h2 class="st">Cheat sheets</h2>
+<details class="more" open><summary>Lifecycle</summary><p><code>onInit</code> once → <code>onBeforeRendering</code> each render → <code>onAfterRendering</code> DOM ready → <code>onExit</code> cleanup. Route wiring in onInit; DOM libs in onAfterRendering (once); detach in onExit.</p></details>
+<details class="more"><summary>Routing</summary><p>manifest <code>routes</code> (name/pattern/target) + <code>targets</code> (viewName/level/controlId/aggregation). <code>navTo(name, params)</code>; <code>attachPatternMatched</code> in onInit; back via History with deep-link fallback.</p></details>
+<details class="more"><summary>Models</summary><p>JSONModel (UI state) · ODataModel V2/V4 (backend) · ResourceModel (i18n). <code>setModel(m)</code> default, <code>setModel(m,"x")</code> named → <code>{x&gt;…}</code>. Update via <code>setProperty</code> — never raw mutation.</p></details>
+<details class="more"><summary>Binding</summary><p>Modes: one-way (lists), two-way (forms), one-time (static). Types: property, aggregation (<code>items</code>), element (<code>bindElement</code>), expression (<code>{=…}</code>). Context = pointer to one object.</p></details>
+<details class="more"><summary>OData V2</summary><p><code>read/create/update/remove</code> + <code>setDeferredGroups</code> + <code>submitChanges</code>. Options: <code>$filter $select $expand $orderby $top $skip $count</code> (binding opts drop the <code>$</code>).</p></details>
+<details class="more"><summary>OData V4</summary><p><code>bindList/bindContext</code>, <code>requestContexts/requestProperty</code>, <code>list.create()</code>, <code>ctx.setProperty/delete()</code>, <code>submitBatch</code>, <code>requestSideEffects</code>. Params keep <code>$</code>.</p></details>
+<details class="more"><summary>CRUD</summary><p>Validate → busy → send → toast + targeted refresh → errors to MessageBox → busy off (finally). Confirm deletes. Disable save while busy.</p></details>
+<details class="more"><summary>Fragments</summary><p><code>Fragment.load({name, controller})</code> → cache promise → <code>addDependent</code> → open. Destroy in onExit.</p></details>
+<details class="more"><summary>Tooling</summary><p><code>ui5 serve</code> dev+proxy · <code>ui5 build --all</code> → dist/Component-preload · deploy dist/ · never commit dist/.</p></details>
+<details class="more"><summary>Debugging</summary><p>First error first. Inspector (bindings) → Network (OData) → Support Assistant (rules) → MessageManager (messages). Empty table = path/model-name mismatch.</p></details>
+<details class="more"><summary>Performance</summary><p><code>$select</code> + growing + one-way lists; batch writes; preload bundle; destroy dialogs; lazy heavy libs; profile before optimizing.</p></details>
+<details class="more"><summary>Fiori</summary><p>Floorplans (List Report/Object Page/FCL), horizon theme, Cozy/Compact, launchpad integration, keyboard + screen-reader pass.</p></details>
+</section>
+<section class="card" id="skillsec"><p class="kicker">Assess</p><h2 class="st">Final skill matrix</h2>
+<p class="muted">Self-rate honestly. Revisit monthly — watch the row turn blue.</p>
+<div id="skillTable"></div>
+</section>
+<section class="card" id="bookmarks"><p class="kicker">Saved</p><h2 class="st">My bookmarks</h2><div id="bmList"></div></section>
+<section class="card" id="roadmap"><p class="kicker">Final page</p><h2 class="st">Your SAPUI5 Professional Roadmap</h2>
+<div class="diagram">BEGINNER → FOUNDATION → UI5 → DATA → ODATA → CRUD → FIORI
+  → ARCHITECTURE → TESTING → PERFORMANCE → DEPLOYMENT → PROFESSIONAL</div>
+<h3 class="sh">Build these 3 projects</h3>
+<p>1. Product CRUD · 2. Employee Management · 3. Fiori Business Application (see <a href="#projects">Projects</a>).</p>
+<h3 class="sh">Professional readiness checklist</h3>
+<div id="readyList"></div>
+</section>
+</main>
+</div>
+<button id="toTop" title="Back to top">↑</button>
+<footer class="site">Master SAPUI5 · single-file interactive course · UI5 1.x current, 2.x-ready, legacy patterns labeled · no backend, progress stays in your browser.</footer>
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+/* theme, readbar, drawer */
+const root=document.documentElement;
+function setTheme(t){root.setAttribute('data-theme',t);try{localStorage.setItem('ui5m-theme',t)}catch(e){}$('#themeBtn').textContent=t==='dark'?'☀️':'🌙';document.querySelector('meta[name="theme-color"]').setAttribute('content',t==='dark'?'#000000':'#ffffff');}
+let sth=null;try{sth=localStorage.getItem('ui5m-theme')}catch(e){}
+setTheme(sth||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+$('#themeBtn').addEventListener('click',()=>setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark'));
+addEventListener('scroll',()=>{const h=document.documentElement,m=h.scrollHeight-h.clientHeight;$('#readbar').style.width=(m>0?h.scrollTop/m*100:0)+'%';$('#toTop').classList.toggle('show',h.scrollTop>700);},{passive:true});
+$('#toTop').addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+const snv=$('#sidenav');$('#menuBtn').addEventListener('click',()=>{snv.classList.toggle('open');$('#scrim').classList.toggle('show',snv.classList.contains('open'));});
+$('#scrim').addEventListener('click',()=>{snv.classList.remove('open');$('#scrim').classList.remove('show');});
+/* state */
+let S={topics:{},quiz:{},notes:{},bm:[],skill:{},proj:{},ready:{}};
+try{Object.assign(S,JSON.parse(localStorage.getItem('ui5-mastery-v1')||'{}'))}catch(e){}
+function save(){try{localStorage.setItem('ui5-mastery-v1',JSON.stringify(S))}catch(e){}}
+/* data (course content below) */
+const MODULES=[
+{id:'m01',n:'01',title:'Web Development Fundamentals',lvl:'BEGINNER',est:'4h',intro:'Everything UI5 stands on. Skim what you know, drill what you don’t — every item below pays off directly in UI5 work.',
+topics:[
+{t:'HTML5 & semantic DOM',c:'LEVEL 1: HTML describes structure; the browser parses it into the DOM tree. LEVEL 2: UI5 XML views compile down to this same DOM — understanding nodes, attributes and events explains half of UI5 rendering.',w:'Every UI5 control renders HTML. Debugging “why is nothing visible” starts in the Elements panel.',s:'<button id="b">Save</button>\n<script>\n  document.getElementById("b")\n    .addEventListener("press", () => console.log("hi"));\n<\/script>',sl:'xml',f:'Browser page → later: webapp/view/*.view.xml compiles to controls → DOM.',m:'Div-soup instead of semantic tags; duplicate id attributes.',b:'Semantic tags (header/main/section); unique ids; in UI5 prefer control aggregations over raw HTML.'},
+{t:'CSS: box model, flex, grid, responsive',c:'LEVEL 1: every element is content + padding + border + margin. Flexbox lays out in one direction, grid in two. LEVEL 2: UI5 controls ship their own CSS; your custom CSS must respect control DOM (use stable classes, never deep internals).',w:'Responsive Fiori layouts are flex/grid under the hood; custom styling without breaking them requires box-model fluency.',s:'.card {\n  display: flex; gap: 1rem;      /* one-direction layout */\n  padding: 1rem;                 /* inside space */\n  margin-bottom: 1rem;           /* outside space */\n}\n@media (max-width: 600px) {\n  .card { flex-direction: column; }\n}',f:'webapp/css/style.css, loaded via manifest.json "css" resources.',m:'Fighting UI5 layout with !important; styling sap-* internals that change per version.',b:'Use UI5 layout controls first; custom CSS only via your own classes; test at 320px width.'},
+{t:'Modern JavaScript (ES6+)',c:'LEVEL 1: let/const, arrow functions, template literals, destructuring, modules, classes. LEVEL 2: UI5 controllers are AMD modules (sap.ui.define); handlers are just functions with an event object.',w:'You read and write controllers all day — promises and modules are non-negotiable.',s:"import Controller from 'sap/ui/core/mvc/Controller';\n\nexport default class Main extends Controller {\n  onInit() {\n    const { id } = this.getView().getId(); // destructuring\n    this.getView().setModel(new JSONModel({ id }));\n  }\n\n  onPress = (oEvent) => {                  // arrow keeps this\n    MessageToast.show(`Pressed ${oEvent.getSource().getId()}`);\n  };\n}",f:'webapp/controller/*.controller.js — one class per view.',m:'var + function-scoped surprises; losing this inside callbacks (use arrows).',b:'const by default; async/await over .then chains; named handler methods (onX) per event.'},
+{t:'Promises, async/await, JSON & REST',c:'LEVEL 1: async operations return Promises; await pauses until resolved; try/catch handles failure. REST maps CRUD to GET/POST/PUT/PATCH/DELETE with status codes. LEVEL 2: OData is REST with conventions ($filter, $metadata) — and UI5 models wrap it in bindings.',w:'ODataModel.read/create/update/remove are promise-based; HTTP fluency makes OData trivial.',s:'try {\n  const res = await fetch("/api/Products", {\n    method: "POST",\n    headers: { "Content-Type": "application/json" },\n    body: JSON.stringify({ Name: "Laptop" })\n  });\n  if (!res.ok) throw new Error(`HTTP ${res.status}`);\n  const product = await res.json();\n} catch (err) {\n  console.error("Create failed", err);\n}',f:'Browser/service layer → later: webapp/service/*.js wrapping OData calls.',m:'Ignoring non-2xx statuses; forgetting Content-Type; unhandled rejections.',b:'Always check res.ok; centralize fetch in a service module; surface errors via MessageBox.'},
+{t:'DevTools, Git & CORS',c:'LEVEL 1: Network tab shows every request; Console runs JS; Sources debugs; Application holds storage. CORS is the browser blocking cross-origin calls without server permission. LEVEL 2: 90% of “OData doesn’t work” is CORS/destination/proxy — diagnosed in Network tab.',w:'You will live in DevTools debugging bindings, routes and OData.',s:'git init && git add . && git commit -m "feat: product list"\ngit checkout -b feature/detail-page',sl:'sh',f:'Repo root; UI5 deploy later reads the same repo.',m:'Committing node_modules/dist; debugging minified code without sourcemaps.',b:'Atomic commits; .gitignore dist/node_modules; use ui5 serve with livereload.'}],
+quiz:[
+{q:'Which declaration should be your default in UI5 controllers?',o:['var','let everywhere','const, let only when reassigning','implicit globals'],a:2,why:'const-by-default prevents accidental reassignment; let only where rebinding is needed.'},
+{q:'A fetch() returns 404. What happens?',o:['It throws automatically','Promise resolves; you must check res.ok','It retries','It returns null'],a:1,why:'fetch only rejects on network failure. HTTP errors need an explicit res.ok check.'},
+{q:'Why does the browser block your localhost UI5 app calling the ABAP backend directly?',o:['Missing UI5 bootstrap','CORS — no Access-Control-Allow-Origin','Wrong OData version','HTTPS required'],a:1,why:'Cross-origin reads need server CORS headers; on BTP the destination + approuter solve this.'},
+{q:'Flexbox vs CSS Grid?',o:['Grid is one-directional','Flexbox is one-directional, grid is two-dimensional','They are identical','Grid replaces all UI5 layouts'],a:1,why:'Flex for rows/columns of components; grid for full page regions.'},
+{q:'What is the DOM?',o:['The HTML file on disk','The live tree of nodes the browser builds from HTML','A UI5 control','A CSS engine'],a:1,why:'UI5 renders controls into this live tree; the Elements panel shows it.'}],
+ex:'Build a plain HTML page: fetch a public JSON list, render it into cards with flexbox, add search filter. No UI5 yet — bring it to M03 and rebuild it in UI5.',
+iv:{q:'Explain event delegation in one minute.',a:'One listener on a parent handles events from many children via bubbling — the same idea as UI5 routing one press handler per list using the event source.'}},
+{id:'m02',n:'02',title:'SAPUI5 Fundamentals',lvl:'BEGINNER',est:'5h',intro:'What UI5 is, how an app boots, and the 30 controls you will use constantly. Modern component-based development only.',
+topics:[
+{t:'SAPUI5 vs OpenUI5 & architecture',c:'LEVEL 1: OpenUI5 is the open-source core; SAPUI5 adds enterprise libs (SmartControls, VCC). You write the same code against both. LEVEL 2: bootstrap loads sap-ui-core.js async; Component + manifest.json describe the app; models feed controls via binding.',w:'Choosing the right CDN/SDK and bootstrap flags decides version, theme and language for everything.',flow:['index.html bootstrap','Component.js','manifest.json','views','controls'],s:'<script id="sap-ui-bootstrap"\n  src="https://sdk.openui5.org/1.120/resources/sap-ui-core.js"\n  data-sap-ui-theme="sap_horizon"\n  data-sap-ui-async="true"\n  data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"\n  data-sap-ui-resource-roots=\'{"my.app": "./"}\'><\/script>',sl:'xml',f:'webapp/index.html — boots the Component named in data-sap-ui-on-init.',m:'Sync bootstrap (data-sap-ui-preload="sync" legacy); hardcoding version-less "latest" CDN in prod.',b:'Pin a maintained LTS version; async boot; horizon theme for Fiori compliance.'},
+{t:'Controls: properties, events, aggregations',c:'LEVEL 1: a control is a configurable UI brick: properties (data in), events (signals out), aggregations (child controls). LEVEL 2: metadata drives rendering, data binding and the API reference — same pattern for Button and ObjectPageLayout.',w:'Reading any control’s API page becomes mechanical once you see the pattern.',s:'<Button text="Save" type="Emphasized" press=".onSave">\n  <layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>\n</Button>',sl:'xml',f:'Any *.view.xml — properties as attributes, aggregation as child tags.',m:'Setting layout inside the wrong aggregation; string "true" instead of boolean.',b:'Bind properties, hardcode only static text (then move to i18n).'},
+{t:'XML views, namespaces & controllers',c:'LEVEL 1: XML declares the UI tree; namespaces map prefixes (m:, core:) to libraries. LEVEL 2: the view instantiates controls, wires press=".onSave" to the controller, and owns the binding contexts.',w:'XML views are the standard — readable, toolable, declarative.',s:'<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"\n  controllerName="my.app.controller.Main">\n  <Page title="{i18n>appTitle}">\n    <Button text="{i18n>save}" press=".onSave"/>\n  </Page>\n</mvc:View>',sl:'xml',f:'webapp/view/*.view.xml + webapp/controller/*.controller.js (same base name).',m:'Forgetting controllerName (orphan view); default namespace confusion.',b:'One view–one controller; logic in controller, never in XML expressions beyond binding.'},
+{t:'Component.js & manifest.json',c:'LEVEL 1: Component is the app root; manifest.json is its ID card (name, models, routing, resources). LEVEL 2: ComponentSupport boots it; router, models and i18n are declared here, not in code.',w:'This is what makes apps deployable, routable and reusable instead of script tags.',s:'sap.ui.define(["sap/ui/core/UIComponent"], UIComponent =>\n  UIComponent.extend("my.app.Component", {\n    metadata: { manifest: "json" },\n    init() {\n      UIComponent.prototype.init.apply(this, arguments);\n      this.getRouter().initialize();\n    }\n  }));',f:'webapp/Component.js + webapp/manifest.json (always together).',m:'Creating models in Component.init instead of manifest (unconfigurable); skipping router.initialize().',b:'Declare models/routing/resources in manifest; keep Component.init to init + router.'},
+{t:'Core libraries & control-picker',c:'sap.m = mobile-first Fiori controls (Page, Table, Dialog). sap.ui.layout = splitters/grids. sap.ui.table = desktop grid with fixed columns. sap.ui.core = framework (mvc, fragments, routing).',w:'Picking sap.m.Table vs sap.ui.table.Table (or Dialog vs Popover) correctly is a daily architect decision.',flow:['Phone-first, Fiori → sap.m','Desktop power-grid → sap.ui.table','Page structure → sap.ui.layout','Anything framework → sap.ui.core'],s:'<!-- responsive master-detail in one tag -->\n<f:FlexibleColumnLayout layout="TwoColumnsMidExpanded"/>',sl:'xml',f:'Views; namespace f="sap.f".',m:'sap.ui.table on phones; ObjectPageLayout for a two-field form.',b:'Match control to device + density; check the Fiori Design Guidelines first.'}],
+quiz:[
+{q:'OpenUI5 vs SAPUI5?',o:['Different languages','OpenUI5 is open-source core; SAPUI5 adds enterprise libs','SAPUI5 is legacy','Unrelated projects'],a:1,why:'Same APIs for standard controls; SAPUI5 adds e.g. SmartControls, VCC.'},
+{q:'Where do press=".onSave" handlers live?',o:['In the XML','In the controller with the same base name','In Component.js','In manifest.json'],a:1,why:'Views declare; controllers implement. controllerName links them.'},
+{q:'What does data-sap-ui-async="true" do?',o:['Nothing','Loads modules asynchronously (modern, non-blocking)','Enables TypeScript','Switches to OData V4'],a:1,why:'Async loading is the modern standard; sync XHR is legacy.'},
+{q:'Which library for a desktop analytical grid?',o:['sap.m.Table','sap.ui.table.Table','sap.ui.layout','sap.ui.core'],a:1,why:'sap.ui.table = fixed columns, scrolling, desktop density; sap.m.Table = responsive Fiori.'},
+{q:'manifest.json is…?',o:['Build config only','The app descriptor: models, routing, resources, i18n','A test file','The router itself'],a:1,why:'Declarative app config consumed by Component, router and tooling.'}],
+ex:'Scaffold a freestyle app (ui5 tooling or Fiori generator): one XML view with Page + Button + Input; wire press to MessageToast; run with ui5 serve.',
+iv:{q:'Walk me through UI5 bootstrap.',a:'index.html loads sap-ui-core.js async with theme/libs; ComponentSupport instantiates Component from manifest; router initializes; root view renders into the page.'}},
+{id:'m03',n:'03',title:'MVC Architecture',lvl:'BEGINNER',est:'4h',intro:'The pattern behind every UI5 app: who owns what, the controller lifecycle, and the full event-to-UI flow.',
+topics:[
+{t:'Model–View–Controller split',c:'LEVEL 1: View = what you see (XML). Controller = what happens (JS). Model = the data (JSON/OData). LEVEL 2: strict one-way dependency — controller knows view+model; view never imports the controller file; model knows nothing.',w:'Violating the split creates untestable “smart view” spaghetti.',flow:['User action','Event','Controller','Model/service','Backend','Model update','Binding','UI update'],s:'// controller talks to BOTH sides; sides never talk to each other\nthis.byId("nameInput").getValue();      // controller → view\nthis.getView().getModel().getProperty("/name"); // controller → model',f:'controller/*.controller.js orchestrating view/*.view.xml + models.',m:'Business logic inside XML expression bindings; jQuery DOM hacks bypassing models.',b:'Thin views, focused controllers, data only via models.'},
+{t:'Controller lifecycle & APIs',c:'onInit (once, setup) → onBeforeRendering (each render, adjust) → onAfterRendering (DOM ready, 3rd-party init) → onExit (cleanup). this.getView(), this.byId(id), this.getOwnerComponent() are your compass.',w:'Putting code in the wrong hook causes double-runs or missing DOM.',s:'onInit() {\n  this.getRouter().getRoute("detail")\n    .attachPatternMatched(this._onMatched, this);\n},\nonExit() {\n  // detach events, destroy timers/fragments\n}',f:'Every controller; route wiring in onInit, DOM work in onAfterRendering.',m:'Heavy OData calls in onBeforeRendering (runs every render!); leaking attached events.',b:'Bind once in onInit; guard onAfterRendering DOM code to run once; always detach in onExit.'},
+{t:'Project: Product Management UI (MVC)',c:'One view (product table + search), one controller (filter/sort handlers), one JSONModel (products). Search filters the binding — no DOM code at all.',w:'Your first complete MVC loop: user → event → model → binding → UI.',s:'onSearch(oEvent) {\n  const q = oEvent.getParameter("newValue");\n  const binding = this.byId("tbl").getBinding("items");\n  binding.filter(q ? [new Filter("Name", "Contains", q)] : []);\n}',f:'controller/Main.controller.js; view holds Table id="tbl" items="{/products}".',m:'Rebuilding the table rows manually instead of filtering the binding.',b:'Manipulate bindings, never rendered DOM.'}],
+quiz:[
+{q:'Which hook runs once for setup?',o:['onBeforeRendering','onInit','onAfterRendering','onExit'],a:1,why:'onInit = one-time wiring (router, models). Rendering hooks run repeatedly.'},
+{q:'Why avoid logic in onBeforeRendering?',o:['It never runs','It runs before every render — side effects repeat','It is deprecated','It cannot access models'],a:1,why:'Filtering/calling backends there multiplies work per render.'},
+{q:'this.byId() searches…?',o:['The whole DOM','The current view (view-local ids)','The Component','The backend'],a:1,why:'View-scoped lookup is why duplicate ids across views are safe.'},
+{q:'Correct MVC dependency?',o:['View imports controller','Controller uses view + model; model is independent','Model calls controller','All layers import each other'],a:1,why:'One-way dependencies keep layers testable.'},
+{q:'Filtering a table correctly means…?',o:['Rebuilding rows','Filtering the items binding','Hiding rows with CSS','Reloading the page'],a:1,why:'Binding-level filter = model-driven UI update, the MVC way.'}],
+ex:'Rebuild your M01 plain-JS list app in MVC: XML view + controller + JSONModel. Same features, zero document.getElementById.',
+iv:{q:'How do controller and view communicate?',a:'View declares events (press=".onSave"); controller implements handlers and reaches controls via byId; data flows only through models/bindings.'}},
+{id:'m04',n:'04',title:'Routing & Navigation',lvl:'BEGINNER',est:'4h',intro:'Bookmarkable, decoupled navigation declared in manifest.json — routes, targets, parameters and back navigation.',
+topics:[
+{t:'Routes, targets & patterns',c:'LEVEL 1: a route maps a URL pattern (products/{id}) to a target (view in an aggregation). LEVEL 2: router parses hash, matches pattern, instantiates the target view into controlId/controlAggregation; viewLevel drives transitions.',w:'Routing decouples views — no view ever hardcodes the next view.',s:'"routes": [{\n  "name": "detail", "pattern": "products/{id}",\n  "target": "detail"\n}],\n"targets": {\n  "detail": {\n    "viewName": "Detail", "viewLevel": 2,\n    "controlId": "app", "controlAggregation": "pages"\n  }\n}',
+sl:'json',f:'manifest.json → "sap.ui5".routing (routes + targets + config).',m:'Navigating via view constructors instead of navTo; wrong controlAggregation (blank page).',b:'Every screen = route+target; viewLevel ascending with depth.'},
+{t:'navTo, parameters & back',c:'oRouter.navTo("detail", {id}) builds the hash; patternMatched (with arguments) loads data; History/History.go(-1) returns, falling back to a default route when history is empty (deep link).',w:'Deep-linkable detail pages and correct browser-back behavior define pro navigation.',s:'onPress(oEvent) {\n  const id = oEvent.getSource().getBindingContext().getProperty("ID");\n  this.getOwnerComponent().getRouter().navTo("detail", { id });\n},\n_onMatched(oEvent) {\n  const { id } = oEvent.getParameter("arguments");\n  this.getView().bindElement(`/Products(${id})`);\n},\nonNavBack() {\n  const hist = History.getInstance();\n  hist.getPreviousHash() !== undefined\n    ? history.go(-1)\n    : this.getRouter().navTo("home", {}, true);\n}',f:'Controllers for navTo/back; _onMatched bound in onInit via attachPatternMatched.',m:'Reading id from a global variable instead of route arguments; back button breaking on deep links.',b:'Pass state via URL (route + query params); always provide the no-history fallback.'}],
+quiz:[
+{q:'Where is routing declared (modern)?',o:['Component.js code','manifest.json sap.ui5.routing','index.html','A router.js file'],a:1,why:'Declarative routing in manifest is the current standard.'},
+{q:'What does controlAggregation do?',o:['Styles the page','Tells the router where to place the target view','Validates the pattern','Caches views'],a:1,why:'E.g. pages aggregation of App/SplitApp — wrong value = blank screen.'},
+{q:'Deep link to detail with empty history + Back pressed?',o:['Browser closes','Fallback navTo home','Crash','Stays'],a:1,why:'Always handle getPreviousHash()===undefined with a default route.'},
+{q:'How does Detail know which product?',o:['Global variable','Route arguments via patternMatched','DOM id','LocalStorage'],a:1,why:'URL is the single source of navigation state.'},
+{q:'Router vs History?',o:['Same thing','Router navigates forward by name; History tracks browser hash stack','History navigates','Router is legacy'],a:1,why:'Use both: navTo to go, History to go back safely.'}],
+ex:'Build Home → Products → Detail → Edit with back navigation. Open Detail via pasted URL — it must load standalone.',
+iv:{q:'Explain patternMatched.',a:'Fired when the URL matches a route; arguments carry parameters. Controllers attach in onInit and bind/load data — so refresh and deep links work.'}},
+{id:'m05',n:'05',title:'Models & Data Binding',lvl:'INTERMEDIATE',est:'6h',intro:'The heart of UI5. JSONModel vs OData vs ResourceModel, binding modes and the four binding types — with the flows that make them click.',
+topics:[
+{t:'Model types & setModel',c:'LEVEL 1: JSONModel = client data; ODataModel = backend service; ResourceModel = i18n texts. Named models (setModel(m,"cart")) coexist with the default one. LEVEL 2: models are observable stores; setProperty notifies every bound control.',w:'Choosing the right model per data source prevents 90% of binding confusion.',flow:['Model','Binding','Control'],s:'const m = new JSONModel({ products: [] });\nthis.getView().setModel(m);            // default\nthis.getView().setModel(cart, "cart"); // named → {cart>/items}\nm.setProperty("/products/0/Price", 9.99); // UI updates itself',f:'Component/manifest for OData+i18n; controllers for JSONModel setup.',m:'Two default models overwriting each other; expecting UI update after mutating raw JS objects (use setProperty).',b:'OData for backend, JSON for UI state, Resource for texts; one default + named others.'},
+{t:'Binding modes & types',c:'One-way (model→UI), Two-way (both; forms), One-time (initial only, cheapest). Types: property ({/name}), aggregation (items="{/list}"), element (bindElement, detail context), expression ({= ${a} > 5 ? "x" : "y"}).',w:'Wrong mode = stale UI or wasted renders; wrong type = “binding not working”.',flow:['User','Control','Two-way binding','Model'],s:'<!-- aggregation + expression + formatter, all declarative -->\n<Table items="{/Products}">\n  <ColumnListItem>\n    <Text text="{Name}"/>\n    <ObjectStatus text="{= ${Stock} > 0 ? \'In stock\' : \'Empty\' }"\n                   state="{path: \'Stock\', formatter: \'.fmt.availability\'}"/>\n  </ColumnListItem>\n</Table>',sl:'xml',f:'Views; formatters in model/formatter.js, referenced relatively.',m:'Two-way on huge read-only tables (perf); logic-heavy expressions instead of formatters.',b:'Two-way only for editable forms; formatters pure + unit-tested.'},
+{t:'Contexts, bindElement & binding APIs',c:'A context = pointer to one object (getBindingContext()). bindElement sets a view’s context (detail pages); bindItems/bindRows attach collections programmatically.',w:'Detail pages, dialogs and master-detail all hinge on contexts.',s:'// detail route matched → point the whole view at one object\nthis.getView().bindElement({\n  path: `/Products(${id})`,\n  events: { dataReceived: () => this.getView().setBusy(false) }\n});\nconst ctx = oEvent.getSource().getBindingContext(); // row → object\nconst productId = ctx.getProperty("ID");',f:'Detail controllers (bindElement); event handlers (getBindingContext).',m:'Absolute paths where a context-relative one was needed; forgetting contexts are model-specific.',b:'One bindElement per detail view; read row data from contexts, not from controls.'}],
+quiz:[
+{q:'Which model for backend OData?',o:['JSONModel','ODataModel (V2/V4)','ResourceModel','XMLModel'],a:1,why:'ODataModel speaks the service protocol; JSONModel is client-side state.'},
+{q:'Two-way binding is for…?',o:['Read-only tables','Editable forms syncing back to the model','i18n','Metadata'],a:1,why:'User edits flow control→model automatically.'},
+{q:'Expression binding is best for…?',o:['Complex logic','Tiny inline conditions','Backend calls','Routing'],a:1,why:'Keep it trivial; move logic to formatters.'},
+{q:'bindElement() is used on…?',o:['Tables','Detail views to set object context','Models','Routers'],a:1,why:'Points a view/dialog at one entity path.'},
+{q:'UI doesn’t update after myData.push(x). Why?',o:['UI5 bug','Mutated raw object — use setProperty/setData','Wrong theme','Missing controller'],a:1,why:'Observability comes from model APIs, not raw mutation.'}],
+ex:'Master-detail: list bound to /Products, search + sort via binding APIs, detail view via bindElement from route id.',
+iv:{q:'One-way vs two-way vs one-time?',a:'One-way model→UI (lists); two-way both directions (forms); one-time single initial value, cheapest for static texts.'}},
+{id:'m06',n:'06',title:'OData V2',lvl:'INTERMEDIATE',est:'5h',intro:'Most SAP backends you will meet are V2. Entities, $metadata, the V2 model API, batch and deferred groups.',
+topics:[
+{t:'OData essentials & $metadata',c:'LEVEL 1: an OData service exposes EntitySets (collections) of EntityTypes with properties + navigation properties; $metadata is the contract. LEVEL 2: UI5 generates requests from bindings + query options ($filter/$expand/$select/$orderby/$top/$skip/$count).',w:'You cannot debug what you cannot read — $metadata + Network tab is the workflow.',s:'GET /sap/opu/odata/sap/ZPRODUCT_SRV/$metadata\nGET /Products?$filter=Price gt 100&$select=ID,Name,Price&$top=20',sl:'http',f:'Service document in backend; $metadata inspected in browser.',m:'Guessing field names instead of reading $metadata.',b:'Bookmark $metadata; design $select/$expand before coding.'},
+{t:'V2 model API: read/create/update/remove',c:'sap.ui.model.odata.v2.ODataModel with promise-style CRUD. Changes collect in the model until submitChanges() (deferred groups) or send immediately.',w:'The daily driver for S/4 and Gateway backends.',s:'const m = this.getModel();\n// READ\nconst { results } = await m.read("/Products", {\n  urlParameters: { $expand: "Supplier", $top: "50" }\n});\n// CREATE / UPDATE / DELETE\nawait m.create("/Products", { Name: "Laptop", Price: 999 });\nawait m.update("/Products(1)", { Price: 899 });\nawait m.remove("/Products(1)");\n// batch staged changes\nm.setDeferredGroups(["changes"]);\nawait m.submitChanges({ groupId: "changes" });',f:'Controllers/services; model from manifest.json sap.ui5.models.',m:'Forgetting submitChanges with deferred groups (nothing sent); update() on a path without key.',b:'Group related writes; one submitChanges per user action; map backend errors to MessageBox.'}],
+quiz:[
+{q:'What is $metadata?',o:['A UI5 file','The machine-readable service contract','A theme','A log'],a:1,why:'EntityTypes, sets, associations — always read it first.'},
+{q:'Deferred groups + submitChanges means…?',o:['Auto-send each change','Stage changes, send as one batch on demand','Read-only mode','Faster rendering'],a:1,why:'Batch control for transactional multi-write UX.'},
+{q:'$expand does what?',o:['Expands the table','Pulls navigation properties inline, avoiding extra round-trips','Sorts','Deletes'],a:1,why:'One request with supplier data beats N+1 calls.'},
+{q:'V2 update() needs…?',o:['Only the payload','Entity path with key + changed fields','A new model','Admin rights'],a:1,why:'Key-addressed entity + delta payload.'},
+{q:'Batch requests help by…?',o:['Styling','Reducing round-trips, transactional grouping','Bigger payloads only','Caching'],a:1,why:'Fewer trips + all-or-nothing semantics.'}],
+ex:'Against a V2 demo service or MockServer: read with $filter/$expand, create + delete a record, then repeat as one batch.',
+iv:{q:'How do batch + deferred groups work?',a:'Changes in deferred groups wait in the model; submitChanges sends them as one $batch. Transactional UX, fewer round-trips.'}},
+{id:'m07',n:'07',title:'OData V4',lvl:'ADVANCED',est:'5h',intro:'The modern binding-centric model: list/context/property bindings, auto-$batch, and why it differs from V2.',
+topics:[
+{t:'Binding-centric architecture',c:'LEVEL 1: in V4 you rarely call read() — controls bind (bindList/bindContext) and the model fetches, caches and batches automatically. LEVEL 2: ODataListBinding pages data; contexts are first-class (requestObject/requestProperty); one auto-batch per frame.',w:'Less code, fewer requests, but a different mental model than V2.',s:'const list = this.getModel().bindList("/Products", undefined, undefined,\n  { $expand: "Supplier", $select: "ID,Name,Price" });\nconst contexts = await list.requestContexts(0, 50);\nconst name = await contexts[0].requestProperty("Name");\n// CREATE via the list binding — auto-batched\nawait list.create({ Name: "Laptop", Price: 999 });',f:'Controllers; model declared in manifest with serviceUrl + auto batch.',m:'Calling V2-style read() expecting V4 binding magic; fighting the model cache instead of refreshing bindings.',b:'Think bindings-first; create/update/delete through list/context bindings.'},
+{t:'submitBatch, side effects & messages',c:'V4 auto-groups changes into $batch; requestSideEffects() refreshes affected areas; server messages surface via the message model automatically.',w:'Correct refresh + message handling separates V4 demos from V4 apps.',s:'await this.getModel().submitBatch("myGroup");\nawait listBinding.requestSideEffects([{ $PropertyPath: "Stock" }]);',f:'After save actions; message handling global via message manager.',m:'Full-page refresh after every save (kills fine-grained updates).',b:'Targeted side-effect refresh; let the message model show backend messages.'}],
+quiz:[
+{q:'Core V4 idea?',o:['Manual AJAX','Binding-centric: bindings fetch/cache/batch','XML only','No backend'],a:1,why:'You bind; the model handles transport.'},
+{q:'How to create in V4?',o:['m.create("/Products")','listBinding.create({...})','POST manually','It is impossible'],a:1,why:'Creation happens through the list binding, auto-batched.'},
+{q:'requestContexts(0,50)…?',o:['Deletes 50','Returns contexts for paging through 50 entries','Sorts','Expands all'],a:1,why:'Programmatic paging over the list binding.'},
+{q:'After save, refresh correctly via…?',o:['location.reload()','requestSideEffects for affected paths','Nothing needed ever','New model'],a:1,why:'Targeted refresh preserves state and performance.'},
+{q:'V4 binding params look like…?',o:['expand, select','Exactly the URL options: $expand, $select','camelCase only','queryXML'],a:1,why:'V4 uses identical names to the wire ($-prefixed).'}],
+ex:'Convert your V2 CRUD list to V4: bindList + table, create via list binding, delete via context, compare request counts in Network tab.',
+iv:{q:'How is V4 different from V2 at runtime?',a:'Bindings own fetching/caching/batching; one auto $batch; contexts first-class; $-prefixed params match the URL.'}},
+{id:'m08',n:'08',title:'V2 vs V4 + Complete CRUD',lvl:'ADVANCED',est:'6h',intro:'Side-by-side comparison, then the full Product CRUD: search, filter, sort, validation, busy, errors, confirmations — in both stacks.',
+topics:[
+{t:'V2 vs V4 comparison',c:'Same OData ideas, different APIs. Learn the mapping cold — interviews and migrations test exactly this.',w:'You will maintain V2 and build V4; mixing APIs is the #1 bug source.',s:'// V2 (imperative)              |  // V4 (binding-centric)\nawait m.read("/Products");         |  const c = await list.requestContexts();\nawait m.create("/Products", o);   |  await list.create(o);\nawait m.update("/Products(1)",o); |  await ctx.setProperty("Price", 9);\nawait m.remove("/Products(1)");   |  await ctx.delete();\nm.submitChanges();                |  await m.submitBatch("g"); // often auto',f:'Keep V2 and V4 code in separate services; never mix model classes.',m:'Calling .read() on a V4 model; .bindList on a V2 model; sap.ui.model.odata.ODataModel (deprecated v1) in new code.',b:'Label every sample with its stack; migrate v1 model users to v2/v4 models.'},
+{t:'Complete CRUD checklist',c:'Production CRUD = validation before send + busy indicator + confirmation for deletes + success MessageToast + backend errors in MessageBox + refresh of exactly the affected binding.',w:'This checklist is the difference between demo and enterprise.',flow:['Validate','Busy on','Send (batch)','Toast + refresh','Errors → MessageBox','Busy off'],s:'async onSave() {\n  const view = this.getView();\n  if (!this._valid(view)) return;\n  view.setBusy(true);\n  try {\n    if (this._isNew) await this._create(); else await this._update();\n    MessageToast.show("Saved");\n    this._refreshList();\n  } catch (e) {\n    MessageBox.error(e.message);\n  } finally { view.setBusy(false); }\n}',f:'Detail/Edit controllers; validation in a util module.',m:'No busy state (double-submit); deleting without confirmation; swallowing errors.',b:'Disable save while busy; confirm destructive actions; never leave a catch empty.'}],
+quiz:[
+{q:'Deprecated OData model class?',o:['v2.ODataModel','v4.ODataModel','sap.ui.model.odata.ODataModel (v1)','JSONModel'],a:2,why:'The v1 model is deprecated — use v2 or v4 models.'},
+{q:'V4 delete?',o:['m.remove(path)','context.delete()','m.delete(path)','Not supported'],a:1,why:'Deletion hangs off the context in V4.'},
+{q:'Why disable Save while busy?',o:['Looks','Prevents double-submit duplicates','Faster','Required by Fiori'],a:1,why:'Double clicks = duplicate creates without it.'},
+{q:'Where do backend V4 messages appear?',o:['Nowhere','Message model automatically','Only console','Email'],a:1,why:'V4 wires server messages into the message model.'},
+{q:'V2 vs V4 $expand param?',o:['Same $expand on wire; binding options differ (expand vs $expand)','Identical everywhere','V4 has no expand','V2 has no expand'],a:0,why:'Wire format equal; V2 binding options drop the $ prefix.'}],
+ex:'Ship the Product CRUD (list/search/sort/create/edit/delete/validation/busy/errors) in V2, then port to V4. Counts as Project 1.',
+iv:{q:'How do you prevent duplicate creates on double-click?',a:'Busy indicator + disabled save until the promise settles; idempotency key server-side for critical writes.'}},
+{id:'m09',n:'09',title:'Advanced UI Controls',lvl:'INTERMEDIATE',est:'5h',intro:'When to use which control — the decision tables architects use daily.',
+topics:[
+{t:'Tables, lists & forms: the decisions',c:'sap.m.Table (responsive, Fiori) vs sap.ui.table.Table (desktop grid) vs List (simple rows) vs Form/SimpleForm (label-field pairs).',w:'Wrong control = broken UX on phones or missing desktop power.',s:'<!-- sap.m.Table: responsive columns, growing -->\n<Table items="{/Products}" growing="true" growingThreshold="20">\n  <columns><Column><Text text="Name"/></Column></columns>\n  <items><ColumnListItem><Text text="{Name}"/></ColumnListItem></items>\n</Table>',sl:'xml',f:'List/report views; popin behavior via demandPopin on columns.',m:'sap.ui.table on mobile; hand-rolled div tables.',b:'m.Table default; ui.table only for desktop grids; demandPopin for small screens.'},
+{t:'Dialogs, popovers & message UX',c:'Dialog = modal task (forms, confirmations). Popover = contextual, non-modal info. MessageBox/MessageToast = feedback, never data entry.',w:'Modal misuse destroys flow; correct message UX defines perceived quality.',s:'MessageBox.confirm("Delete product?", {\n  actions: [MessageBox.Action.DELETE, MessageBox.Action.CANCEL],\n  onClose: sAction => {\n    if (sAction === MessageBox.Action.DELETE) this._delete();\n  }\n});',f:'Any destructive or validated action in controllers.',m:'Popover for multi-field forms; alert() instead of MessageBox.',b:'Dialog for tasks, Popover for context, Toast for success, Box for decisions/errors.'},
+{t:'ObjectPage, IconTabBar & FlexibleColumnLayout',c:'ObjectPageLayout = Fiori object page (header + sections). IconTabBar = tabbed content with counts. FlexibleColumnLayout = master-detail-detail across screen sizes.',w:'These three compose nearly every Fiori app shell.',flow:['FCL begin','FCL mid (object)','FCL end (sub-object)'],s:'<f:FlexibleColumnLayout layout="TwoColumnsMidExpanded"/>',sl:'xml',f:'App view root for FCL-based Fiori apps (f="sap.f").',m:'Nested splitters imitating FCL (loses responsive behavior).',b:'FCL + routing layouts (layout parameter per route) for Fiori compliance.'}],
+quiz:[
+{q:'sap.m.Table vs sap.ui.table.Table?',o:['Same','m.Table responsive Fiori; ui.table desktop power-grid','ui.table is legacy','m.Table is legacy'],a:1,why:'Device + density decide.'},
+{q:'Dialog vs Popover?',o:['Interchangeable','Dialog = modal task; Popover = contextual info','Popover is modal','Dialog cannot contain forms'],a:1,why:'Modality matches task weight.'},
+{q:'List vs Table?',o:['Same','List = simple homogeneous rows; Table = columns/headers','Table is mobile-only','List needs backend'],a:1,why:'Columns ⇒ Table; simple rows ⇒ List.'},
+{q:'growing="true" gives…?',o:['Infinite data','Client pagination on scroll','Sorting','Filtering'],a:1,why:'Scroll-based paging for large lists.'},
+{q:'Success feedback belongs in…?',o:['alert()','MessageToast','console','MessageBox error'],a:1,why:'Toast = lightweight success; Box = decisions/errors.'}],
+ex:'Rebuild your product list: FCL master-detail, m.Table with growing + popin, delete via MessageBox.confirm.',
+iv:{q:'When is sap.ui.table the right call?',a:'Desktop-only analytical grids needing fixed columns, scrolling, multi-select and keyboard handling — never as a mobile pattern.'}},
+{id:'m10',n:'10',title:'Advanced Data Handling',lvl:'ADVANCED',est:'4h',intro:'Sorting, filtering, grouping, server vs client ops, busy UX and formatting — with performance implications.',
+topics:[
+{t:'Server vs client operations',c:'Server-side ($filter/$orderby/$top) scales to millions; client-side suits small, fully-loaded sets. Growing lists page on scroll. Never client-filter 100k rows.',w:'This choice decides whether your app survives production data volumes.',s:'table.getBinding("items").sort(new Sorter("Price", true));\ntable.getBinding("items").filter(new Filter("Category", "EQ", "IT"));\n// formatters stay pure and cheap\nformatPrice: v => Number(v).toFixed(2)',f:'List controllers (sort/filter); model/formatter.js (pure formatters).',m:'Client-side filter on huge sets; formatter doing OData calls.',b:'Server ops by default; $select to slim payloads; formatters pure.'},
+{t:'Busy, messages & validation',c:'setBusy on view/table during loads; MessageManager centralizes validation + backend messages; validate on submit AND live for key fields.',w:'Perceived performance and data quality live here.',s:'this.getView().setBusy(true);\ntry { await save(); } finally { this.getView().setBusy(false); }',f:'Around every async action; MessageManager registered once per component.',m:'Busy forever after exceptions (missing finally); validating only on save.',b:'try/finally for busy; validate early, message precisely.'}],
+quiz:[
+{q:'100k rows + client filter = ?',o:['Fine','Frozen UI — use server-side ops','Faster','Best practice'],a:1,why:'Ship predicates to the backend; page results.'},
+{q:'$select helps by…?',o:['Sorting','Slimming payloads to needed fields','Auth','Caching'],a:1,why:'Less bytes, faster parse, cheaper backend.'},
+{q:'Formatters must be…?',o:['Async','Pure and cheap','Backend-calling','Stateful'],a:1,why:'They run per row per render — side effects multiply.'},
+{q:'Busy handling done right?',o:['Set once','try/finally around async work','Never unset','CSS only'],a:1,why:'Guarantees the indicator clears on errors.'},
+{q:'Growing lists implement…?',o:['Sorting','Scroll pagination','Grouping','Validation'],a:1,why:'growingThreshold pages data on demand.'}],
+ex:'Add server-side search/sort/filter + growing to your CRUD; measure Network tab before/after $select.',
+iv:{q:'Client or server filtering?',a:'Server unless the full set is small and already loaded; use $select and prefer growing over loading everything.'}},
+{id:'m11',n:'11',title:'Fragments & Reusability',lvl:'INTERMEDIATE',est:'3h',intro:'Reusable dialogs, forms and controls — the cure for 2000-line controllers.',
+topics:[
+{t:'XML fragments & Fragment.load',c:'LEVEL 1: a fragment is a view without a controller — a reusable UI piece (dialog, form block). LEVEL 2: Fragment.load() instantiates it async, adds it as a view dependent (lifecycle + models inherited), caches the promise.',w:'One dialog definition reused from five controllers, fixed once.',s:'// load once, reuse forever\nif (!this._dlg) {\n  this._dlg = Fragment.load({\n    name: "my.app.fragment.ProductDialog",\n    controller: this\n  }).then(dlg => { this.getView().addDependent(dlg); return dlg; });\n}\nthis._dlg.then(dlg => dlg.open());',f:'webapp/fragment/*.fragment.xml; open/close from any controller.',m:'new Dialog() per open (leaks); forgetting addDependent (models/i18n missing).',b:'Cache the Fragment.load promise; addDependent always; destroy in onExit.'},
+{t:'Custom controls & libraries',c:'Extend Control/SAPUI5 base classes for repeated domain widgets (RatingIndicator-plus, StatusBadge); ship shared ones as a reusable library consumed via manifest "libs".',w:'Third occurrence of copy-paste UI = extract a control.',s:'sap.ui.define(["sap/ui/core/Control"], Control =>\n  Control.extend("my.lib.StatusBadge", {\n    metadata: { properties: { status: { type: "string" } } },\n    renderer: (rm, ctrl) => {\n      rm.openStart("span", ctrl).class("badge-" + ctrl.getStatus());\n      rm.openEnd(); rm.text(ctrl.getStatus()); rm.close("span");\n    }\n  }));',f:'webapp/control/*.js or a shared library project.',m:'Renderer writing unescaped user data (XSS); logic in renderer (runs often).',b:'Escape all text (rm.text); keep renderer pure; API like standard controls.'}],
+quiz:[
+{q:'Why addDependent(fragment)?',o:['Styling','Inherits models/lifecycle from the view','Faster','Required for tables'],a:1,why:'Dependents share models, i18n and busy handling; destroyed with the view.'},
+{q:'Fragment.load returns…?',o:['A control','A promise of the fragment root','A model','A router'],a:1,why:'Async instantiation — cache the promise, open in .then.'},
+{q:'When to build a custom control?',o:['Always','Third repeated pattern that config can’t cover','Never','Only SAP can'],a:1,why:'Reuse threshold: third copy-paste = extract.'},
+{q:'Fragment vs view?',o:['Same','Fragment = controller-less reusable piece','Fragments have routing','Views are smaller'],a:1,why:'Fragments compose views and dialogs.'},
+{q:'Forgetting addDependent causes…?',o:['Nothing','Missing models/i18n + leaks on view destroy','Faster load','Better styling'],a:1,why:'Lifecycle and model inheritance come from dependents.'}],
+ex:'Extract your CRUD create/edit form into ProductDialog.fragment.xml; open it from two places.',
+iv:{q:'How do you keep controllers small?',a:'Fragments for reusable UI, service modules for backend calls, utils/formatters for logic — controller only orchestrates.'}},
+{id:'m12',n:'12',title:'Professional UI5 Architecture',lvl:'ADVANCED',est:'5h',intro:'Component-based structure, service layers, sap.ui.define discipline — plus BAD vs GOOD so you can smell the difference.',
+topics:[
+{t:'The professional folder contract',c:'Every directory has one job: controller (orchestrate), view (declare), model (types/formatters/state), service (backend), fragment (reuse), i18n, css, util, test. Component.js + manifest.json wire it all.',w:'New joiners navigate by convention; tooling and tests assume it.',s:'webapp/\n├── controller/   // thin orchestrators\n├── view/         // declarative XML only\n├── model/        // models.js, formatter.js (pure)\n├── service/      // ProductService.js (OData calls)\n├── fragment/     // dialogs, form blocks\n├── i18n/         // texts, never hardcoded\n├── util/         // validators, dates\n├── test/         // qunit + opa\n├── Component.js  // init + router\n├── manifest.json // models, routing, libs\n└── index.html    // bootstrap only',sl:'sh',f:'Every UI5 project — enforce in code review.',m:'Backend URLs in controllers; i18n text in XML literals; utils with UI dependencies.',b:'Service layer owns all transport; controllers own flow; formatters own display.'},
+{t:'sap.ui.define & async discipline',c:'Every module declares deps (sap.ui.define) and loads async; sap.ui.require for lazy cases (rare dialogs, heavy libs). Sync XHR / jQuery.sap are legacy — flagged by the UI5 linter.',w:'Correct modules = parallel loads, no globals, 2.x-ready code.',s:'sap.ui.define([\n  "sap/ui/core/mvc/Controller",\n  "my/app/service/ProductService"\n], (Controller, ProductService) => {\n  "use strict";\n  return Controller.extend("my.app.controller.Main", {\n    async onInit() {\n      this.products = await ProductService.list();\n    }\n  });\n});',f:'Every .js file in webapp.',m:'Globals via window.*; sync sap.ui.require inside renderers.',b:'"use strict"; named deps; run the UI5 linter in CI for 2.x readiness.'},
+{t:'BAD vs GOOD',c:'BAD: 1500-line controller with fetch URLs, German labels in XML, formatter calling backend. GOOD: service module, i18n keys, pure formatters, fragment dialogs, tested utils.',w:'Architecture is judged by where code lives, not how clever it is.',flow:['BAD: controller does everything','GOOD: service + formatter + fragment + util'],f:'Code review checklist.',m:'“It works, ship it” without layering.',b:'If it touches HTTP → service. If it formats → formatter. If reused → fragment/control.'}],
+quiz:[
+{q:'Where do backend calls belong?',o:['Controller','Service module','XML view','Formatter'],a:1,why:'Transport isolated, mockable, reusable.'},
+{q:'sap.ui.define is for…?',o:['Styling','Declaring AMD modules + dependencies','Routing','i18n'],a:1,why:'Explicit deps, async loading, no globals.'},
+{q:'Formatter calling OData is…?',o:['Fine','An anti-pattern — formatters must be pure','Faster','Required'],a:1,why:'Per-row-per-render execution multiplies side effects.'},
+{q:'UI5 linter checks…?',o:['Spelling','Deprecated/legacy APIs incl. 2.x readiness','Colors','Line length only'],a:1,why:'Run it in CI before upgrades.'},
+{q:'Hardcoded German text in XML is…?',o:['Fine for Germany','A bug — use i18n','Faster','Required'],a:1,why:'i18n from day one; translators never touch code.'}],
+ex:'Refactor your CRUD: extract ProductService, move texts to i18n, pure formatters, dialog to fragment. Run the UI5 linter.',
+iv:{q:'Describe your ideal UI5 project structure.',a:'Manifest-driven models/routing, thin controllers, service layer, pure formatters, fragments, i18n, qunit+opa tests — and why each layer exists.'}},
+{id:'m13',n:'13',title:'SAP Backend Integration',lvl:'ADVANCED',est:'4h',intro:'Gateway, destinations, CSRF, launchpad: how UI5 actually reaches S/4 through BTP.',
+topics:[
+{t:'The integration chain',c:'UI5 → (approuter) → destination (URL+auth) → BTP → connectivity/Cloud Connector → Gateway → OData → S/4 (CDS/RAP views). CSRF token fetched once per session for writes.',w:'Every “it works locally but not on BTP” issue lives somewhere on this chain.',flow:['UI5','Destination','BTP','Cloud Connector','Gateway/OData','S/4HANA'],s:'// reads work immediately; writes need the CSRF dance (model handles it)\n// destination (BTP cockpit): URL + OAuth2ClientCredentials\n// Evergreen rule: UI5 never stores backend passwords',f:'BTP destinations; mainfest model serviceUrl points at destination path.',m:'Hardcoded backend URLs; Basic auth in code; ignoring token refresh.',b:'All backend addressing via destinations; principal propagation where users differ.'},
+{t:'Launchpad & deployment targets',c:'Standalone approuter, Fiori Launchpad tiles (Work Zone), embedded S/4 Fiori — same Component, different shell services (UShell, nav).',w:'One codebase, three shells: guard shell-specific code.',s:'const ushell = sap.ushell && sap.ushell.Container;\nif (ushell) { /* launchpad APIs */ } // else standalone mode',f:'Component init / shell adapters.',m:'Assuming UShell always exists (breaks standalone).',b:'Feature-detect shell services; test all three targets.'}],
+quiz:[
+{q:'UI5 → S/4 on BTP flows via…?',o:['Direct DB','Destination + connectivity + Gateway','Email','Shared folder'],a:1,why:'The standard hybrid chain.'},
+{q:'CSRF token is for…?',o:['Reads','Protecting state-changing requests','Styling','Routing'],a:1,why:'Fetched per session; the model attaches it to writes.'},
+{q:'Backend passwords belong…?',o:['In code','In BTP destinations, never in code','In XML','In git'],a:1,why:'Secrets live in platform config.'},
+{q:'Same app on launchpad + standalone needs…?',o:['Two apps','Shell feature-detection','Nothing','Only standalone'],a:1,why:'Guard sap.ushell usage.'},
+{q:'RAP/CDS are…?',o:['Frontend','Backend modeling/programming models exposing OData','CSS','Test tools'],a:1,why:'Know enough to talk to ABAP colleagues.'}],
+ex:'Point your CRUD at a real destination-based service; trace the full chain in Network tab; document each hop.',
+iv:{q:'Local works, BTP fails. Debug order?',a:'Approuter routes/auth → destination config → connectivity/connector → Gateway service activation → CORS/CSRF — check each hop’s logs.'}},
+{id:'m14',n:'14',title:'SAP Fiori UX',lvl:'ADVANCED',est:'4h',intro:'Role-based, responsive, simple, coherent, delightful — and the floorplans that implement them.',
+topics:[
+{t:'Principles + floorplans',c:'Five principles drive every decision. Floorplans: List Report (search+table), Object Page (header+sections), Worklist, Overview Page (cards), Analytical List Page, Flexible Column Layout for master-detail.',w:'Fiori compliance is a promotion criterion, not decoration.',flow:['List Report','Object Page','Sub-object (FCL end)'],s:'<!-- Fiori Elements can generate these from annotations; freestyle mirrors the pattern -->\n<Page title="{i18n>poTitle}" showNavButton="true">\n  <Table growing="true" mode="SingleSelectMaster"/>\n</Page>',sl:'xml',f:'Freestyle views or Fiori Elements templates.',m:'Custom “creative” navigation breaking Fiori patterns; desktop-only layouts.',b:'Start from a floorplan; deviate only with UX sign-off.'},
+{t:'Accessibility & theming',c:'Roles/labels on interactive elements, keyboard operability, focus visibility, contrast, sap_horizon theming + content densities (Cozy/Compact).',w:'Enterprise software must be usable by everyone — and audited for it.',s:'<Button text="Approve" tooltip="Approve purchase order" press=".onApprove"/>\n<!-- SAPUI5 renders aria + keyboard handling; you supply labels -->',sl:'xml',f:'Every control; test with keyboard only + screen reader.',m:'Icon-only buttons without tooltip/text; div onclick instead of Button.',b:'Never div-clickables; visible focus; test Compact + Cozy.'}],
+quiz:[
+{q:'Fiori principles?',o:['Fast, cheap','Role-based, responsive, simple, coherent, delightful','Dark, dense','Mobile-only'],a:1,why:'The five words behind every guideline.'},
+{q:'List Report + Object Page = ?',o:['Antipattern','Standard master-detail Fiori flow','Only for HR','Legacy'],a:1,why:'The most common enterprise pattern.'},
+{q:'FCL gives you…?',o:['Themes','Responsive master-detail-detail columns','Backend','Tests'],a:1,why:'Begin/mid/end columns across screen sizes.'},
+{q:'Icon-only button needs…?',o:['Nothing','Accessible name (tooltip/text)','Color','Bigger icon'],a:1,why:'Screen readers need the name.'},
+{q:'Fiori vs generic UI5 app?',o:['Same','Fiori follows floorplans, roles, densities, launchpad integration','Fiori is slower','Generic is certified'],a:1,why:'Compliance = patterns + shell + theming.'}],
+ex:'Rebuild your CRUD list as a List Report + Object Page with FCL; keyboard-only test the whole flow.',
+iv:{q:'How do you prove Fiori compliance?',a:'Floorplan used, horizon theme, densities, launchpad integration, accessibility pass, UX review against guidelines.'}},
+{id:'m15',n:'15',title:'Testing',lvl:'ADVANCED',est:'4h',intro:'QUnit units, OPA5 journeys, MockServer isolation, Playwright E2E — the pyramid that lets you refactor without fear.',
+topics:[
+{t:'QUnit + OPA5 + MockServer',c:'QUnit tests units (formatters, utils, service parsers). OPA5 drives real journeys (login→create→assert) in the browser. MockServer fakes OData so tests run offline and deterministic.',w:'Untested binding/formatter logic is where production bugs hide.',s:'QUnit.module("formatter");\nQUnit.test("status text", assert => {\n  assert.strictEqual(fmt.availability(5), "In stock", "positive stock");\n});\n// OPA: iPressCreate → iSeeDialog → iEnterData → iSeeSuccessToast',f:'webapp/test/unit + webapp/test/integration; run via ui5 test / karma.',m:'Testing through the real backend (flaky); zero negative-path tests.',b:'Pyramid: many units, fewer OPA journeys, Playwright for critical E2E; MockServer default.'},
+{t:'Playwright E2E in CI',c:'Playwright drives Chromium/Firefox/WebKit against the deployed app: login, CRUD, visual checks. Runs headless in the pipeline on every merge.',w:'Catches integration + cross-browser regressions units cannot.',s:'await page.getByRole("button", { name: "Create" }).click();\nawait page.getByLabel("Name").fill("Laptop");\nawait expect(page.getByText("Saved")).toBeVisible();',f:'e2e/ folder + pipeline job.',m:'Sleep-based waits (flaky); testing third-party shells.',b:'Role-based locators; web-first assertions; trace on failure.'}],
+quiz:[
+{q:'QUnit is for…?',o:['Journeys','Units: formatters, utils, parsers','E2E','Visual'],a:1,why:'Fast, isolated, many.'},
+{q:'OPA5 drives…?',o:['Units','Real UI journeys in browser','Backend','CSS'],a:1,why:'Given-when-then on the running app.'},
+{q:'MockServer gives…?',o:['Backend','Deterministic offline OData fakes','Themes','Users'],a:1,why:'Stable, fast, offline tests.'},
+{q:'Playwright adds…?',o:['Units','Cross-browser E2E in CI','Mocking','Linting'],a:1,why:'Top of the pyramid for critical flows.'},
+{q:'Test pyramid order?',o:['E2E heaviest','Many units → fewer journeys → few E2E','Only E2E','No tests'],a:1,why:'Speed + stability economics.'}],
+ex:'Unit-test your formatter + one OPA journey (create product); run headless in CI.',
+iv:{q:'How do you test OData without a backend?',a:'MockServer with representative metadata + data, error cases included; contract-test against real $metadata periodically.'}},
+{id:'m16',n:'16',title:'Performance',lvl:'ADVANCED',est:'4h',intro:'Why UI5 apps get slow — and the decision tree to fix them: payload, bindings, rendering, network.',
+topics:[
+{t:'Payload & binding discipline',c:'LEVEL 1: every byte bound costs parse + render. $select slim fields, $expand only what displays, growing pages lists. LEVEL 2: two-way bindings on huge read-only tables re-evaluate constantly; one-time bindings freeze static texts.',w:'Backend payload is usually the #1 bottleneck — fixable in one line.',s:'// BEFORE: 47 fields, full collection, two-way everywhere\n// AFTER: slim + paged + one-way\n<Table items="{path: \'/Products\', parameters: { $select: \'ID,Name,Price\' }}" growing="true"/>',sl:'xml',f:'List bindings in views; binding modes per use-case.',m:'$expand everything “just in case”; two-way on 5k-row tables.',b:'Measure in Network tab first; $select + growing + one-way defaults.'},
+{t:'Rendering, preload & leaks',c:'Component-preload.js bundles the app (built by ui5 build). destroy() dialogs/fragments you create; detach events in onExit; lazy-load heavy libs via sap.ui.require. UI5 Support Assistant flags binding/model anti-patterns.',w:'Memory leaks kill long-lived Fiori sessions.',flow:['Profile (DevTools)','Payload? → $select/growing','Bindings? → modes','Leaks? → destroy/detach','Bundle? → preload'],s:'// lazy heavy dependency — loaded only when needed\nsap.ui.require(["my/app/util/HeavyChart"], HeavyChart => {\n  HeavyChart.render(this.byId("chartBox"));\n});',f:'Rare paths (exports, charts); onExit cleanup everywhere.',m:'New dialog per open; global event bus listeners never detached.',b:'Cache + destroy; profile before optimizing; Support Assistant in CI review.'}],
+quiz:[
+{q:'First perf check?',o:['Rewrite all','Network tab payload + binding audit','New theme','More RAM'],a:1,why:'Measure: payload size, request count, binding modes.'},
+{q:'Component-preload.js is…?',o:['A test','The built bundle of the app','A theme','A model'],a:1,why:'ui5 build creates it — one optimized load.'},
+{q:'Dialog leak fix?',o:['Nothing','Cache instance, destroy in onExit','Reload page','CSS'],a:1,why:'Create-once + destroy beats create-per-open.'},
+{q:'One-time binding is for…?',o:['Forms','Static texts that never change','Lists','i18n only'],a:1,why:'Cheapest mode: evaluate once, detach.'},
+{q:'Support Assistant finds…?',o:['Spelling','Binding/model anti-patterns at runtime','Backend bugs','Git issues'],a:1,why:'Run it on suspect pages before guessing.'}],
+ex:'Profile your CRUD: record load time + request count, apply $select + growing + one-way, record again. Target: half the payload.',
+iv:{q:'“My UI5 app is slow.” Your first 3 checks?',a:'Network payload ($select? batch?), binding modes on big tables, then memory/rendering via profiler + Support Assistant.'}},
+{id:'m17',n:'17',title:'Debugging',lvl:'ADVANCED',est:'4h',intro:'DevTools, UI5 Inspector, Support Assistant and the MessageManager — plus the troubleshooting table for the six errors everyone hits.',
+topics:[
+{t:'The debugging stack',c:'Console (errors) → Network (OData status/payload) → UI5 Inspector (control tree, bindings, models) → Support Assistant (rules) → MessageManager (app messages). manifest/Component errors surface at boot — read the first error, not the last.',w:'Ordered tools beat random clicking.',s:'// in Console: inspect the running app\nsap.ui.getCore().byId("container-myApp---main--tbl").getBinding("items").getLength()\n// MessageManager: central error pipeline\nsap.ui.getCore().getMessageManager().registerObject(oView, true);',f:'Console snippets; MessageManager once per Component.',m:'Debugging minified prod code (use sourcemaps/test build); ignoring the FIRST error.',b:'Reproduce → isolate layer (boot/binding/data/render) → fix → regression test.'},
+{t:'Troubleshooting table',c:'Six classics: (1) Cannot read properties of undefined → binding/context not ready (guard + patternMatched). (2) 404 → wrong service path/destination. (3) Failed to load resource → missing lib in manifest/ui5.yaml. (4) Module could not be loaded → typo in sap.ui.define path. (5) getBindingContext of undefined → row without context (group headers!). (6) No data in table → binding path/model name mismatch — check Inspector.',w:'Pattern-matching errors is a senior skill; this table is the shortcut.',flow:['Read FIRST error','Which layer?','Inspector/Network check','Fix + guard','Add test'],f:'Keep this table bookmarked (☆ this module).',m:'Fixing symptoms (extra null checks everywhere) instead of timing/roots.',b:'Every fixed bug gets a guard + a test so it never returns.'}],
+quiz:[
+{q:'First step with any error?',o:['Rewrite','Read the FIRST error, identify the layer','Clear cache','Restart'],a:1,why:'Cascades mislead; the root error is usually earliest.'},
+{q:'UI5 Inspector shows…?',o:['Backend','Control tree, bindings, models live','Git','CSS only'],a:1,why:'See what the app thinks is bound — vs what you assume.'},
+{q:'getBindingContext of undefined often means…?',o:['No backend','Event from a row-less control (e.g. group header)','Wrong theme','No router'],a:1,why:'Guard: check the source has a context first.'},
+{q:'Empty table, no error. Check?',o:['Backend down','Binding path + model name in Inspector','Theme','Router'],a:1,why:'Silent mismatch is the classic — verify path and model name.'},
+{q:'MessageManager centralizes…?',o:['Routing','Validation + backend messages for display','Themes','Tests'],a:1,why:'One pipeline feeding message popovers/boxes.'}],
+ex:'Break your CRUD six ways (wrong path, no CSRF/dest, typo module, missing context guard, empty expand, killed backend) and fix each using the table.',
+iv:{q:'Table shows nothing, no errors. Walk me through it.',a:'Inspector: binding exists? path correct? model name matches? data arrived (Network)? context propagation? — ordered checks, no guessing.'}},
+{id:'m18',n:'18',title:'UI5 Tooling & Development',lvl:'PRO',est:'3h',intro:'npm-based local development from zero: ui5.yaml, serve, build, deploy — what each command actually does.',
+topics:[
+{t:'ui5.yaml, serve & build',c:'ui5.yaml declares framework version, paths and middleware (proxy to backend = no CORS locally). ui5 serve = dev server + livereload + proxy. ui5 build = Component-preload + minification into dist/. ui5 build --all includes dependencies.',w:'Reproducible local dev and optimized production bundles.',s:'npm init -y && npm i -D @ui5/cli\nnpx ui5 serve        # dev server + proxy + livereload\nnpx ui5 build --all  # dist/ with Component-preload.js\n# ui5.yaml\nspecVersion: "3.0"\nmetadata: { name: my.app }\ntype: application\nbuilder:\n  bundles:\n    - bundleName: Component-preload.js',sl:'sh',f:'Project root: package.json scripts + ui5.yaml.',m:'Deploying webapp/ instead of dist/; committing dist/; proxy pointing at prod.',b:'npm start = serve; npm run build = build --all; dist/ gitignored.'},
+{t:'Git hygiene for UI5 projects',c:'Source webapp/, test/, ui5.yaml, package.json. Ignore node_modules/, dist/. Feature branches + PRs + required checks (lint, tests, build).',w:'Clean repos make CI/CD trivial later.',flow:['Branch','PR + checks','Review','Merge','CI builds'],f:'Repo root .gitignore + branch policy.',m:'Secrets in ui5.yaml proxy config committed.',b:'Env-specific proxy targets; secrets only in CI/BTP.'}],
+quiz:[
+{q:'ui5 serve gives…?',o:['Production bundle','Dev server + livereload + backend proxy','Tests','Deploy'],a:1,why:'The daily inner loop.'},
+{q:'Component-preload.js comes from…?',o:['serve','ui5 build','git','browser'],a:1,why:'Build-time bundling for fast loads.'},
+{q:'Deploy dist/ or webapp/?',o:['webapp/','dist/ (built)','Both','Neither'],a:1,why:'Optimized, minified, preloaded.'},
+{q:'Local CORS fix?',o:['Disable browser security','ui5.yaml proxy to backend','JSONP','Nothing'],a:1,why:'Dev proxy keeps origin same-origin.'},
+{q:'Commit dist/?',o:['Yes','No — build it in CI','Sometimes','Only CSS'],a:1,why:'Build artifacts regenerate; source is truth.'}],
+ex:'From empty folder to running app: init, ui5.yaml with proxy, serve, build --all, inspect dist/Component-preload.js.',
+iv:{q:'What does ui5 build --all do?',a:'Bundles the app (Component-preload), minifies, includes dependencies — producing the deployable dist/.'}},
+{id:'m19',n:'19',title:'CI/CD & BTP Deployment',lvl:'PRO',est:'4h',intro:'From git push to Fiori Launchpad: pipelines, quality gates and BTP targets.',
+topics:[
+{t:'Pipeline anatomy',c:'Lint → unit tests → build → integration/OPA → deploy to dev → deploy to prod (approval). Artifacts immutable; same bundle promoted across stages.',w:'Repeatability is the whole point — no snowflake deploys.',flow:['Git push','Lint + QUnit','ui5 build','OPA/Playwright','Deploy DEV','Approve','Deploy PROD'],s:'# .github/workflows/ui5.yml (concept)\n- run: npm ci && npx ui5 lint\n- run: npm test            # QUnit headless\n- run: npx ui5 build --all\n- run: npx ui5-deploy --target abap # or html5-repo deploy',sl:'yaml',f:'.github/workflows or Jenkinsfile at repo root.',m:'Skipping tests on “small” changes; different bundles per stage.',b:'Gate every merge; promote identical artifacts; secret-free YAML.'},
+{t:'BTP targets & launchpad',c:'HTML5 repo + approuter (CF), ABAP repository (embedded), Work Zone tiles. Destination per backend per landscape; role collections per audience.',w:'Knowing the target shapes the build (approuter routes, BSP application, tile config).',flow:['dist/','HTML5 repo / ABAP','Approuter','Launchpad tile','User'],f:'mta.yaml / fiori deploy config; tile in Work Zone.',m:'Prod backend URL baked into the bundle.',b:'Build once, configure per landscape via destinations.'}],
+quiz:[
+{q:'Same bundle to DEV and PROD because…?',o:['Laziness','Identical artifacts = tested == shipped','Faster','Cheaper'],a:1,why:'Promote, don’t rebuild, for trustworthy releases.'},
+{q:'Quality gates include…?',o:['Only build','Lint + tests + build before deploy','Deploy first','Manual only'],a:1,why:'Broken code must fail before landscapes.'},
+{q:'Per-landscape backends via…?',o:['Rebuild','Destinations','Hardcode','Email'],a:1,why:'Config, not code, varies by landscape.'},
+{q:'Fiori tile lives in…?',o:['Code','Launchpad/Work Zone config','CSS','Model'],a:1,why:'Distribution is platform config.'},
+{q:'Secrets in pipeline YAML?',o:['Fine','Never — vaults/CI secrets','Sometimes','Only test'],a:1,why:'Leaked secrets in git are forever.'}],
+ex:'Write the pipeline for your CRUD: lint → QUnit → build → deploy to a dev target. Green run required.',
+iv:{q:'How do you safely ship UI5 to production?',a:'Gated pipeline, identical promoted artifacts, per-landscape destinations, launchpad rollout with smoke tests.'}},
+{id:'m20',n:'20',title:'Real Projects',lvl:'PRO',est:'12h',intro:'Three guided builds below in the Projects section: Product CRUD, Employee Management, Fiori Business App. This module tracks them — tick each project card when shipped.',
+topics:[
+{t:'How to work the projects',c:'Each project lists features, file tree and acceptance criteria. Build in order; reuse your service/formatter/fragment patterns; write the OPA journey before you call it done.',w:'Portfolio + proof beats certificates.',flow:['Spec','Build','Test','Deploy','Demo'],f:'See #projects section below.',m:'Skipping tests “for portfolio speed”.',b:'Done = deployed + tested + demoable.'}],
+quiz:[
+{q:'A project is “done” when…?',o:['Code written','Deployed + tested + demoable','Started','Designed'],a:1,why:'Employers check live behavior.'},
+{q:'Reuse across projects?',o:['Copy-paste all','Service/formatter/fragment patterns','Nothing','Only CSS'],a:1,why:'Patterns transfer; code adapts.'},
+{q:'Write tests…?',o:['Never for portfolio','Yes — OPA journey minimum','Only units','After hiring'],a:1,why:'Tested portfolio stands out.'},
+{q:'Best demo?',o:['Screenshots','Live deployed app + 2-min tour','Slides','Code zip'],a:1,why:'Running software convinces.'},
+{q:'Project order?',o:['Random','CRUD → Employee → Fiori Business','Hardest first','Only one'],a:1,why:'Complexity ramps with your skill.'}],
+ex:'Ship Project 1 this week (deployed + tested). Tick its card below.',
+iv:{q:'Walk me through your portfolio project architecture.',a:'Layers, why V2 vs V4, testing pyramid, deployment target — decisions, not just features.'}},
+{id:'m21',n:'21',title:'Interview Preparation',lvl:'PRO',est:'4h',intro:'Level-indexed bank below (Beginner → Architect) with short answers, details and traps. Drill with flashcards, then mock interviews out loud.',
+topics:[
+{t:'How to use this module',c:'Filter the bank by level, answer out loud before expanding details, note traps in your own words. Pair with M01–M19 quizzes for breadth.',w:'Interviews test explanation, not just recall.',flow:['Read Q','Answer aloud','Check detail','Note trap'],f:'See #interview section below.',m:'Memorizing without understanding (fail on follow-ups).',b:'STAR stories from your 3 projects for every claim.'}],
+quiz:[
+{q:'Best prep strategy?',o:['Memorize','Understand + build + explain aloud','Only quizzes','Only videos'],a:1,why:'Follow-ups expose memorization.'},
+{q:'“Why V4 over V2?” good answer…?',o:['Newer','Binding-centric efficiency + auto-batch, with migration costs noted','V2 is dead','No reason'],a:1,why:'Balanced, experienced reasoning.'},
+{q:'STAR is for…?',o:['Code','Structuring experience stories','Testing','Routing'],a:1,why:'Situation, Task, Action, Result.'},
+{q:'Trap questions test…?',o:['Trivia','Depth beyond the slogan','Typing','Age'],a:1,why:'“Why” follow-ups separate levels.'},
+{q:'Architect-level answers include…?',o:['Buzzwords','Trade-offs, costs, alternatives','Longer words','Silence'],a:1,why:'Decisions under constraints.'}],
+ex:'Do 5 mock interviews (all levels), record yourself, fix filler explanations with module links.',
+iv:{q:'Why should we hire you as a UI5 developer?',a:'Three shipped projects + testing + BTP deploys + this course’s checklists — then prove it live.'}},
+];
+const IV=[
+{lvl:'Beginner',q:'What is MVC in UI5?',short:'XML view (UI), controller (logic), model (data) — one-way dependencies.',detail:'Views declare controls and bindings; controllers handle events and orchestrate via byId/models; models hold state. Controller knows view+model; reverse imports are a smell. Example: onSearch filters the table binding — no DOM code.',trap:'“Can the view call controller methods directly?” Only via declared events; importing controller code into views breaks layering.'},
+{lvl:'Beginner',q:'JSONModel vs ODataModel?',short:'JSONModel = client state; ODataModel = backend service protocol.',detail:'Use JSONModel for UI state/dropdowns, ODataModel (V2/V4) for backend entities. Never hand-roll CRUD over JSONModel against OData — you lose batch, metadata and messages.',trap:'“Why not fetch() + JSONModel for everything?” You reimplement the ODataModel badly.'},
+{lvl:'Beginner',q:'What does navTo() do?',short:'Navigates by route name with parameters, updating the URL hash.',detail:'oRouter.navTo("detail", {id}) → hash #/products/42 → patternMatched fires → controller binds data. Keeps views decoupled and URLs deep-linkable.',trap:'Passing whole objects instead of ids — URLs must carry state, not memory.'},
+{lvl:'Intermediate',q:'Explain binding modes with examples.',short:'One-way (lists), two-way (forms), one-time (static).',detail:'Lists default one-way for perf; forms need two-way; i18n/static texts one-time. Wrong mode = stale UI or wasted renders on 5k rows.',trap:'“Two-way everywhere is simpler” — until a huge read-only table re-renders constantly.'},
+{lvl:'Intermediate',q:'V2 read vs V4 bindList?',short:'V2: imperative m.read(); V4: bindList + requestContexts, model fetches/batches.',detail:'V4 moves transport into bindings: one auto-$batch, first-class contexts, $-prefixed params matching the wire. Mixing APIs (read() on V4) is the top migration bug.',trap:'“V4 is just newer syntax” — no, it’s a different (binding-centric) architecture.'},
+{lvl:'Intermediate',q:'How do fragments avoid giant controllers?',short:'Reusable controller-less UI (dialogs/forms) loaded via Fragment.load, shared across controllers.',detail:'Cache the load promise, addDependent for models/lifecycle, destroy in onExit. Custom controls for repeated widgets; service modules for transport.',trap:'“Fragments share controllers?” They receive one — design them controller-agnostic.'},
+{lvl:'Advanced',q:'How do you prevent duplicate creates?',short:'Busy + disabled save until settle; idempotency keys server-side.',detail:'view.setBusy(true) in try, reset in finally; disable the button; confirmation for deletes; MessageBox for backend errors; refresh only affected bindings.',trap:'Client-only guards — replayed requests still duplicate without server idempotency.'},
+{lvl:'Advanced',q:'Client or server filtering for 100k rows?',short:'Server — $filter/$orderby + growing; client only for small loaded sets.',detail:'Ship predicates via binding sorters/filters, slim with $select, page with growingThreshold. Client-filtering huge sets freezes the UI; formatters must stay pure.',trap:'“It works in dev” — dev has 50 rows.'},
+{lvl:'Advanced',q:'Debug an empty table with no errors.',short:'Inspector: binding exists? path + model name? data arrived (Network)?',detail:'Ordered checks: binding path vs model name, context propagation, then payload. Silent mismatches are the classic — never guess, inspect.',trap:'Jumping to backend blame before checking the binding path.'},
+{lvl:'Senior',q:'Design offline-tolerant approximations in UI5?',short:'Outbox-pattern thinking: queue intents, confirm later, reconcile conflicts explicitly.',detail:'Even without full offline: disable actions without data, cache reference data, show sync state, design every mutation as retryable with user-visible status.',trap:'“Offline plugin solves it” — UX and conflict policy are the real work.'},
+{lvl:'Senior',q:'V2→V4 migration strategy?',short:' strangler: new screens V4, shared services split by stack, migrate by bounded context.',detail:'Keep V2/V4 code in separate services, map APIs explicitly, migrate highest-churn screens first, keep batch semantics equivalent, regression-test with OPA journeys.',trap:'Big-bang rewrites — migrate incrementally with the app running.'},
+{lvl:'Architect',q:'How do you structure a 50-view Fiori program?',short:'Component per bounded context, shared library, service layer, FCL shell, manifest-driven.',detail:'Split by domain (not by team), versioned reusable library, strict layering (service/formatter/fragment), centralized error + message handling, pipeline with lint/tests/build gates, landscape-aware destinations.',trap:'“One giant app” — deployability and team autonomy argue for components.'},
+{lvl:'Architect',q:'UI5 1.x → 2.x readiness?',short:'Run the UI5 linter, kill sync/deprecated APIs, AMD + async everywhere.',detail:'Remove jQuery.sap/sync XHR/global leaks, verify libs for 2.x, test bootstrap against 2.x nightly, gate CI on linter. Baseline: 1.136 legacy-free.',trap:'“2.x is just an upgrade” — it removes non-best-practice APIs permanently.'},
+{lvl:'Architect',q:'Prove production readiness?',short:'Tests pyramid green, perf budget met, a11y pass, destinations/secrets clean, runbooks.',detail:'QUnit+OPA+Playwright, Support Assistant clean, payload budgets, keyboard/screen-reader pass, no secrets in repo, monitoring + DLQs + on-call runbook for OData/messaging failures.',trap:'“It works on BTP dev” — prod needs evidence, not hope.'}];
+const FL=[
+{q:'What is JSONModel?',a:'Client-side observable data store. setProperty() notifies all bound controls.'},
+{q:'What is OData?',a:'REST-based protocol for business data: entity sets, $metadata contract, query options ($filter/$expand/$select…).'},
+{q:'What is a binding context?',a:'A pointer to one object in a model. Detail views bindElement() to one; rows expose theirs via getBindingContext().'},
+{q:'What is navTo()?',a:'Router navigation by route name + params. Decouples views; makes URLs deep-linkable.'},
+{q:'What is a fragment?',a:'Controller-less reusable UI piece (dialog/form). Loaded once via Fragment.load, shared, added as dependent.'},
+{q:'What is Component.js?',a:'The app root: init() + router start. Paired with manifest.json which declares models/routing/resources.'},
+{q:'What is manifest.json?',a:'The app descriptor: name, models, routing, i18n, libs, resources. Declarative > code.'},
+{q:'What is $expand?',a:'OData option pulling navigation properties inline — kills N+1 requests.'},
+{q:'What is $select?',a:'OData option slimming payloads to needed fields — first perf lever.'},
+{q:'What is OData V4 model?',a:'Binding-centric model: list/context/property bindings fetch, cache and auto-batch. Think bindings-first.'},
+{q:'What is Fiori?',a:'Role-based, responsive, simple, coherent, delightful enterprise UX + floorplans (List Report, Object Page…) + launchpad.'},
+{q:'What is UI5 Tooling?',a:'npm-based toolchain: ui5 serve (dev+proxy), ui5 build (Component-preload dist), ui5.yaml config.'},
+{q:'onInit vs onBeforeRendering?',a:'onInit runs once (setup). onBeforeRendering runs before every render — never put one-time work there.'},
+{q:'submitChanges() (V2)?',a:'Sends staged changes of deferred groups as one $batch. Forget it → nothing is sent.'},
+{q:'requestSideEffects() (V4)?',a:'Targeted refresh of affected paths after changes — no full reloads.'},
+{q:'Dialog vs Popover?',a:'Dialog = modal task. Popover = contextual non-modal info.'},
+{q:'sap.m.Table vs sap.ui.table.Table?',a:'m.Table = responsive Fiori default. ui.table = desktop power-grid only.'},
+{q:'What is MockServer?',a:'Fake OData backend for deterministic offline tests and demos.'},
+{q:'QUnit vs OPA5?',a:'QUnit = units (formatters/utils). OPA5 = real UI journeys in the browser.'},
+{q:'What is Component-preload.js?',a:'The built app bundle from ui5 build — fast single-load production artifact.'},
+{q:'Why addDependent on dialogs?',a:'Inherits models/i18n/lifecycle from the view; destroyed with it. No leaks.'},
+{q:'Two-way binding danger?',a:'On huge read-only tables it re-evaluates constantly. One-way for lists, two-way for forms.'},
+{q:'First perf check?',a:'Network tab: payload size + request count. Then $select/growing/binding modes.'},
+{q:'Empty table, no error?',a:'Check binding path + model name in UI5 Inspector, then Network payload.'}];
+/* highlight + code */
+const HL={xml:{c:new RegExp('<!--'+'[\\s\\S]*?-->'),k:/\b(Controller|View|Page|Button|Input|Table|Column|columns|items|text|title|press|value|path|id|xmlns|mvc|core|layout|table|f|macros|Action|ObjectPageLayout)\b/},js:{c:/\/\/[^\n]*|\/\*[\s\S]*?\*\//,k:/\b(const|let|var|function|async|await|return|if|else|for|of|new|this|sap|define|require|controller|onInit|byId|getView|navTo|true|false|null|undefined|class|extends|import|export|from|try|catch)\b/},json:{c:null,k:/\b(true|false|null)\b/},xml2:{c:null,k:null}};
+function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function highlight(scope){(scope||document).querySelectorAll('pre code').forEach(el=>{if(el.dataset.hl)return;el.dataset.hl='1';
+const lab=el.closest('pre').querySelector('.lang');let lang=(lab?lab.textContent:'code').trim().toLowerCase();if(lang==='javascript')lang='js';
+const spec=HL[lang]||HL.js,src=el.textContent,parts=[],kinds=[];
+if(spec.c){parts.push('('+spec.c.source+')');kinds.push('tok-c');}
+parts.push('("(?:[^"\\\\]|\\\\.)*"|\'(?:[^\'\\\\]|\\\\.)*\')');kinds.push('tok-s');
+if(spec.k){parts.push('('+spec.k.source+')');kinds.push('tok-k');}
+parts.push('(\\b\\d+(?:\\.\\d+)?\\b)');kinds.push('tok-n');
+let rx;try{rx=new RegExp(parts.join('|'),'g')}catch(e){return;}
+let out='',last=0,m;while((m=rx.exec(src))!==null){out+=escH(src.slice(last,m.index));const gi=m.slice(1).findIndex(g=>g!==undefined);out+='<span class="'+kinds[gi]+'">'+escH(m[0])+'</span>';last=m.index+m[0].length;}
+el.innerHTML=out+escH(src.slice(last));});}
+function codeBlock(lang,code){return '<div class="cwrap"><pre><div class="chead"><span class="d" style="background:#ff5f57"></span><span class="d" style="background:#febc2e"></span><span class="d" style="background:#28c840"></span><span class="lang">'+lang+'</span></div><code>'+escH(code)+'</code></pre><button class="cbtn">⧉ copy</button></div>';}
+document.addEventListener('click',e=>{const b=e.target.closest('.cbtn');if(!b)return;navigator.clipboard.writeText(b.parentElement.querySelector('code').innerText).then(()=>{b.textContent='✓ copied';setTimeout(()=>b.textContent='⧉ copy',1400);});});
+function autoEnhance(){$$('pre').forEach(pre=>{if(!pre.querySelector('.chead')){const h=document.createElement('div');h.className='chead';h.innerHTML='<span class="d" style="background:#ff5f57"></span><span class="d" style="background:#febc2e"></span><span class="d" style="background:#28c840"></span><span class="lang">'+(pre.dataset.lang||'code')+'</span>';pre.prepend(h);}
+if(!pre.parentElement.classList.contains('cwrap')){const w=document.createElement('div');w.className='cwrap';pre.parentNode.insertBefore(w,pre);w.appendChild(pre);const b=document.createElement('button');b.className='cbtn';b.textContent='⧉ copy';w.appendChild(b);}});}
+/* modules */
+const TLABEL=['○ Not started','◐ In progress','● Done'];
+function tkey(mid,tid){return mid+':'+tid;}
+function topicState(mid,tid){return S.topics[tkey(mid,tid)]||0;}
+function modPct(m){if(!m.topics.length)return 0;const d=m.topics.filter((_,i)=>topicState(m.id,i)===2).length;return Math.round(d/m.topics.length*100);}
+function renderModules(){
+$('#modRoot').innerHTML=MODULES.map(m=>{
+const pct=modPct(m),bm=S.bm.includes(m.id);
+const topics=m.topics.map((t,i)=>{
+const st=topicState(m.id,i);
+let h='<div class="topic" id="t-'+m.id+'-'+i+'"><header><h4>'+(i+1)+'. '+t.t+'</h4><button class="tstate s'+st+'" data-m="'+m.id+'" data-t="'+i+'">'+TLABEL[st]+'</button></header><div class="body">';
+h+='<b class="k">Concept</b><p>'+t.c+'</p>';
+if(t.w)h+='<b class="k">Why it matters</b><p>'+t.w+'</p>';
+if(t.flow)h+='<div class="flow">'+t.flow.map((f,j)=>'<span>'+f+'</span>'+(j<t.flow.length-1?'<i>→</i>':'')).join('')+'</div>';
+if(t.s)h+=codeBlock(t.sl||'js',t.s);
+if(t.f)h+='<div class="co ex"><b>📌 File location</b>'+t.f+'</div>';
+if(t.m)h+='<div class="co warn"><b>⚠️ Common mistakes</b>'+t.m+'</div>';
+if(t.b)h+='<div class="co good"><b>✅ Best practice</b>'+t.b+'</div>';
+return h+'</div></div>';}).join('');
+const quiz=m.quiz.map((q,qi)=>'<div class="quiz" data-m="'+m.id+'" data-q="'+qi+'"><h5>Q'+(qi+1)+'. '+q.q+'</h5>'
++q.o.map((o,oi)=>'<label><input type="radio" name="'+m.id+'-'+qi+'" value="'+oi+'"/> '+o+'</label>').join('')
++'<div class="res"></div></div>').join('');
+return '<section class="card" id="m-'+m.id+'"><p class="kicker">Module '+m.n+'</p>'
++'<h2 class="st">'+m.title+'<span class="lvl '+m.lvl+'">'+m.lvl+'</span></h2>'
++'<p class="muted">⏱ '+m.est+' · <span id="pct-'+m.id+'">'+pct+'%</span> complete · '+m.topics.length+' topics · '+m.quiz.length+' quiz questions</p>'
++'<p>'+m.intro+'</p>'+topics
++'<h3 class="sh">🧪 Mini exercise</h3><div class="co ex"><b>Exercise</b>'+m.ex+'</div>'
++'<h3 class="sh">✓ Check your knowledge</h3>'+quiz+'<button class="qbtn" data-mq="'+m.id+'">Submit quiz</button> <span id="qs-'+m.id+'" style="font-size:13px;font-weight:700"></span>'
++'<h3 class="sh">🔥 Interview teaser</h3><div class="co fire"><b>Interview tip</b><b>'+m.iv.q+'</b><br/>'+m.iv.a+'</div>'
++'<div class="fbtns"><button class="sbtn" data-bm="'+m.id+'">'+(bm?'★ Bookmarked':'☆ Bookmark module')+'</button></div>'
++'<p style="margin-top:10px"><b>Notes</b></p><textarea class="notes" data-nm="'+m.id+'" placeholder="Your personal notes for this module…">'+escH(S.notes[m.id]||'')+'</textarea>'
++'</section>';}).join('');
+highlight($('#modRoot'));
+$$('#modRoot .tstate').forEach(b=>b.addEventListener('click',()=>{const k=tkey(b.dataset.m,+b.dataset.t);S.topics[k]=((S.topics[k]||0)+1)%3;save();refresh();}));
+$$('#modRoot [data-bm]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.bm;S.bm.includes(id)?S.bm=S.bm.filter(x=>x!==id):S.bm.push(id);save();refresh();}));
+$$('#modRoot .notes').forEach(t=>t.addEventListener('input',()=>{S.notes[t.dataset.nm]=t.value;save();}));
+$$('#modRoot [data-mq]').forEach(b=>b.addEventListener('click',()=>gradeQuiz(b.dataset.mq)));}
+function gradeQuiz(mid){
+const m=MODULES.find(x=>x.id===mid);let ok=0;
+m.quiz.forEach((q,qi)=>{const box=document.querySelector('.quiz[data-m="'+mid+'"][data-q="'+qi+'"]');
+const sel=box.querySelector('input:checked');const res=box.querySelector('.res');
+box.querySelectorAll('label').forEach((l,li)=>{l.style.background=li===q.a?'color-mix(in srgb,var(--green) 12%,transparent)':(sel&&+sel.value===li?'color-mix(in srgb,var(--red) 10%,transparent)':'');});
+if(sel&&+sel.value===q.a)ok++;
+res.innerHTML=(sel&&+sel.value===q.a?'✅ Correct. ':'❌ Correct answer: <b>'+q.o[q.a]+'</b>. ')+'<span class="why">'+q.why+'</span>';});
+S.quiz[mid]={s:ok,t:m.quiz.length};save();
+$('#qs-'+mid).textContent='Score: '+ok+'/'+m.quiz.length;refresh(false);}
+/* sidebar + dashboard */
+function renderSide(){
+$('#sidenav').innerHTML=MODULES.map(m=>'<details'+(modPct(m)<100?' open':'')+'><summary>'+m.n+' · '+m.title+'<span class="pc">'+modPct(m)+'%</span></summary><div class="sub">'
++m.topics.map((t,i)=>'<a href="#t-'+m.id+'-'+i+'" class="'+(topicState(m.id,i)===2?'done':'')+'">'+t.t+'</a>').join('')+'</div></details>').join('')
++'<details open><summary>Wrap-up<span class="pc"></span></summary><div class="sub"><a href="#projects">Real projects</a><a href="#flashsec">Flashcards</a><a href="#interview">Interview prep</a><a href="#cheats">Cheat sheets</a><a href="#skillsec">Skill matrix</a><a href="#bookmarks">My bookmarks</a><a href="#roadmap">Professional roadmap</a></div></details>';}
+function dashboard(){
+let tt=0,dd=0;MODULES.forEach(m=>m.topics.forEach((_,i)=>{tt++;if(topicState(m.id,i)===2)dd++;}));
+const pct=tt?Math.round(dd/tt*100):0;
+const modsDone=MODULES.filter(m=>m.topics.length&&m.topics.every((_,i)=>topicState(m.id,i)===2)).length;
+const qs=Object.values(S.quiz);const avg=qs.length?Math.round(qs.reduce((a,q)=>a+q.s/q.t,0)/qs.length*100):null;
+const pd=Object.values(S.proj).filter(Boolean).length;
+$('#stProg').textContent=pct+'%';$('#stProgBar').style.width=pct+'%';
+$('#stMods').textContent=modsDone+' / '+MODULES.length;$('#stModsBar').style.width=Math.round(modsDone/MODULES.length*100)+'%';
+$('#stQuiz').textContent=avg===null?'—':avg+'%';$('#stQuizBar').style.width=(avg||0)+'%';
+const lvl=pct<15?'Novice':pct<40?'Beginner':pct<65?'Intermediate':pct<90?'Advanced':'Professional';
+$('#stLevel').textContent=lvl;$('#stProj').textContent=pd+'/3 projects';$('#stProjBar').style.width=Math.round(pd/3*100)+'%';
+$('#bmN').textContent=S.bm.length;
+const cur=MODULES.find(m=>modPct(m)<100);}
+/* search */
+function clearHits(){$$('mark.hit').forEach(m=>m.replaceWith(document.createTextNode(m.textContent)));}
+$('#q').addEventListener('input',e=>{clearHits();const t=e.target.value.trim().toLowerCase();if(!t)return;
+const rx=new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');let n=0;
+$$('#modRoot p,#modRoot li,#modRoot h4,#modRoot h2').forEach(el=>{if(el.children.length||el.closest('pre'))return;
+if(el.textContent.toLowerCase().includes(t)){el.innerHTML=el.textContent.replace(rx,m=>{n++;return '<mark class="hit">'+m+'</mark>';});}});
+const f=$('mark.hit');if(f)f.scrollIntoView({block:'center'});});
+addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();$('#q').focus();}
+if(e.key==='Escape'&&document.activeElement===$('#q')){$('#q').value='';clearHits();$('#q').blur();}});
+/* flashcards */
+let FLi=0,FLshow=false,FLorder=[];
+function renderFlash(){const box=$('#flashCard');if(!box||!FL.length)return;
+if(!FLorder.length)FLorder=FL.map((_,i)=>i);
+const c=FL[FLorder[FLi%FLorder.length]];
+box.innerHTML='<div class="fq">'+c.q+'</div>'+(FLshow?'<div class="fa">'+c.a+'</div>':'')+'<div class="hint">'+(FLshow?'Answer shown — click for next':'Click to reveal answer')+' · '+(FLi%FLorder.length+1)+' / '+FLorder.length+'</div>';}
+function flashInit(){const box=$('#flashCard');if(!box)return;FLorder=FL.map((_,i)=>i);FLi=0;FLshow=false;renderFlash();
+box.addEventListener('click',()=>{if(!FLshow){FLshow=true;}else{FLshow=false;FLi++;}renderFlash();});
+$('#flPrev').addEventListener('click',ev=>{ev.stopPropagation();FLshow=false;FLi=(FLi-1+FLorder.length)%FLorder.length;renderFlash();});
+$('#flNext').addEventListener('click',ev=>{ev.stopPropagation();FLshow=false;FLi=(FLi+1)%FLorder.length;renderFlash();});
+$('#flShuf').addEventListener('click',ev=>{ev.stopPropagation();FLorder=FLorder.sort(()=>Math.random()-.5);FLi=0;FLshow=false;renderFlash();});}
+/* interview */
+let ivLvl='';
+function renderIV(){const box=$('#ivGrid');if(!box)return;
+const list=IV.filter(x=>!ivLvl||x.lvl===ivLvl);
+box.innerHTML=list.map(x=>'<div class="ivc"><h4>['+x.lvl+'] '+x.q+'</h4><p><b>Short:</b> '+x.short+'</p><details class="more"><summary>Detailed answer + example</summary><p>'+x.detail+'</p></details><p class="trap">🪤 Trap: '+x.trap+'</p></div>').join('');}
+function ivInit(){$$('#ivChips .chip').forEach(c=>c.addEventListener('click',()=>{$$('#ivChips .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');ivLvl=c.dataset.lvl||'';renderIV();}));}
+/* skill matrix */
+const SKILLS=['JavaScript (ES6+)','HTML/CSS','UI5 fundamentals','MVC','Routing','Data binding','OData V2','OData V4','CRUD','Fragments & reuse','Architecture','Fiori UX','Testing (QUnit/OPA)','Performance','Debugging','UI5 Tooling','BTP deployment'];
+function renderSkill(){const box=$('#skillTable');if(!box)return;
+box.innerHTML='<table class="mx skill"><tr><th>Skill</th><th>Self-rating</th></tr>'+SKILLS.map(s=>'<tr><td>'+s+'</td><td><div class="sk" data-sk="'+s+'">'+['Beginner','Intermediate','Advanced','Pro'].map((l,i)=>'<button data-v="'+i+'" class="'+(S.skill[s]===i?'on':'')+'">'+l+'</button>').join('')+'</div></td></tr>').join('')+'</table>';
+box.querySelectorAll('.sk button').forEach(b=>b.addEventListener('click',()=>{S.skill[b.parentElement.dataset.sk]=+b.dataset.v;save();renderSkill();dashboard();}));}
+/* bookmarks */
+function renderBm(){const box=$('#bmList');if(!box)return;
+box.innerHTML=S.bm.length?S.bm.map(id=>{const m=MODULES.find(x=>x.id===id);return m?'<p><a href="#m-'+id+'">'+m.n+' · '+m.title+'</a> — '+modPct(m)+'%</p>':'';}).join(''):'<p class="muted">No bookmarks yet. Use ☆ on any module.</p>';}
+/* refresh */
+function refresh(full=true){if(full&&document.activeElement&&document.activeElement.classList.contains('notes'))full=false;dashboard();renderSide();renderBm();if(full)renderModules();}
+document.addEventListener('click',e=>{
+const p=e.target.closest('[data-proj]');if(p){S.proj[p.dataset.proj]=p.checked;save();dashboard();return;}
+const r=e.target.closest('[data-ready]');if(r){S.ready[r.dataset.ready]=r.checked;save();return;}});
+/* init */
+(function init(){
+const READY=['Build apps from scratch','Design MVC architecture','Implement routing','Work with JSONModel','Work with OData V2','Work with OData V4','Implement full CRUD','Build reusable components','Build reusable fragments','Debug binding issues','Debug OData issues','Apply Fiori UX','Write QUnit + OPA tests','Optimize performance','Deploy applications','Understand SAP BTP','Explain architecture decisions','Handle production problems'];
+const rl=$('#readyList');if(rl)rl.innerHTML=READY.map((r,i)=>'<label style="display:block;font-size:13.5px;padding:5px 0"><input type="checkbox" data-ready="r'+i+'" '+(S.ready['r'+i]?'checked':'')+'/> '+r+'</label>').join('');
+const fc=$('#flCount');if(fc&&typeof FL!=='undefined')fc.textContent=FL.length+' cards';
+$$('[data-proj]').forEach(p=>{p.checked=!!S.proj[p.dataset.proj];});
+autoEnhance();renderModules();renderSide();dashboard();renderBm();renderSkill();renderIV();ivInit();flashInit();highlight(document);
+})();
+})();
+</script>
+</body>
+</html>

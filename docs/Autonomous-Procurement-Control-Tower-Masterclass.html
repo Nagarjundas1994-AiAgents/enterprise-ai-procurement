@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day" data-mode="beginner">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F6F4EC">
+<meta name="description" content="A complete, interactive masterclass building __PROJECT_FULL_NAME__, __PROJECT_ONE_LINE_DESCRIPTION__: SAP CAP/CDS, S/4HANA integration, HANA Cloud Vector Engine RAG, SAP AI Core &amp; Generative AI Hub, LangGraph multi-agent orchestration, MCP, MCP Apps, A2UI, A2A, Event Mesh, XSUAA/IAS security, multi-tenancy and production operations. With Mermaid diagrams, a full reference codebase and official SAP Architecture Center references.">
+<title>Building a Production-Grade Autonomous Procurement Control Tower with SAP CAP, BTP, MCP &amp; A2A — Masterclass</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230B3D91'/%3E%3Cpath d='M6 6h20v20H6z' fill='none' stroke='white' stroke-width='1.4'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#0B3D91;--blue-h:#092C6B;--blue-ink:#082253;--blue-soft:#E7ECF8;--blue-mid:#5C86D6;
+  --teal:#0E7C86;--teal-soft:#E3F2F1;--green:#2E7D46;--green-soft:#E7F3EA;
+  --violet:#6B46E8;--violet-soft:#EEE9FD;
+  --gold:#B5710A;--gold-soft:#F9EEDC;
+  --ink:#1A2333;--ink-2:#47536A;--ink-3:#6B7690;--mute:#8992A6;
+  --bg:#F6F4EC;--bg-2:#EEEADE;--surf:#FCFBF6;--surf-2:#F1EEE4;
+  --line:#DCD6C3;--line-2:#E7E2D2;--focus:#0B3D91;
+  --ok:#2E7D46;--ok-bg:#E7F3EA;--warn:#B5710A;--warn-bg:#F9EEDC;--bad:#B23A2E;--bad-bg:#F8E7E4;
+  --navy:#0B2545;--code:#0E1B33;--code-fg:#D9E2F3;
+  --a2ui:#0B3D91;--mcpapp:#0E7C86;--mcp:#25539E;--a2a:#6B46E8;--cap:#0B3D91;--hana:#B5710A;
+  --r:6px;--r-sm:3px;
+  --sans:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --display:"Space Grotesk","IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono","Cascadia Code","Consolas",ui-monospace,monospace;
+  --shadow:0 0 0 1px rgba(20,30,50,.05),0 2px 8px rgba(20,30,50,.05);
+  --shadow-lg:0 0 0 1px rgba(20,30,50,.06),0 20px 46px rgba(20,30,50,.12);
+  --navw:288px;--railw:236px;--max:800px;
+  --grid-line:rgba(11,61,145,.07);
+  color-scheme:light;
+}
+html[data-theme="night"]{
+  --blue:#6FB1FF;--blue-h:#9FCBFF;--blue-ink:#BFDCFF;--blue-soft:#132D57;--blue-mid:#2C4E86;
+  --teal:#54D6C9;--teal-soft:#0E322F;--green:#7FD79A;--green-soft:#123321;
+  --violet:#B79CFF;--violet-soft:#241B4D;
+  --gold:#F0B25A;--gold-soft:#332305;
+  --ink:#E9EFFB;--ink-2:#B9C6E0;--ink-3:#8CA0C4;--mute:#6F84AC;
+  --bg:#0B2545;--bg-2:#0F2E56;--surf:#0E2A4F;--surf-2:#123162;
+  --line:#254374;--line-2:#1B3762;--focus:#6FB1FF;
+  --grid-line:rgba(111,177,255,.09);
+  --ok:#81C995;--ok-bg:#14301C;--warn:#FDD663;--warn-bg:#332200;--bad:#F28B82;--bad-bg:#3A1212;
+  --navy:#7FB6EE;--code:#080E18;--code-fg:#D7DEE8;
+  --a2ui:#7FB6EE;--mcpapp:#5EC8C2;--mcp:#9DB4FF;--a2a:#B09CFF;--cap:#7FB6EE;--hana:#F0B27A;
+  --shadow:0 0 0 1px rgba(255,255,255,.04),0 2px 10px rgba(0,0,0,.28);
+  --shadow-lg:0 0 0 1px rgba(255,255,255,.05),0 16px 40px rgba(0,0,0,.4);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+html,body{margin:0;padding:0}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+a{color:var(--blue);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:var(--blue-h)}
+code,kbd{font-family:var(--mono);font-size:.84em;background:var(--blue-soft);color:var(--blue-ink);padding:.08em .36em;border-radius:3px}
+kbd{border:1px solid var(--line);background:var(--surf)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--blue);color:#fff;padding:.5rem 1rem;z-index:80;border-radius:var(--r-sm)}
+.skip:focus{left:8px}
+#readbar{position:fixed;inset:0 0 auto 0;height:3px;background:transparent;z-index:70;pointer-events:none}
+#readbar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--teal));transition:width .12s linear}
+
+.topbar{position:sticky;top:0;z-index:50;height:56px;display:flex;align-items:center;gap:.7rem;padding:0 1rem;background:color-mix(in srgb,var(--surf) 90%,transparent);backdrop-filter:saturate(150%) blur(14px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:.65rem;min-width:0;text-decoration:none;color:inherit}
+.brand-mark{width:30px;height:30px;border-radius:3px;flex:none;background:linear-gradient(145deg,#0B3D91,#B5710A);color:#fff;display:grid;place-items:center}
+.brand b{display:block;font-family:var(--display);font-size:13.5px;letter-spacing:.01em;line-height:1.15}
+.brand small{display:block;font-size:11px;color:var(--mute);font-weight:400}
+.searchwrap{flex:1;max-width:440px;position:relative}
+#q{width:100%;height:36px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--ink);padding:0 2.4rem 0 2.15rem;font:500 13.5px/1 var(--sans)}
+#q::placeholder{color:var(--mute)}
+.searchwrap .ico{position:absolute;left:.72rem;top:50%;transform:translateY(-50%);color:var(--mute);pointer-events:none}
+.searchwrap .hint{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);font:11px var(--mono);color:var(--mute)}
+.toggles{margin-left:auto;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;justify-content:flex-end}
+.iconbtn{height:34px;min-width:34px;padding:0 .7rem;border:1px solid var(--line);border-radius:8px;background:var(--surf);color:var(--ink-2);cursor:pointer;font:600 12px var(--sans);display:inline-flex;align-items:center;gap:.35rem}
+.iconbtn:hover,.iconbtn[aria-pressed="true"]{border-color:var(--blue);color:var(--blue)}
+.burger{display:none}
+.progchip{font:600 11px var(--mono);color:var(--ink-3);border:1px solid var(--line);background:var(--surf);border-radius:999px;padding:.28rem .65rem}
+
+.layout{display:grid;grid-template-columns:var(--navw) minmax(0,1fr) var(--railw);min-height:calc(100vh - 56px)}
+.sidenav{position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto;border-right:1px solid var(--line);background:var(--surf);padding:.85rem .6rem 3rem}
+.sidenav .g,details.navg>summary{font:600 10px/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--mute);padding:.85rem .5rem .3rem}
+details.navg{border:0;background:transparent;margin:0}
+details.navg>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.navg>summary::-webkit-details-marker{display:none}
+details.navg>summary::after{content:"+";font:600 12px var(--mono);color:var(--mute)}
+details.navg[open]>summary::after{content:"\2013"}
+.navg.locked>summary{opacity:.55;cursor:default}
+.navg.locked>summary::after{content:"\1F512";font-size:10px}
+.crumbs{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;font-size:12.5px;color:var(--ink-3);margin:0 0 1rem}
+.crumbs b{color:var(--ink-2);font-weight:650}
+.layer{font:650 10px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:1.1rem 0 .35rem}
+.quiz{border:1px solid var(--line);border-radius:var(--r);background:var(--surf);padding:.9rem 1rem;margin:.7rem 0}
+.quiz p{margin:0 0 .55rem;font-weight:650}
+.quiz label{display:block;margin:.28rem 0;cursor:pointer;color:var(--ink-2);font-weight:400}
+.quiz .ok{color:var(--ok);font-size:13.5px;margin:.45rem 0 0}
+.quiz .no{color:var(--bad);font-size:13.5px;margin:.45rem 0 0}
+.sm{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:1rem 0}
+.sm i{display:block;padding:.55rem .4rem;border-radius:8px;border:1px solid var(--line);background:var(--surf);font-style:normal;text-align:center;font-size:11.5px}
+.sm i b{display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:.15rem}
+.sm i.on{border-color:var(--blue);background:var(--blue-soft)}
+#bread{position:sticky;top:56px;z-index:20;padding:.35rem 0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);font-size:12.5px;color:var(--ink-3);border-bottom:1px solid transparent}
+.sidenav a{display:flex;align-items:flex-start;gap:.45rem;color:var(--ink-2);text-decoration:none;border-radius:7px;padding:.36rem .5rem .36rem .4rem;font-size:13px;line-height:1.35}
+.sidenav a .n{flex:none;font:500 10px var(--mono);color:var(--mute);width:1.65rem;padding-top:.12rem}
+.sidenav a:hover{background:var(--bg-2);color:var(--ink)}
+.sidenav a.active{background:var(--blue-soft);color:var(--blue-ink);font-weight:600}
+.sidenav a.active .n{color:var(--blue)}
+.sidenav a.done .n{color:var(--ok)}
+.sidenav a[hidden]{display:none}
+.dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--line);flex:none;margin-top:.38rem}
+.sidenav a.done .dot{background:var(--ok);border-color:var(--ok)}
+main{min-width:0;padding:0 2.1rem 7rem}
+.wrap{max-width:var(--max);margin:0 auto}
+.rail{position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto;border-left:1px solid var(--line);padding:1.05rem .8rem 3rem;font-size:12.5px}
+.rail h2{margin:0 0 .55rem;font:600 10px/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.rail a{display:block;color:var(--ink-3);text-decoration:none;padding:.22rem 0 .22rem .6rem;border-left:2px solid transparent}
+.rail a:hover,.rail a.active{color:var(--blue);border-left-color:var(--blue)}
+.rail .mode-note{margin-top:1.2rem;padding:.7rem .75rem;border:1px solid var(--line);border-radius:8px;background:var(--surf-2);color:var(--ink-3);font-size:12px}
+
+.kicker{font:600 11px/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin:0 0 .55rem}
+h1{font-family:var(--display);font-weight:650;font-size:clamp(1.9rem,4.2vw,2.7rem);line-height:1.12;letter-spacing:-.03em;margin:0 0 .7rem;text-wrap:balance}
+h2{font-family:var(--display);font-weight:650;font-size:1.42rem;letter-spacing:-.02em;line-height:1.25;margin:0 0 .5rem;scroll-margin-top:80px;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:1.08rem;margin:1.7rem 0 .45rem;scroll-margin-top:80px}
+h4{font-weight:650;font-size:.96rem;margin:1.25rem 0 .35rem}
+p{margin:0 0 .95rem;color:var(--ink);max-width:70ch}
+.lede{font-size:1.12rem;color:var(--ink-2);max-width:64ch}
+section.mod{padding:2.6rem 0 2.1rem;border-top:1px solid var(--line);position:relative}
+section.mod::before{content:"";position:absolute;top:-1px;left:0;width:46px;height:3px;background:var(--blue)}
+.modhead{display:flex;align-items:center;gap:.7rem;margin-bottom:.4rem;flex-wrap:wrap}
+.modnum{font:650 11px/1 var(--mono);color:var(--surf);letter-spacing:.06em;background:var(--ink);padding:.32rem .55rem;border-radius:2px}
+.modnum.step{color:#fff;background:var(--blue);border-radius:999px;padding:.25rem .7rem;font-weight:700}
+.stepgoal{font-size:1.02rem;color:var(--ink-2);font-weight:500;margin:0 0 1.1rem}
+.modtag{font:650 10px var(--display);letter-spacing:.08em;text-transform:uppercase;padding:.15rem .5rem;border-radius:999px;border:1px solid var(--line);color:var(--ink-3)}
+.modtag.cap{border-color:color-mix(in srgb,var(--cap) 45%,var(--line));color:var(--cap);background:var(--blue-soft)}
+.modtag.mcp{border-color:color-mix(in srgb,var(--mcp) 45%,var(--line));color:var(--mcp);background:var(--blue-soft)}
+.modtag.a2a{border-color:color-mix(in srgb,var(--a2a) 45%,var(--line));color:var(--a2a);background:var(--violet-soft)}
+.modtag.a2ui{border-color:color-mix(in srgb,var(--a2ui) 45%,var(--line));color:var(--a2ui);background:var(--blue-soft)}
+.modtag.hana{border-color:color-mix(in srgb,var(--hana) 45%,var(--line));color:var(--hana);background:var(--gold-soft)}
+.runlabel{display:inline-block;font:600 9.5px/1 var(--sans);letter-spacing:.05em;text-transform:uppercase;padding:.28rem .55rem;border-radius:999px;vertical-align:middle;margin-left:.15rem}
+.runlabel.ok{background:var(--ok-bg);color:var(--ok)}
+.runlabel.chk{background:var(--warn-bg);color:var(--warn)}
+.runlabel.des{background:var(--violet-soft);color:var(--violet)}
+h2 .runlabel{font-size:9.5px}
+ul,ol{margin:0 0 1.05rem;padding-left:1.2rem;max-width:70ch}
+li{margin:.26rem 0}
+.done-row{display:flex;align-items:center;gap:.55rem;margin:1.1rem 0 0}
+.done-row label{font-size:13.5px;color:var(--ink-2);cursor:pointer}
+.done-row input{accent-color:var(--blue)}
+
+.callout{border:1px solid var(--line);border-left-width:4px;border-radius:var(--r);padding:.85rem 1rem;margin:1rem 0 1.2rem;background:var(--surf);max-width:74ch}
+.callout h4{margin:.05rem 0 .3rem;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase}
+.callout p:last-child,.callout ul:last-child{margin:0}
+.callout.takeaway{border-left-color:var(--ok);background:var(--ok-bg)}
+.callout.mistake{border-left-color:var(--bad);background:var(--bad-bg)}
+.callout.try{border-left-color:var(--blue);background:var(--blue-soft)}
+.callout.insight{border-left-color:var(--violet);background:var(--violet-soft)}
+.callout.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+.callout.concept{border-left-color:var(--teal);background:var(--teal-soft)}
+.callout.beginner{border-left-color:var(--blue-mid);background:var(--blue-soft)}
+.callout.prod{border-left-color:var(--gold);background:var(--gold-soft)}
+.grid2,.grid3{display:grid;gap:.75rem;margin:1rem 0 1.2rem}
+.grid2{grid-template-columns:1fr 1fr}
+.grid3{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:1rem 1.05rem;box-shadow:var(--shadow)}
+.card h3,.card h4{margin:.05rem 0 .35rem}
+.card p{margin:0;color:var(--ink-2);font-size:.95rem}
+.card p+p{margin-top:.45rem}
+
+.stack{display:flex;flex-direction:column;align-items:stretch;gap:0;margin:1.05rem 0 1.3rem;max-width:540px}
+.stack .box{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:.65rem .85rem;text-align:center;box-shadow:var(--shadow);cursor:pointer}
+.stack .box:hover,.stack .box.on{border-color:var(--blue);background:var(--blue-soft)}
+.stack .box b{display:block;font-size:.95rem}
+.stack .box span{display:block;font-size:.78rem;color:var(--ink-3);margin-top:.08rem}
+.stack .arr{text-align:center;color:var(--mute);font:12px var(--mono);padding:.12rem 0;letter-spacing:.08em}
+.flowline{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin:1rem 0 1.2rem}
+.chip{display:inline-flex;align-items:center;gap:.35rem;border:1px solid var(--line);background:var(--surf);border-radius:999px;padding:.28rem .7rem;font-size:12.5px;color:var(--ink-2)}
+.chip.hot{border-color:color-mix(in srgb,var(--blue) 40%,var(--line));color:var(--blue-ink);background:var(--blue-soft)}
+.chip.teal{border-color:color-mix(in srgb,var(--teal) 40%,var(--line));color:var(--teal);background:var(--teal-soft)}
+.chip.violet{border-color:color-mix(in srgb,var(--violet) 40%,var(--line));color:var(--violet);background:var(--violet-soft)}
+.chip.gold{border-color:color-mix(in srgb,var(--gold) 40%,var(--line));color:var(--gold);background:var(--gold-soft)}
+
+.ascii{font:12px/1.55 var(--mono);background:var(--surf-2);border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:2px;padding:1rem 1.1rem;overflow:auto;white-space:pre;color:var(--ink-2);margin:1rem 0 1.25rem;position:relative}
+.codeblock{margin:1rem 0 1.3rem;border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:2px;background:var(--code);color:var(--code-fg);overflow:hidden;box-shadow:var(--shadow)}
+.codeblock figcaption{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.45rem .75rem;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07);font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#9AA8B8}
+.copy-btn{border:1px solid rgba(255,255,255,.14);background:transparent;color:#C5D0DC;border-radius:4px;font:600 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:.25rem .45rem;cursor:pointer}
+.copy-btn:hover,.copy-btn.ok{border-color:#7FB6EE;color:#7FB6EE}
+.codeblock pre{margin:0;padding:.9rem .95rem;overflow:auto;font:12.5px/1.65 var(--mono)}
+.codeblock code{background:none;color:inherit;padding:0;font-size:inherit;border-radius:0}
+.tok-k{color:#7EC8FF}.tok-s{color:#A8E6A1}.tok-c{color:#8B98A8;font-style:italic}.tok-n{color:#F0C674}.tok-p{color:#E8B4D4}
+
+.table-wrap{overflow:auto;margin:1rem 0 1.35rem;border:1px solid var(--line);border-top:3px solid var(--ink-3);border-radius:2px;background:var(--surf)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:.62rem .72rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);background:var(--surf-2);font-weight:650}
+td{color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+tr.hl td{background:var(--blue-soft)}
+
+.steps{counter-reset:st;margin:1rem 0 1.3rem;padding:0;list-style:none;max-width:none}
+.steps>li{position:relative;padding:.15rem 0 .85rem 2.35rem;border-left:2px solid var(--line);margin-left:.7rem}
+.steps>li:last-child{border-left-color:transparent}
+.steps>li::before{counter-increment:st;content:counter(st);position:absolute;left:-.72rem;top:.12rem;width:1.35rem;height:1.35rem;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font:650 11px var(--sans)}
+
+details.qa{border:1px solid var(--line);border-radius:var(--r);background:var(--surf);margin:.4rem 0;padding:.1rem .85rem}
+details.qa summary{cursor:pointer;font-weight:650;padding:.55rem 0;list-style:none}
+details.qa summary::-webkit-details-marker{display:none}
+details.qa summary::after{content:"\FF0B";float:right;color:var(--mute);font-weight:500}
+details.qa[open] summary::after{content:"\2013"}
+details.fold{margin:1rem 0;border:1px solid var(--line);border-radius:var(--r);background:var(--surf)}
+details.fold>summary{cursor:pointer;padding:.7rem 1rem;font-weight:650}
+.glossary{max-width:74ch;margin:0 0 1.2rem}
+.glossary dt{font-weight:650;margin-top:.85rem}
+.glossary dd{margin:.15rem 0 0;color:var(--ink-2)}
+
+.hero{padding:2.6rem 0 1.5rem;margin:0 -1.4rem 0;padding-left:1.4rem;padding-right:1.4rem;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:26px 26px;background-position:center top}
+.hero .sub{font-size:1.08rem;color:var(--ink-2);margin:0 0 1.1rem;max-width:64ch}
+.statrow{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:1.3rem 0;border:1px solid var(--ink);background:var(--ink)}
+.stat{background:var(--surf);padding:.85rem .9rem}
+.stat b{display:block;font-family:var(--mono);font-size:1.5rem;font-weight:650;letter-spacing:-.01em;color:var(--blue)}
+.stat span{display:block;font-size:11px;letter-spacing:.02em;color:var(--ink-3);margin-top:.2rem}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:1rem 0 1.2rem}
+.vs{font:650 11px var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:0 0 .35rem}
+.chat{border:1px solid var(--line);border-radius:var(--r);background:var(--surf);overflow:hidden;margin:1rem 0 1.2rem}
+.chat .msg{padding:.75rem 1rem;border-bottom:1px solid var(--line-2)}
+.chat .msg:last-child{border-bottom:0}
+.chat .who{font:650 11px var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 .25rem}
+.chat .user .who{color:var(--blue)}
+.chat .ai .who{color:var(--ink-3)}
+.chat .good .who{color:var(--ok)}
+
+.tabs{display:flex;flex-wrap:wrap;gap:.35rem;margin:1rem 0 .7rem}
+.tab{border:1px solid var(--line);background:var(--surf);color:var(--ink-2);border-radius:999px;padding:.32rem .75rem;font:650 12.5px var(--sans);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.tabpanel[hidden]{display:none}
+.filetree{display:grid;grid-template-columns:220px 1fr;gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:1rem 0 1.25rem;background:var(--surf);min-height:280px}
+.filetree nav{border-right:1px solid var(--line);background:var(--surf-2);padding:.5rem}
+.filetree nav button{display:block;width:100%;text-align:left;border:0;background:transparent;color:var(--ink-2);font:500 12.5px var(--mono);padding:.4rem .55rem;border-radius:6px;cursor:pointer}
+.filetree nav button:hover,.filetree nav button[aria-pressed="true"]{background:var(--blue-soft);color:var(--blue-ink)}
+.filetree .pane{padding:1rem 1.05rem}
+.filetree .pane h4{margin:.1rem 0 .35rem;font-family:var(--mono);font-size:13px}
+.filetree .meta{display:grid;gap:.3rem;font-size:13.5px;color:var(--ink-2)}
+.filetree .meta b{color:var(--ink)}
+
+.seq{display:grid;gap:.45rem;margin:1rem 0 1.2rem}
+.seq .row{display:grid;grid-template-columns:36px 1fr;gap:.7rem;align-items:start}
+.seq .n{width:28px;height:28px;border-radius:50%;background:var(--blue-soft);color:var(--blue-ink);display:grid;place-items:center;font:650 12px var(--mono)}
+.seq .row.on .n{background:var(--blue);color:#fff}
+.seq .body{border:1px solid var(--line);border-radius:8px;padding:.55rem .75rem;background:var(--surf)}
+.seq .body b{display:block;font-size:.92rem}
+.seq .body span{display:block;font-size:.82rem;color:var(--ink-3)}
+
+.treeq{border:1px solid var(--line);border-radius:var(--r);padding:1.05rem 1.1rem;background:var(--surf);margin:1rem 0}
+.treeq h3{margin:.1rem 0 .55rem}
+.treeq .opts{display:flex;flex-wrap:wrap;gap:.45rem}
+.treeq .opts button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:.5rem .8rem;font:650 13.5px var(--sans);cursor:pointer}
+.treeq .opts button:hover{border-color:var(--blue);color:var(--blue)}
+.verdict{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:var(--r);padding:1rem 1.1rem;background:var(--blue-soft);margin:1rem 0}
+.verdict.teal{border-left-color:var(--teal);background:var(--teal-soft)}
+.verdict.violet{border-left-color:var(--violet);background:var(--violet-soft)}
+.verdict.gold{border-left-color:var(--gold);background:var(--gold-soft)}
+
+.archsel{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:.55rem;margin:1rem 0}
+.archsel button{text-align:left;border:1px solid var(--line);background:var(--surf);border-radius:var(--r);padding:.75rem .8rem;cursor:pointer;color:inherit}
+.archsel button[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft);box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 25%,transparent)}
+.archsel b{display:block;font-size:.9rem}
+.archsel span{display:block;font-size:12px;color:var(--ink-3);margin-top:.15rem}
+
+.timeline{display:grid;gap:0;margin:1.1rem 0 1.3rem;border-left:2px solid var(--line);padding-left:0}
+.timeline button{display:grid;grid-template-columns:16px 1fr;gap:.75rem;width:100%;text-align:left;border:0;background:transparent;color:inherit;padding:.45rem 0 .45rem .15rem;cursor:pointer}
+.timeline button .dot{width:12px;height:12px;border-radius:50%;background:var(--surf);border:2px solid var(--blue);margin-left:-23px;margin-top:.25rem}
+.timeline button.on .dot{background:var(--blue)}
+.timeline button .lab b{display:block;font-size:.92rem}
+.timeline button .lab span{display:block;font-size:.8rem;color:var(--ink-3)}
+#roadExplain{border:1px solid var(--line);border-radius:var(--r);padding:.85rem 1rem;background:var(--surf);margin:.2rem 0 1.2rem}
+
+.nodegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;margin:1rem 0}
+.nodegrid button{border:1px solid var(--line);background:var(--surf);border-radius:8px;padding:.6rem .65rem;cursor:pointer;text-align:left;color:inherit}
+.nodegrid button:hover,.nodegrid button.on{border-color:var(--blue);background:var(--blue-soft)}
+.nodegrid b{display:block;font-size:.82rem}
+.nodegrid span{display:block;font-size:11.5px;color:var(--ink-3)}
+#tracePane{border:1px solid var(--line);border-radius:var(--r);padding:.9rem 1rem;background:var(--surf);min-height:140px}
+
+.giant{font:11.5px/1.45 var(--mono);background:var(--navy);color:#E8EEF4;border-radius:2px;padding:1.15rem 1.1rem;overflow:auto;white-space:pre;margin:1rem 0 1.3rem;border-top:3px solid var(--gold)}
+html[data-theme="night"] .giant{background:#071C38;border:1px solid var(--line);border-top:3px solid var(--gold)}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0 1rem}
+
+html[data-mode="architect"] .beginner-only{display:none}
+html[data-mode="beginner"] .architect-only{display:none}
+mark.hit{background:#FDD663;color:#152536;padding:0 .1em;border-radius:2px}
+
+/* Diagrams stay on fixed light "drafting paper" regardless of page theme — a printed
+   sheet reads the same whether the room is lit or dark, and it lets Mermaid's default
+   light rendering always stay legible without re-theming on toggle. */
+.diagram{margin:1.1rem 0 1.35rem;border:1px solid #DCD6C3;border-top:3px solid #0B3D91;border-radius:2px;background:#FCFBF6;background-image:linear-gradient(rgba(11,61,145,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(11,61,145,.07) 1px,transparent 1px);background-size:22px 22px;padding:1.1rem 1.1rem .7rem;overflow:auto;box-shadow:var(--shadow);color:#1A2333}
+.diagram svg{display:block;max-width:100%;height:auto;margin:0 auto;color:#1A2333}
+.diagram svg foreignObject,
+.diagram svg foreignObject div,
+.diagram svg foreignObject span,
+.diagram svg foreignObject p,
+.diagram svg .nodeLabel,
+.diagram svg .edgeLabel,
+.diagram svg .label,
+.diagram svg .actor>text{color:#1A2333!important}
+.diagram svg text,
+.diagram svg tspan{fill:#1A2333}
+.diagram svg .node.darklabel foreignObject,
+.diagram svg .node.darklabel foreignObject *,
+.diagram svg .node.darklabel .nodeLabel{color:#FFFFFF!important}
+.diagram svg .node.darklabel text,
+.diagram svg .node.darklabel tspan{fill:#FFFFFF}
+.diagram .figcap{margin:.7rem -1.1rem 0;padding:.5rem 1.1rem 0;border-top:1px dashed #DCD6C3;font:650 10px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:#6B7690;background:transparent}
+.srconly{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* --- title block (drafting stamp) --- */
+.titleblock{display:inline-grid;grid-template-columns:auto auto;column-gap:1.3rem;row-gap:.3rem;border:1.5px solid var(--ink);padding:.7rem 1rem;margin:0 0 1.3rem;background:var(--surf);box-shadow:3px 3px 0 var(--gold)}
+.titleblock .tb-row{display:contents}
+.titleblock .tb-k{font:650 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);align-self:center}
+.titleblock .tb-v{font:650 12px/1 var(--mono);color:var(--ink);align-self:center}
+
+/* --- official SAP Architecture Center embeds --- */
+.acfig{margin:1.4rem 0;border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:2px;overflow:hidden;background:var(--surf)}
+.acfig .achead{padding:.9rem 1.05rem .3rem}
+.acfig .achead .badge{display:inline-block;font:650 9.5px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;padding:.22rem .55rem;border-radius:999px;background:var(--gold-soft);color:var(--gold)}
+.acfig .achead strong{display:block;margin:.5rem 0 .3rem;font-family:var(--display);font-size:1.05rem;font-weight:650;color:var(--ink)}
+.acfig .achead p{margin:0 0 .85rem;font-size:.9rem;color:var(--ink-2)}
+.acframe{display:block;width:100%;height:420px;border:0;border-top:1px solid var(--line);background:#fff}
+.aclinks{display:flex;flex-wrap:wrap;gap:.4rem .9rem;padding:.75rem 1.05rem;font-size:12.5px;border-top:1px solid var(--line);background:var(--surf-2)}
+.acfig .acnote{margin:0;padding:0 1.05rem .9rem;font-size:11.5px;color:var(--ink-3)}
+.ccard{border:1px solid var(--line);border-radius:var(--r);background:var(--surf);margin:1.1rem 0 1.3rem;overflow:hidden}
+.cchead{display:flex;align-items:baseline;gap:.6rem;padding:.9rem 1.1rem;border-bottom:1px solid var(--line);background:var(--bg-2);flex-wrap:wrap}
+.cchead strong{font-family:var(--display);font-size:1.05rem;font-weight:700}
+.cchead span{font-size:.85rem;color:var(--ink-3);font-family:var(--mono)}
+.ccrow{padding:.75rem 1.1rem;border-bottom:1px solid var(--line-2)}
+.ccrow b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:.2rem}
+.ccrow p,.ccrow ul{margin:0;color:var(--ink-2);font-size:.94rem}
+.ccrow ul{padding-left:1.1rem}
+.ccrow:last-child{border-bottom:0}
+.depth{margin:.4rem 0 1rem}
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin:1.1rem 0}
+.pill{border:1px solid var(--line);background:var(--surf);color:var(--ink-3);border-radius:999px;padding:.32rem .8rem;font:600 12px var(--sans)}
+.pill.on{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.badge{display:inline-block;font:650 9.5px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;padding:.22rem .5rem;border-radius:999px;vertical-align:middle;margin:0 .15rem}
+.badge.verify{background:var(--warn-bg);color:var(--warn)}
+.badge.ga{background:var(--ok-bg);color:var(--ok)}
+.badge.beta{background:var(--violet-soft);color:var(--violet)}
+@media(max-width:700px){.acframe{height:320px}}
+
+footer.site{border-top:1px solid var(--line);padding:2rem 0 4rem;color:var(--ink-3);font-size:.88rem}
+#searchstatus{min-height:0;font-size:13px;color:var(--mute);margin:.15rem 0 .6rem}
+
+@media (max-width:1180px){
+  .layout{grid-template-columns:var(--navw) minmax(0,1fr)}
+  .rail{display:none}
+}
+@media (max-width:880px){
+  .burger{display:inline-flex}
+  .layout{grid-template-columns:1fr}
+  .sidenav{position:fixed;inset:56px auto 0 0;width:min(88vw,310px);z-index:40;transform:translateX(-105%);transition:transform .2s ease;box-shadow:var(--shadow-lg)}
+  .sidenav.open{transform:none}
+  .scrim{display:none;position:fixed;inset:56px 0 0;background:rgba(10,16,28,.45);z-index:35}
+  .scrim.on{display:block}
+  main{padding:0 1rem 5rem}
+  .grid2,.grid3,.compare,.statrow,.archsel,.filetree,.nodegrid{grid-template-columns:1fr}
+  .searchwrap{max-width:none}
+  .searchwrap .hint{display:none}
+  .brand small{display:none}
+}
+@media print{
+  .topbar,.sidenav,.rail,#readbar,.toggles,.copy-btn,.burger,.scrim,.done-row{display:none!important}
+  .layout{display:block}
+  main{padding:0}
+  body{background:#fff;color:#111;font-size:11.5pt}
+  .codeblock,.giant{break-inside:avoid}
+  a{color:inherit}
+  html[data-mode="beginner"] .architect-only,html[data-mode="architect"] .beginner-only{display:block}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div id="readbar" aria-hidden="true"><i></i></div>
+<header class="topbar">
+  <button class="iconbtn burger" type="button" aria-expanded="false" aria-controls="sidenav" id="burger">Menu</button>
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" stroke="white" stroke-width="1.1"/><path d="M3 8h10M8 3v10" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+    <span><b>ProcureX Control Tower</b><small>CAP + MCP + A2A Workshop</small></span>
+  </a>
+  <div class="searchwrap">
+    <svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input id="q" type="search" placeholder="Search modules, protocols, terms…" autocomplete="off" aria-label="Search this course">
+    <span class="hint">/</span>
+  </div>
+  <div class="toggles">
+    <button class="iconbtn" type="button" id="modeBtn" aria-pressed="false" title="Switch explanation depth">Architect mode</button>
+    <button class="iconbtn" type="button" id="themeBtn" aria-pressed="false">Night</button>
+    <span class="progchip" id="labprog" title="Modules marked complete">0/0</span>
+    <button class="iconbtn" type="button" onclick="window.print()">Print</button>
+  </div>
+</header>
+<div class="scrim" id="scrim" hidden></div>
+
+<div class="layout">
+<nav class="sidenav" id="sidenav" aria-label="Course contents"><details class="navg" open><summary class="g">Start</summary><a href="#top"><span class="n">00</span><span class="dot"></span>Welcome &amp; master model</a><a href="#roadmap"><span class="n">&#9679;</span><span class="dot"></span>Journey &amp; build status</a><a href="#m01"><span class="n">01</span><span class="dot"></span>Business problem</a><a href="#m02"><span class="n">02</span><span class="dot"></span>Architect thinking</a><a href="#m03"><span class="n">03</span><span class="dot"></span>A2A+MCP architecture map</a></details><details class="navg" open><summary class="g">Foundation</summary><a href="#m04"><span class="n">04</span><span class="dot"></span>Setup: Node, CAP, Postgres</a><a href="#m05"><span class="n">05</span><span class="dot"></span>CDS domain model</a><a href="#m06"><span class="n">06</span><span class="dot"></span>Database: SQLite to HANA</a><a href="#m07"><span class="n">07</span><span class="dot"></span>OData V4 service</a><a href="#m08"><span class="n">08</span><span class="dot"></span>CRUD + lifecycle</a><a href="#m09"><span class="n">09</span><span class="dot"></span>Business logic + tx</a></details><details class="navg" open><summary class="g">Trust</summary><a href="#m10"><span class="n">10</span><span class="dot"></span>AuthN + AuthZ + XSUAA</a><a href="#m11"><span class="n">11</span><span class="dot"></span>Destinations</a><a href="#m12"><span class="n">12</span><span class="dot"></span>External API integration</a><a href="#m13"><span class="n">13</span><span class="dot"></span>Events + background jobs</a></details><details class="navg" open><summary class="g">Agent protocols</summary><a href="#m14"><span class="n">14</span><span class="dot"></span>MCP from zero</a><a href="#m15"><span class="n">15</span><span class="dot"></span>Our MCP server</a><a href="#m16"><span class="n">16</span><span class="dot"></span>MCP security</a><a href="#m17"><span class="n">17</span><span class="dot"></span>AI agent + tool loop</a><a href="#m18"><span class="n">18</span><span class="dot"></span>A2A + discovery</a><a href="#m19"><span class="n">19</span><span class="dot"></span>MCP + A2A together</a><a href="#m20"><span class="n">20</span><span class="dot"></span>MCP gateway</a><a href="#m21"><span class="n">21</span><span class="dot"></span>IAS trust chain</a></details><details class="navg"><summary class="g">Experience</summary><a href="#m22"><span class="n">22</span><span class="dot"></span>SAPUI5 frontend</a><a href="#m23"><span class="n">23</span><span class="dot"></span>AI assistant UI</a><a href="#m24"><span class="n">24</span><span class="dot"></span>Audit logging</a><a href="#m25"><span class="n">25</span><span class="dot"></span>Observability</a><a href="#m26"><span class="n">26</span><span class="dot"></span>Error handling</a></details><details class="navg"><summary class="g">Ship it</summary><a href="#m27"><span class="n">27</span><span class="dot"></span>Testing strategy</a><a href="#m28"><span class="n">28</span><span class="dot"></span>Postman collection</a><a href="#m29"><span class="n">29</span><span class="dot"></span>Migrations+Docker+Git+CI</a><a href="#m30"><span class="n">30</span><span class="dot"></span>BTP deploy + security</a><a href="#m31"><span class="n">31</span><span class="dot"></span>Prod map + troubleshooting</a><a href="#m32"><span class="n">32</span><span class="dot"></span>Source + checklist + matrix</a></details><details class="navg"><summary class="g">Audit & full source</summary><a href="#m33"><span class="n">33</span><span class="dot"></span>Gap audit + Inventory</a><a href="#m34"><span class="n">34</span><span class="dot"></span>LLM provider trio</a><a href="#m35"><span class="n">35</span><span class="dot"></span>UI5 missing files</a><a href="#m36"><span class="n">36</span><span class="dot"></span>Source I: config+deploy</a><a href="#m37"><span class="n">37</span><span class="dot"></span>Source II: lib+tests</a></details></nav>
+<main id="content"><div class="wrap">
+<header class="hero" id="top">
+  <div class="titleblock">
+    <div class="tb-row"><span class="tb-k">Doc No.</span><span class="tb-v">AC-PROC-2026</span></div>
+    <div class="tb-row"><span class="tb-k">Rev.</span><span class="tb-v">2026.09</span></div>
+    <div class="tb-row"><span class="tb-k">Stack</span><span class="tb-v">CAP Node.js + PG</span></div>
+    <div class="tb-row"><span class="tb-k">Phases</span><span class="tb-v">P0-P41</span></div>
+  </div>
+  <p class="kicker">Building a Production-Grade Autonomous Procurement Control Tower with SAP CAP, BTP, MCP and A2A</p>
+  <h1>Autonomous Procurement Control Tower</h1>
+  <p class="sub">End-to-End SAP CAP + AI Agent + MCP + A2A Hands-On Workshop. You build ONE application from a plain UI-CAP-DB triple into an AI-enabled, MCP-enabled, A2A-enabled enterprise system — and you learn every acronym on the way because you type it, run it, break it, and secure it.</p>
+  <div class="statrow">
+    <div class="stat"><b>41</b><span>modules, beginner to production</span></div>
+    <div class="stat"><b>30+</b><span>domain entities in db/schema.cds</span></div>
+    <div class="stat"><b>7</b><span>specialist agents behind one orchestrator</span></div>
+    <div class="stat"><b>13</b><span>governed MCP tools, zero raw DB access</span></div>
+  </div>
+  <p>This document is the course. Open it in a browser (no server needed), follow it top to bottom, and copy the code into the <b>same</b> repository at every step. Nothing is thrown away: Phase 4's OData service is still there in Phase 33's BTP deployment, with agents wrapped around it.</p>
+  <div class="callout concept"><h4>The one rule, repeated all course</h4><p>An AI agent <b>never touches the database directly</b>. It calls a <b>governed CAP service</b>. CAP owns business logic and authorization. MCP, A2A and the gateway are how agents <em>reach</em> that governed layer — never a way around it. Every diagram below is a variation on that sentence.</p></div>
+  <h3>The master mental model</h3>
+  <p>Every phase zooms into one arrow of this picture. Keep it in your head from here on.</p><div class="diagram"><pre class="mermaid">flowchart TD
+  U[&quot;User&quot;] --&gt; F[&quot;SAPUI5 Fiori app&quot;]
+  F --&gt; CAP[&quot;SAP CAP services&quot;]
+  CAP --&gt; DB[&quot;PostgreSQL, HANA Cloud in prod&quot;]
+  F --&gt; AG[&quot;AI Agent&quot;]
+  AG --&gt; MCP[&quot;MCP Gateway + MCP tools&quot;]
+  MCP --&gt; CAP
+  AG --&gt; A2A[&quot;A2A to Risk Agent&quot;]
+  A2A --&gt; AG2[&quot;Risk Agent&quot;]
+  AG2 --&gt; MCP
+  CAP --&gt; EXT[&quot;External APIs via Destination&quot;]
+  CAP --&gt; EV[&quot;Events + background jobs&quot;]
+  CAP --&gt; IAS[&quot;IAS and XSUAA&quot;]
+
+  classDef user fill:#E7ECF8,stroke:#0B3D91,color:#0B3D91,stroke-width:1.4px;
+  classDef gov fill:#F9EEDC,stroke:#B5710A,color:#B5710A,stroke-width:1.4px;
+  classDef agent fill:#0B3D91,stroke:#0B3D91,color:#fff,stroke-width:1.4px;
+  classDef proto fill:#EEE9FD,stroke:#6B46E8,color:#6B46E8,stroke-width:1.4px;
+  class U,F user;
+  class CAP,DB,EXT,EV,IAS gov;
+  class AG,AG2 agent;
+  class MCP,A2A proto;</pre><p class="figcap">FIG. 0 — MASTER MENTAL MODEL: ONE GOVERNED PATH</p></div>
+  <div class="callout beginner"><h4>How to use this document</h4><p>Each module follows <b>What is it / Why / Where in our app / How it works / Code / Test it / Expected result / Production note</b>. Toggle <b>Architect mode</b> (top bar) to hide beginner scaffolding. Tick <b>Mark complete</b> to track progress (stored locally). Press <b>/</b> to search. Every code block has a <b>Copy</b> button.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m00"> Mark the introduction complete</label></div>
+</header>
+<section class="mod" id="roadmap" data-mod="roadmap">
+  <div class="modhead"><span class="modnum">12/12 LEVELS BUILT</span></div>
+  <h2>The twenty-level journey &mdash; and where this document is right now</h2>
+  <p>This course is written level by level, in the same one-repository, nothing-thrown-away spirit Level 2 preaches
+  for the codebase itself. Every row below either has a real module in the sidebar you can read right now, or is
+  honestly marked as not written yet &mdash; there is no placeholder content hiding behind a &ldquo;coming soon&rdquo;
+  link anywhere in this document.</p>
+  <div class="pills"><span class="pill on">P0 &middot; Architecture map</span><span class="pill on">P1 &middot; Project setup</span><span class="pill on">P2-P3 &middot; CDS + database</span><span class="pill on">P4-P6 &middot; OData + CRUD + logic</span><span class="pill on">P7-P10 &middot; Trust + integration</span><span class="pill on">P11-P13 &middot; MCP</span><span class="pill on">P14-P18 &middot; Agents + A2A</span><span class="pill on">P19-P20 &middot; Gateway + IAS</span><span class="pill on">P21-P26 &middot; UI + ops</span><span class="pill on">P27-P35 &middot; Ship</span><span class="pill on">P36-P41 &middot; Finish</span><span class="pill on">P42 &middot; Gap audit + full source</span></div>
+  <div class="table-wrap"><table><thead><tr><th>Level</th><th>Title</th><th>What it adds</th><th>Status</th></tr></thead>
+  <tbody><tr><td>P0</td><td>Architecture map</td><td>A2A+MCP diagram decoded, build-vs-buy split</td><td><span class="badge ga">Built</span></td></tr><tr><td>P1</td><td>Project setup</td><td>CAP Node.js project, folder tour</td><td><span class="badge ga">Built</span></td></tr><tr><td>P2-P3</td><td>CDS + database</td><td>Domain model, Postgres local, HANA prod</td><td><span class="badge ga">Built</span></td></tr><tr><td>P4-P6</td><td>OData + CRUD + logic</td><td>Services, handlers, transactions</td><td><span class="badge ga">Built</span></td></tr><tr><td>P7-P10</td><td>Trust + integration</td><td>XSUAA, destinations, external API, events</td><td><span class="badge ga">Built</span></td></tr><tr><td>P11-P13</td><td>MCP</td><td>Protocol, server, security</td><td><span class="badge ga">Built</span></td></tr><tr><td>P14-P18</td><td>Agents + A2A</td><td>Tool loop, 2 agents, discovery, combined flow</td><td><span class="badge ga">Built</span></td></tr><tr><td>P19-P20</td><td>Gateway + IAS</td><td>Gateway responsibilities, trust chain</td><td><span class="badge ga">Built</span></td></tr><tr><td>P21-P26</td><td>UI + ops</td><td>UI5, chat UI, audit, observability, errors</td><td><span class="badge ga">Built</span></td></tr><tr><td>P27-P35</td><td>Ship</td><td>Tests, Docker, CI/CD, BTP, security, tenancy</td><td><span class="badge ga">Built</span></td></tr><tr><td>P36-P41</td><td>Finish</td><td>Architecture poster, checklist, matrix, roadmap</td><td><span class="badge ga">Built</span></td></tr><tr><td>P42</td><td>Gap audit + full source</td><td>Inventory pack, /health fix, providers, UI5 files, verbatim repo files</td><td><span class="badge ga">Built</span></td></tr></tbody></table></div>
+</section>
+<section class="mod" id="m01" data-mod="m01">
+  <div class="modhead"><span class="modnum">MODULE 01</span></div>
+  <h2>The business problem</h2>
+<p class="layer">What is it? The scenario</p>
+<p><b>Autonomous Procurement Control Tower</b> is a realistic enterprise procurement platform. A factory buyer raises a <b>purchase requisition</b> (I need 500 brake pads), a manager <b>approves</b> it, the system converts it to a <b>purchase order</b> against a <b>supplier</b>, tracks <b>goods receipts</b>, <b>invoices</b> and <b>payments</b>, watches <b>budgets</b>, and flags <b>risks</b> (late delivery, abnormal price). Then AI arrives: buyers ask questions in plain English, a <b>procurement agent</b> answers using governed tools, and a <b>risk agent</b> supplies risk analysis over <b>A2A</b>.</p>
+<div class="grid2"><article class="card"><h4>Requisitions to payment</h4><p>PR with items, approvals, PO with items, receipts, invoices, payments — the document flow auditors actually check.</p></article><article class="card"><h4>Master data + money</h4><p>Suppliers with risk scores, materials, departments, budgets with committed and consumed amounts.</p></article><article class="card"><h4>Risk + policy</h4><p>RiskAssessments, Policies as data, PolicyViolations — policy gates decide, the LLM only recommends.</p></article><article class="card"><h4>Agents + audit</h4><p>Agents, AgentExecutions, MCPTools, MCPToolExecutions, AIConversations, AuditLogs — every AI action traceable.</p></article></div>
+<p class="layer">Why do we need it? The pain today</p>
+<ol class="steps"><li>Buyer emails spreadsheets; nobody knows the PR status or remaining budget.</li><li>Manager approves by gut feel; no policy check, no risk score, no audit proof.</li><li>Invoice arrives for a different amount; 3-way match (PO vs receipt vs invoice) is manual.</li><li>Supplier keeps delivering late; the signal hides in past orders nobody queries.</li><li>Leadership asks 'which suppliers are risky?' — the answer takes a week of SQL.</li></ol>
+<div class="chat"><div class="msg user"><p class="who">User asks</p><p>Which suppliers have high procurement risk, and why?</p></div><div class="msg ai"><p class="who">Governed answer (end of course)</p><p>Risk Agent scores suppliers from live POs, receipts and disputes via MCP tools — with policy citations and an audit row — instead of a week of SQL.</p></div><div class="msg user"><p class="who">User asks</p><p>Create a requisition for 200 brake pads and route it for approval.</p></div><div class="msg ai"><p class="who">Governed action</p><p>Procurement Agent calls createPurchaseRequisition + submitForApproval through the MCP gateway — RBAC, tenant check, budget check, audit write — then shows the approval task.</p></div></div>
+<div class="callout mistake"><h4>Common mistake</h4><p>Building 'a chatbot with direct database access'. It demos well and fails the first audit: no authorization, no tenant isolation, no policy gate, no trace of who approved what. This course builds the opposite — the agent is the <em>least</em> privileged actor in the system.</p></div>
+<div><details class='qa'><summary>Is this a real working project or disconnected demos?</summary><p>One project, extended phase by phase. Phase 4's OData URLs still work in Phase 33's BTP deployment.</p></details><details class='qa'><summary>Do I need a paid LLM key?</summary><p>No. Local development uses a MockLLM provider with deterministic responses. Real providers (SAP AI Core / Generative AI Hub) plug in later behind the same interface.</p></details><details class='qa'><summary>Do I need BTP on day one?</summary><p>No. Everything runs locally (SQLite/Postgres, mocked auth, mock LLM, mock destination) until the deployment phases.</p></details></div>
+<div class="quiz" data-quiz="q01" data-why="MCP is transport. CAP owns who-can-do-what — see Phase 7 and Phase 16."><p>Where does authorization live in this architecture?</p><label><input type="radio" name="q01" value="ok"> In the CAP service layer, enforced before every read and action</label><label><input type="radio" name="q01" value="no"> In the MCP protocol itself</label><label><input type="radio" name="q01" value="no"> In the LLM prompt</label></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m01"> Mark module 01 complete</label></div>
+</section>
+<section class="mod" id="m02" data-mod="m02">
+  <div class="modhead"><span class="modnum">MODULE 02</span></div>
+  <h2>How a Solution Architect thinks about this</h2>
+<p class="layer">The mindset shift</p>
+<div class="compare"><div><p class="vs">Novice approach</p><div class="card"><p>"I will add an AI agent, an MCP server, and A2A to my app." Technology list first — authorization, tenancy and audit discovered during the incident review.</p></div></div><div><p class="vs">Architect approach</p><div class="card"><p>"The capability is <em>governed procurement execution</em>. The system of record is CAP + Postgres. Agents reach it through tools with explicit grants, every write audited, every cross-agent call authenticated. Then I pick protocols." Capability, owner, failure mode first.</p></div></div></div>
+<div class="callout insight"><h4>Architect insight</h4><p>For every box in any AI architecture diagram, ask: <b>who calls it, with whose identity, checked against what policy, and where is the audit row?</b> If any answer is 'the agent just can', the diagram is a demo, not a design.</p></div>
+<p class="layer">Concept to production ladder (used for every technology)</p>
+<p>Each technology in this course climbs the same ladder: <b>CONCEPT → MINIMAL EXAMPLE → OUR APPLICATION → PRODUCTION VERSION</b>. At each rung you see <b>WHAT WE HAVE BUILT SO FAR</b> and <b>WHAT WE ARE ADDING NOW</b>, so the final BTP poster in Phase 35 is the sum of small understood steps, not a leap.</p>
+<div class="table-wrap"><table><thead><tr><th>Rung</th><th>MCP example</th><th>A2A example</th></tr></thead><tbody><tr><td>CONCEPT</td><td>Host / client / server / tools in one paragraph</td><td>Agent Card, task, message, discovery in one paragraph</td></tr><tr><td>MINIMAL</td><td>One-tool server (getSupplier), no auth</td><td>Two agents exchanging one JSON task</td></tr><tr><td>OUR APP</td><td>13 tools on MCPService with RBAC + audit</td><td>ProcurementAgent delegates risk scoring to RiskAgent</td></tr><tr><td>PRODUCTION</td><td>Gateway: OAuth, rate limit, tool filtering, audit</td><td>Signed discovery, scoped delegation, timeouts, idempotency</td></tr></tbody></table></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m02"> Mark module 02 complete</label></div>
+</section>
+<section class="mod" id="m03" data-mod="m03">
+  <div class="modhead"><span class="modnum">MODULE 03</span></div>
+  <h2>Mapping the SAP A2A + MCP architecture to our build</h2>
+<p class="layer">What the SAP diagram shows</p>
+<p>The reference architecture ("A2A and MCP for Interoperability") shows SAP Business AI Platform layers: Joule / Joule Studio / orchestrator, Agent Gateway, managed runtimes, MCP Builder, MCP + A2A fabrics, SAP Autonomous Suite, custom and bring-your-own agents, MCP Gateway, OData/REST services, Cloud Identity Services, third-party MCP servers/APIs, hyperscalers, external agents — with Trust, Authentication, Discovery and Governance as cross-cutting concerns.</p>
+<div class="diagram"><pre class="mermaid">flowchart LR
+  subgraph WE_BUILD[&quot;A. We build locally&quot;]
+    UI[&quot;UI5 app&quot;] --&gt; CAP[&quot;CAP services&quot;]
+    CAP --&gt; PG[&quot;PostgreSQL&quot;]
+    CAP --&gt; MCP[&quot;MCP server (13 tools)&quot;]
+    MCP --&gt; GW[&quot;Gateway (learning)&quot;]
+    GW --&gt; PA[&quot;Procurement Agent&quot;]
+    PA --&gt; RA[&quot;Risk Agent&quot;]
+  end
+  subgraph SAP_MANAGED[&quot;B. SAP-managed (BTP prod)&quot;]
+    AR[&quot;Approuter&quot;] --- IAS[&quot;IAS and XSUAA&quot;]
+    HM[&quot;HANA Cloud&quot;] --- EM[&quot;Event Mesh&quot;]
+    DST[&quot;Destination&quot;] --- LOG[&quot;Logging + Monitoring&quot;]
+    AIC[&quot;AI Core / GenAI Hub&quot;]
+  end
+  subgraph EXTERNAL[&quot;D. External&quot;]
+    XMCP[&quot;Third-party MCP&quot;] --- XAPI[&quot;Third-party APIs&quot;]
+    XAG[&quot;External agents&quot;]
+  end
+  PA --&gt; AIC
+  GW --&gt; XMCP
+  PA --&gt; XAG
+  CAP --&gt; DST
+  CAP --&gt; EM
+  UI --&gt; AR
+  AR --&gt; CAP</pre><p class="figcap">FIG. 1 — REFERENCE MAP TRANSLATED TO OUR BUILD</p></div>
+<div class="table-wrap"><table><thead><tr><th>Box in SAP diagram</th><th>What it is</th><th>We implement?</th><th>How we connect / protocol / auth</th></tr></thead><tbody><tr><td>Joule / Studio / Orchestrator</td><td>SAP-managed agent runtime + UX</td><td>No — simulate. Our orchestrator action plays the role locally</td><td>Conceptual mapping; real integration later via AI Core</td></tr><tr><td>Agent Gateway</td><td>Single audited agent entry point</td><td>Learning implementation in AgentService.orchestrate</td><td>HTTPS + JWT; user identity propagated</td></tr><tr><td>MCP Builder / MCP Gateway</td><td>Tool registry, routing, policy</td><td>Learning gateway (Express middleware)</td><td>MCP JSON-RPC; OAuth; tool filtering per agent</td></tr><tr><td>Custom / BYO agents</td><td>Our specialist agents</td><td>Yes: 7 agents in db.Agents + handlers</td><td>A2A JSON tasks; agent IDs + grants</td></tr><tr><td>OData / REST services</td><td>Business APIs</td><td>Yes: ProcurementService, Catalog, Supplier, Invoice, Approval</td><td>OData V4 + REST; JWT scopes</td></tr><tr><td>Cloud Identity Services</td><td>Users, trust, tokens</td><td>Simulated locally (x-mock-user); real IAS/XSUAA in prod</td><td>OAuth2 JWT; xs-security.json scopes</td></tr><tr><td>Third-party MCP / APIs / agents</td><td>Outside world</td><td>Mocked locally; Destination in prod</td><td>Destination service + mTLS/OAuth</td></tr><tr><td>HANA / Postgres</td><td>System of record</td><td>Postgres local; HANA Cloud prod</td><td>CAP db layer; tenantId on every row</td></tr></tbody></table></div>
+<div class="callout prod"><h4>Learning vs production</h4><p>Anything labelled <b>learning implementation</b> (gateway, orchestrator, mock LLM, mock destination, EventEmitter events) is explicitly a stand-in with the same interface as the SAP-managed service. The production notes in each phase say exactly what replaces it on BTP. Never present the stand-in as the SAP product.</p></div>
+<div class="callout warn"><h4>Accuracy rule</h4><p>SAP BTP, CAP, MCP and A2A evolve fast. Where an API is version-dependent, the code carries a <b>VERIFY:</b> comment telling you to check current SAP docs instead of asserting a possibly-stale signature.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m03"> Mark module 03 complete</label></div>
+</section>
+<section class="mod" id="m04" data-mod="m04">
+  <div class="modhead"><span class="modnum step">STEP 04</span></div>
+  <h2>Phase 1 — Project setup</h2>
+  <p class="stepgoal">WHAT WE HAVE BUILT SO FAR: empty repo. WHAT WE ARE ADDING NOW: toolchain + layout you will extend for 40 phases.</p>
+<p class="layer">Prerequisites</p>
+<div class="table-wrap"><table><thead><tr><th>Tool</th><th>Version</th><th>Check</th></tr></thead><tbody><tr><td>Node.js</td><td>>= 20</td><td><code>node -v</code></td></tr><tr><td>CAP CLI</td><td>latest (@sap/cds-dk)</td><td><code>cds --version</code></td></tr><tr><td>Git</td><td>any</td><td><code>git --version</code></td></tr><tr><td>Docker</td><td>any (for Postgres)</td><td><code>docker --version</code></td></tr><tr><td>PostgreSQL</td><td>15+ via Docker</td><td><code>pg_isready</code> or Docker ps</td></tr><tr><td>CF CLI</td><td>v8 (deploy phases only)</td><td><code>cf --version</code></td></tr><tr><td>VS Code + REST client</td><td>any</td><td>Postman or .http files</td></tr></tbody></table></div>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Install CLI + scaffold (run once)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>npm install -g @sap/cds-dk
+cds --version
+cds init enterprise-ai-procurement --cap-js
+cd enterprise-ai-procurement
+npm install</code></pre></figure>
+<p class="layer">Exact folder structure (this repo)</p>
+<figure class="codeblock"><figcaption><span class="flang">text</span><span>WHAT WE HAVE: repository layout</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>enterprise-ai-procurement/
+  app/                  # UI5 frontend (Phase 21-22)
+  approuter/            # BTP approuter (Phase 32)
+  db/schema.cds         # domain model (Phase 5)
+  db/common.cds         # shared types/aspects
+  db/data/              # seed CSVs
+  srv/*-service.cds|ts  # Procurement, Catalog, Supplier, Invoice, Approval, MCP, Agent
+  srv/server.js         # CDS_TYPESCRIPT=true bootstrap (do not delete)
+  lib/auth|authorization|audit|validation|workflow|security/  # business plumbing
+  test/                 # vitest suites (Phase 26)
+  scripts/              # pg deploy helpers
+  mta.yaml xs-security.json Dockerfile docker-compose.yml</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Path</th><th>Purpose</th></tr></thead><tbody><tr><td>srv/server.js</td><td>Sets CDS_TYPESCRIPT=true so .ts handlers resolve; app runs under tsx. Deleting it breaks handler resolution.</td></tr><tr><td>lib/*</td><td>Business logic. Handlers call lib; MCP/agents never touch SQL.</td></tr><tr><td>xs-security.json</td><td>Scopes + role templates + collections. Mirrors lib/auth/rbac.ts 1:1.</td></tr><tr><td>mta.yaml</td><td>BTP deployment descriptor (Phase 32).</td></tr><tr><td>docker-compose.yml</td><td>Local Postgres + adminer (Phase 29).</td></tr></tbody></table></div>
+<div class="callout mistake"><h4>Gotcha: handler base class</h4><p>Handlers MUST extend <code>cds.ApplicationService</code> — raw <code>cds.Service</code> has no CRUD executors: entity reads return empty and <code>after CREATE</code> receives <code>undefined</code>. Every <code>srv/*.ts</code> in this repo already does this.</p></div>
+<div><details class='qa'><summary>cds command not found?</summary><p>Reinstall the CLI globally and reopen the terminal so npm's bin dir is on PATH. Then verify with cds --version.</p></details><details class='qa'><summary>Which files do I never invent?</summary><p>Entity/service names. Always verify with the compiled model (cds compile --to csn) before editing CDS or handlers.</p></details></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m04"> Mark step 04 complete</label></div>
+</section>
+<section class="mod" id="m05" data-mod="m05">
+  <div class="modhead"><span class="modnum step">STEP 05</span></div>
+  <h2>Phase 2 — Domain model with CDS</h2>
+  <p class="stepgoal">WHAT WE HAVE: empty db/. ADDING NOW: 30+ entities with compositions, tenant isolation, status enums, concurrency versions.</p>
+<p class="layer">What is it?</p>
+<div class="depth"><p class="beginner-only"><strong>Simple.</strong> CDS is the blueprint of your business: what things exist (Supplier, Order) and how they relate — before any screens or code.</p><p><strong>SAP-specific.</strong> CDS compiles to OData V4 + SQL. One model drives the API, the DB schema, and Fiori annotations.</p><p class="architect-only"><strong>Technical.</strong> Namespace + entities + associations/compositions + managed/cuid aspects + types + @assert constraints. Compositions own children (items die with parent); associations reference independent entities.</p></div>
+<figure class="codeblock"><figcaption><span class="flang">cds</span><span>db/common.cds — reusable types (real db/common.cds)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>namespace procurement.common;
+
+aspect TenantAware { tenantId : String(64); }
+aspect Auditable { createdByAgent : String(128); lastModifiedByAgent : String(128); }
+type RiskLevel : String enum { LOW; MEDIUM; HIGH; CRITICAL; }
+type PRStatus : String enum { DRAFT; SUBMITTED; UNDER_REVIEW; APPROVED; REJECTED; CONVERTED_TO_PO; CANCELLED; }
+type POStatus : String enum { DRAFT; PENDING_APPROVAL; APPROVED; SENT_TO_SUPPLIER; PARTIALLY_RECEIVED; FULLY_RECEIVED; INVOICED; CLOSED; CANCELLED; }
+type ApprovalStatus : String enum { PENDING; APPROVED; REJECTED; ESCALATED; CANCELLED; }
+type InvoiceStatus : String enum { DRAFT; SUBMITTED; MATCHED; MISMATCH; APPROVED; PAID; REJECTED; CANCELLED; }
+type PaymentStatus : String enum { PENDING; PROCESSING; COMPLETED; FAILED; CANCELLED; }
+type PolicyAction : String enum { AUTO_APPROVE; REQUIRE_MANAGER; REQUIRE_FINANCE; REQUIRE_HUMAN; DENY; }
+type ActorType : String enum { USER; AGENT; SYSTEM; }
+type MessageRole : String enum { USER; ASSISTANT; TOOL; SYSTEM; }
+type ToolExecutionStatus : String enum { PENDING; RUNNING; SUCCESS; FAILED; DENIED; }</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">cds</span><span>db/schema.cds — core documents (matches repo)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>namespace procurement.db;
+using { cuid, managed } from &#x27;@sap/cds/common&#x27;;
+using { procurement.common as c } from &#x27;./common&#x27;;
+
+entity Suppliers : cuid, managed, c.TenantAware {
+  supplierId : String(64) not null;
+  name       : String(256) not null;
+  active     : Boolean default true not null;
+  riskScore  : Integer default 0;
+  riskLevel  : c.RiskLevel default #LOW;
+  onTimeRate : Decimal(5,2) default 100.0;
+  contacts   : Composition of many SupplierContacts on contacts.supplier = $self;
+}
+
+entity PurchaseRequisitions : cuid, managed, c.TenantAware, c.Auditable {
+  requisitionNo : String(32) @assert.unique not null;
+  title         : String(256) not null;
+  requester     : Association to Users not null;
+  department    : Association to Departments not null;
+  status        : c.PRStatus default #DRAFT not null;
+  totalAmount   : Decimal(18,2) default 0 not null;
+  version       : Integer default 1 not null; // optimistic concurrency
+  items         : Composition of many PurchaseRequisitionItems on items.requisition = $self;
+  approvals     : Association to many Approvals on approvals.requisition = $self;
+}
+
+entity PurchaseOrders : cuid, managed, c.TenantAware, c.Auditable {
+  orderNo     : String(32) @assert.unique not null;
+  requisition : Association to PurchaseRequisitions;
+  supplier    : Association to Suppliers not null;
+  status      : c.POStatus default #DRAFT not null;
+  totalAmount : Decimal(18,2) default 0 not null;
+  version     : Integer default 1 not null;
+  items       : Composition of many PurchaseOrderItems on items.purchaseOrder = $self;
+}</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Concept</th><th>Used where</th><th>Why</th></tr></thead><tbody><tr><td>cuid, managed</td><td>Every entity</td><td>UUID key + createdAt/modifiedAt/createdBy free</td></tr><tr><td>Composition</td><td>PR-items, PO-items, contacts, messages</td><td>Children owned; cascade delete</td></tr><tr><td>Association</td><td>supplier, requester, department</td><td>Independent master data referenced</td></tr><tr><td>version Integer</td><td>PR + PO</td><td>Optimistic concurrency: WHERE version = expected</td></tr><tr><td>@assert.unique</td><td>requisitionNo, orderNo, supplierId</td><td>DB-level duplicate guard</td></tr></tbody></table></div>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Test it</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>npx cds compile --to csn db srv   # must exit 0 after every CDS change</code></pre></figure>
+<div class="callout prod"><h4>Production note</h4><p>HANA Cloud needs no model change — only the <code>db.kind</code> + deploy target change (Phase 6). Keep CDS portable: no Postgres-only types.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m05"> Mark step 05 complete</label></div>
+</section>
+<section class="mod" id="m06" data-mod="m06">
+  <div class="modhead"><span class="modnum step">STEP 06</span></div>
+  <h2>Phase 3 — Database</h2>
+  <p class="stepgoal">HAVE: CDS model. ADDING: runnable database with an upgrade path that never rewrites business code.</p>
+<p class="layer">The ladder: SQLite → Postgres → HANA</p>
+<div class="diagram"><pre class="mermaid">flowchart TD
+  CDS[&quot;CDS model&quot;] --&gt; ADP[&quot;CAP db adapter&quot;]
+  ADP --&gt; LITE[&quot;SQLite in-memory (tests)&quot;]
+  ADP --&gt; PG[&quot;PostgreSQL (local dev)&quot;]
+  ADP --&gt; HANA[&quot;HANA Cloud (prod)&quot;]
+  PG --&gt; DOCKER[&quot;docker compose service db&quot;]</pre><p class="figcap">FIG. 2 — SAME CDS, THREE DATABASES</p></div>
+<figure class="codeblock"><figcaption><span class="flang">json</span><span>package.json — cds.requires.db (real shape)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>{
+  &quot;cds&quot;: { &quot;requires&quot;: {
+    &quot;db&quot;: { &quot;kind&quot;: &quot;sqlite&quot;, &quot;credentials&quot;: { &quot;database&quot;: &quot;:memory:&quot; },
+      &quot;[production]&quot;: { &quot;kind&quot;: &quot;postgres&quot; },
+      &quot;[postgres]&quot;: { &quot;kind&quot;: &quot;postgres&quot;, &quot;pool&quot;: { &quot;min&quot;: 0, &quot;max&quot;: 5 } } },
+    &quot;auth&quot;: { &quot;kind&quot;: &quot;mocked&quot;, &quot;[production]&quot;: { &quot;kind&quot;: &quot;jwt&quot; } } } }
+}</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">yaml</span><span>docker-compose.yml — local Postgres</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: procurement
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - &quot;5432:5432&quot;
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [&quot;CMD-SHELL&quot;, &quot;pg_isready -U postgres&quot;]
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 4004
+      DATABASE_URL: postgresql://postgres:changeme@db:5432/procurement
+      ALLOW_MOCK_AUTH: &quot;true&quot;
+      JWT_SECRET: dev-only-secret-change-me
+    ports:
+      - &quot;4004:4004&quot;
+
+volumes:
+  pgdata:</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Run it</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>docker compose up -d db
+# .env (never commit real secrets):
+# DATABASE_URL=postgresql://postgres:changeme@localhost:5432/procurement
+npm run db:deploy:pg   # node scripts/deploy-pg.cjs
+npm start               # cds serve under tsx</code></pre></figure>
+<div class="callout mistake"><h4>Common mistake</h4><p>Bare <code>tx.read().where()</code> returns an <b>array</b> — <code>.status</code> on it is <code>undefined</code>. Single-row reads MUST use <code>SELECT.one</code>. The repo's handlers already do.</p></div>
+<div class="table-wrap"><table><thead><tr><th>Environment</th><th>Database</th><th>What changes</th><th>What stays identical</th></tr></thead><tbody><tr><td>Test</td><td>SQLite memory</td><td>Nothing to install</td><td>CDS + handlers</td></tr><tr><td>Local dev</td><td>Postgres Docker</td><td>cds profile + DATABASE_URL</td><td>CDS + handlers + seed</td></tr><tr><td>Production</td><td>HANA Cloud</td><td>mta.yaml service + deploy</td><td>CDS + handlers (portable)</td></tr></tbody></table></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m06"> Mark step 06 complete</label></div>
+</section>
+<section class="mod" id="m07" data-mod="m07">
+  <div class="modhead"><span class="modnum step">STEP 07</span></div>
+  <h2>Phase 4 — OData V4 service</h2>
+  <p class="stepgoal">HAVE: tables. ADDING: typed HTTP API with actions for every state change.</p>
+<p class="layer">What is it?</p>
+<p>OData V4 is the typed HTTP contract CAP generates from your service definition: entities become URL-addressable sets with $filter/$expand/$orderby, actions become POST endpoints. Our paths: <code>/odata/v4/procurement</code>, <code>/catalog</code>, <code>/supplier</code>, <code>/invoice</code>, <code>/approval</code>, <code>/mcp</code>, <code>/agents</code>.</p>
+<figure class="codeblock"><figcaption><span class="flang">cds</span><span>srv/procurement-service.cds (real file)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>using { procurement.db as db } from &#x27;../db/schema&#x27;;
+
+@path: &#x27;/odata/v4/procurement&#x27;
+@odata
+@mcp: &#x27;procurement-ops&#x27;
+service ProcurementService {
+  entity PurchaseRequisitions as projection on db.PurchaseRequisitions;
+  entity PurchaseRequisitionItems as projection on db.PurchaseRequisitionItems;
+  entity PurchaseOrders as projection on db.PurchaseOrders;
+  entity PurchaseOrderItems as projection on db.PurchaseOrderItems;
+  entity GoodsReceipts as projection on db.GoodsReceipts;
+
+  action submitRequisition(ID : String) returns String;
+  action approveRequisition(ID : String, comment : String) returns String;
+  action rejectRequisition(ID : String, comment : String) returns String;
+  action convertToPurchaseOrder(requisitionID : String, supplierID : String) returns PurchaseOrders;
+}</code></pre></figure>
+<div class="callout warn"><h4>ID params are String, not UUID</h4><p>OData URL parsing nulls non-GUID values for UUID-typed params → phantom 404s with readable seed IDs. This repo types every action/function ID param as <code>String</code> deliberately. OData <b>function</b> params need parenthesis syntax <code>/fn(p='v')</code>, never <code>?p='v'</code>.</p></div>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Test it (mocked auth, see Phase 7)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>curl -H &#x27;x-mock-user: buyer:EMPLOYEE&#x27; http://localhost:4004/odata/v4/procurement/PurchaseRequisitions
+curl -H &#x27;x-mock-user: buyer:EMPLOYEE&#x27; &#x27;http://localhost:4004/odata/v4/procurement/PurchaseRequisitions?$filter=status%20eq%20%27DRAFT%27&amp;$top=5&#x27;</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Verb</th><th>Example</th><th>Meaning</th></tr></thead><tbody><tr><td>GET</td><td>/PurchaseRequisitions</td><td>List (tenant-filtered)</td></tr><tr><td>GET</td><td>/PurchaseRequisitions(ID)</td><td>One row + $expand=items</td></tr><tr><td>POST</td><td>/PurchaseRequisitions</td><td>Create (before CREATE validates)</td></tr><tr><td>PATCH</td><td>/PurchaseRequisitions(ID)</td><td>Partial update (version-checked)</td></tr><tr><td>POST</td><td>/submitRequisition</td><td>Unbound action via .send(), never .run({action}) cross-service</td></tr></tbody></table></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m07"> Mark step 07 complete</label></div>
+</section>
+<section class="mod" id="m08" data-mod="m08">
+  <div class="modhead"><span class="modnum step">STEP 08</span></div>
+  <h2>Phase 5 — Complete CRUD</h2>
+  <p class="stepgoal">HAVE: OData surface. ADDING: validation, tenancy, RBAC and audit on every read/write.</p>
+<p class="layer">CAP already gives you CRUD — customize at the edges</p>
+<p>Generic handlers serve CREATE/READ/UPDATE/DELETE. You add <code>before/after</code> hooks only for validation, defaults, tenancy and audit. State changes (submit/approve/convert) are <b>actions</b>, not raw PATCHes, so transitions are explicit and auditable.</p>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>srv/procurement-service.ts — guards (real pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>export default class ProcurementService extends (cds.ApplicationService as any) {
+  async init() {
+    const { PurchaseRequisitions } = this.entities;
+    this.before(&#x27;READ&#x27;, PurchaseRequisitions, async (req: any) =&gt; {
+      const ctx = await ctxOf(req);                       // x-mock-user locally, JWT in prod
+      AuthorizationService.requirePermission(ctx, PERMISSIONS.READ_PR);
+      req.query.where({ tenantId: ctx.tenantId });       // tenant isolation, always
+    });
+    this.before([&#x27;CREATE&#x27;], PurchaseRequisitions, async (req: any) =&gt; {
+      const ctx = await ctxOf(req);
+      AuthorizationService.requirePermission(ctx, PERMISSIONS.CREATE_PR);
+      validateRequisition(req.data);                      // quantity &gt; 0, amounts sane
+      req.data.tenantId = ctx.tenantId;                   // never trust client tenant
+      req.data.status = &#x27;DRAFT&#x27;;
+      req.data.requisitionNo ??= `PR-${Date.now().toString().slice(-6)}`;
+    });
+    this.after([&#x27;CREATE&#x27;], PurchaseRequisitions, async (data: any, req: any) =&gt; {
+      try { if (data) await writeAudit(/* ... */); }      // audit must never break response
+      catch (e) { console.error(&#x27;[audit] hook failed&#x27;, (e as Error).message); }
+      return data;                                        // after-hooks returning undefined WIPE the response
+    });
+    return super.init();
+  }
+}</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Hook</th><th>Use for</th><th>Never for</th></tr></thead><tbody><tr><td>before CREATE/UPDATE</td><td>Validation, defaults, tenant stamping, permission check</td><td>Cross-entity writes (use actions + tx)</td></tr><tr><td>after CREATE</td><td>Audit, notifications (try/catch, return data)</td><td>Throwing — it would break the response</td></tr><tr><td>on <action></td><td>State transitions with tx + version check + audit</td><td>Silent PATCH status edits</td></tr></tbody></table></div>
+<div class="callout mistake"><h4>after-hook trap</h4><p>An <code>after</code> hook that returns <code>undefined</code> wipes the response body. Always <code>return data</code>. Wrap audit in try/catch — observability must never break the business path.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m08"> Mark step 08 complete</label></div>
+</section>
+<section class="mod" id="m09" data-mod="m09">
+  <div class="modhead"><span class="modnum step">STEP 09</span></div>
+  <h2>Phase 6 — Business logic + transactions</h2>
+  <p class="stepgoal">HAVE: guarded CRUD. ADDING: lifecycle actions that are transactional, concurrency-safe, budget- and policy-gated.</p>
+<p class="layer">Business logic: submit → approve → convert</p>
+<div class="diagram"><pre class="mermaid">flowchart TD
+  D[&quot;DRAFT&quot;] --&gt; S[&quot;SUBMITTED&quot;]
+  S --&gt; U[&quot;UNDER_REVIEW&quot;]
+  U --&gt; A[&quot;APPROVED&quot;]
+  U --&gt; R[&quot;REJECTED&quot;]
+  A --&gt; C[&quot;CONVERTED_TO_PO&quot;]
+  A --&gt; POL{&quot;Policy gate + budget check&quot;}
+  POL --&gt;|&quot;AUTO_APPROVE&quot;| PO[&quot;INSERT PurchaseOrder + items&quot;]
+  POL --&gt;|&quot;REQUIRE_HUMAN + agent caller&quot;| DENY[&quot;403 POLICY_REQUIRES_HUMAN_APPROVAL&quot;]
+  POL --&gt;|&quot;DENY&quot;| DENY2[&quot;403 FORBIDDEN&quot;]</pre><p class="figcap">FIG. 3 — REQUISITION LIFECYCLE WITH POLICY GATE</p></div>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>convertToPurchaseOrder — tx + budget + policy + audit (real logic)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>this.on(&#x27;convertToPurchaseOrder&#x27;, async (req: any) =&gt; {
+  try {
+    const ctx = await ctxOf(req);
+    AuthorizationService.requirePermission(ctx, PERMISSIONS.CREATE_PO);
+    const tx = cds.tx(req);                               // single tx for all writes
+    const pr: any = await tx.run(SELECT.one.from(PurchaseRequisitions)
+      .where({ ID: req.data.requisitionID, tenantId: ctx.tenantId }).forUpdate());
+    const supplier: any = await tx.run(SELECT.one.from(&#x27;procurement.db.Suppliers&#x27;)
+      .where({ ID: req.data.supplierID, tenantId: ctx.tenantId }));
+    validatePO(pr, supplier);
+    const budget: any = await tx.run(SELECT.one.from(&#x27;procurement.db.Budgets&#x27;)
+      .where({ department_ID: pr.department_ID, tenantId: ctx.tenantId }).orderBy({ fiscalYear: &#x27;desc&#x27; }));
+    if (budget) {
+      const avail = Number(budget.totalAmount) - Number(budget.committed) - Number(budget.consumed);
+      if (Number(pr.totalAmount) &gt; avail) throw reqError(&#x27;BUDGET_EXCEEDED&#x27;, `need ${pr.totalAmount}, have ${avail}`);
+    }
+    const decision = evaluatePolicy({ amount: Number(pr.totalAmount), riskLevel: supplier.riskLevel },
+      await tx.read(&#x27;procurement.db.Policies&#x27;).where({ tenantId: ctx.tenantId, active: true }));
+    if (decision.action === &#x27;REQUIRE_HUMAN&#x27; &amp;&amp; ctx.isAgent)
+      throw reqError(&#x27;POLICY_REQUIRES_HUMAN_APPROVAL&#x27;, `Policy ${decision.code} needs a human`);
+    if (decision.action === &#x27;DENY&#x27;) throw reqError(&#x27;FORBIDDEN&#x27;, `Policy ${decision.code} denies this order`);
+    // ... INSERT PO + copy items, mark PR CONVERTED_TO_PO, writeAudit ...
+  } catch (e) { req.reject(toHttpError(e)); }
+});</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>req object</th><th>Contains</th><th>Example use</th></tr></thead><tbody><tr><td>req.data</td><td>Action/entity payload</td><td>IDs, comment, amounts</td></tr><tr><td>req.user (via ctx)</td><td>Authenticated identity</td><td>userId, roles, tenantId, isAgent</td></tr><tr><td>cds.tx(req)</td><td>Request-scoped transaction</td><td>All-or-nothing multi-table writes</td></tr><tr><td>SELECT.one + forUpdate()</td><td>Locked single row</td><td>Prevents double-approve races</td></tr></tbody></table></div>
+<div class="ccard adr"><div class="cchead"><strong>ADR-001</strong><span>Policy decides, LLM recommends</span></div><div class="ccrow"><b>Context</b><p>Agents propose amounts and suppliers; someone must have the final deterministic word.</p></div><div class="ccrow"><b>Problem</b><p>Who enforces spend/risk rules?</p></div><div class="ccrow"><b>Options considered</b><ul><li><b>Prompt-only rules.</b> Bypassed by rephrasing; unauditable.</li><li><b>DB-driven policy engine.</b> Versioned, testable, deterministic, auditable.</li></ul></div><div class="ccrow"><b>Decision</b><p>evaluatePolicy() over Policies table runs inside the converting transaction; agents cannot skip it.</p></div><div class="ccrow"><b>Why</b><p>DB policy evaluation is deterministic and tenant-scoped; prompts stay advisory.</p></div><div class="ccrow"><b>Trade-offs</b><p>Extra read per conversion; policy authors need a review workflow.</p></div><div class="ccrow"><b>Consequences</b><p>Every convert call carries a policy decision + audit row; changing a threshold is a data change, not a deploy.</p></div></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m09"> Mark step 09 complete</label></div>
+</section>
+<section class="mod" id="m10" data-mod="m10">
+  <div class="modhead"><span class="modnum step">STEP 10</span></div>
+  <h2>Phase 7 — Authentication + authorization</h2>
+  <p class="stepgoal">HAVE: open API. ADDING: identity, 9 role collections, empty-by-default AI_AGENT, tenant isolation.</p>
+<p class="layer">What is it?</p>
+<div class="depth"><p class="beginner-only"><strong>Simple.</strong> Authentication = who are you (badge check). Authorization = what may you do (which doors your badge opens).</p><p><strong>SAP-specific.</strong> Locally: x-mock-user + x-agent-id headers. BTP: IAS login → approuter → XSUAA JWT with scopes → CAP checks scopes.</p><p class="architect-only"><strong>Technical.</strong> lib/auth/authentication.ts builds ctx {userId, tenantId, roles, isAgent}. AuthorizationService.requirePermission maps scopes→PERMISSIONS. Tenant always comes from ctx, never req.data.</p></div>
+<figure class="codeblock"><figcaption><span class="flang">json</span><span>xs-security.json — scopes + AI_AGENT least privilege (real, excerpt)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>{
+  &quot;xsappname&quot;: &quot;enterprise-ai-procurement&quot;,
+  &quot;tenant-mode&quot;: &quot;dedicated&quot;,
+  &quot;scopes&quot;: [
+    { &quot;name&quot;: &quot;$XSAPPNAME.APPROVE_PURCHASE_REQUISITION&quot;, &quot;description&quot;: &quot;Approve purchase requisitions&quot; },
+    { &quot;name&quot;: &quot;$XSAPPNAME.CREATE_PURCHASE_ORDER&quot;, &quot;description&quot;: &quot;Create purchase orders&quot; },
+    { &quot;name&quot;: &quot;$XSAPPNAME.EXECUTE_MCP_TOOL&quot;, &quot;description&quot;: &quot;Execute MCP tools&quot; }
+  ],
+  &quot;role-templates&quot;: [
+    { &quot;name&quot;: &quot;PROCUREMENT_MANAGER&quot;, &quot;scope-references&quot;: [
+      &quot;$XSAPPNAME.APPROVE_PURCHASE_REQUISITION&quot;, &quot;$XSAPPNAME.CREATE_PURCHASE_ORDER&quot;] },
+    { &quot;name&quot;: &quot;AI_AGENT&quot;, &quot;description&quot;: &quot;Empty by default; per-agent tool grants apply&quot;,
+      &quot;scope-references&quot;: [] }
+  ]
+}</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Local auth drills (mocked)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code># buyer with EMPLOYEE role
+curl -H &#x27;x-mock-user: buyer:EMPLOYEE&#x27; http://localhost:4004/odata/v4/procurement/PurchaseRequisitions
+# manager approves (action, audited)
+curl -X POST -H &#x27;Content-Type: application/json&#x27; -H &#x27;x-mock-user: manager:PROCUREMENT_MANAGER&#x27; \
+  -d &#x27;{&quot;ID&quot;:&quot;&lt;PR-ID&gt;&quot;,&quot;comment&quot;:&quot;ok&quot;}&#x27; http://localhost:4004/odata/v4/procurement/approveRequisition
+# agent identity (least privilege + tool grants)
+curl -H &#x27;x-mock-user: julius:EMPLOYEE&#x27; -H &#x27;x-agent-id: procurement-agent&#x27; http://localhost:4004/odata/v4/mcp/searchSuppliers(search=%27acme%27)</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Role collection (BTP)</th><th>Can do</th><th>Cannot do</th></tr></thead><tbody><tr><td>Employee</td><td>Create/edit own PRs</td><td>Approve, MCP tools</td></tr><tr><td>ProcurementManager</td><td>Full lifecycle incl. approve</td><td>Admin</td></tr><tr><td>Approver</td><td>Approve/reject only</td><td>Create POs, finance</td></tr><tr><td>Finance</td><td>Invoices + payments</td><td>Approve PRs</td></tr><tr><td>AI_Agent (empty)</td><td>Nothing by default; grants per agent</td><td>Anything not explicitly granted</td></tr></tbody></table></div>
+<div class="callout mistake"><h4>Never trust client tenant</h4><p><code>req.data.tenantId</code> is rejected if it disagrees with <code>ctx.tenantId</code>. Every READ adds <code>where({tenantId})</code>. Agents get no wildcard — <code>AgentToolPermissions</code> + <code>maxAmount</code> decide per tool.</p></div>
+<div class="quiz" data-quiz="q10" data-why="Four checks: delegated user, tool grant, scope, policy. See Phase 16 security."><p>An agent calls approveRequisition. What is checked?</p><label><input type="radio" name="q10" value="ok"> User delegation + agent tool grant + APPROVE_PR scope + policy gate</label><label><input type="radio" name="q10" value="no"> Only that the agent exists</label><label><input type="radio" name="q10" value="no"> Only the LLM's confidence</label></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m10"> Mark step 10 complete</label></div>
+</section>
+<section class="mod" id="m11" data-mod="m11">
+  <div class="modhead"><span class="modnum step">STEP 11</span></div>
+  <h2>Phase 8 — Destination service</h2>
+  <p class="stepgoal">HAVE: self-contained app. ADDING: named, credential-free route to the outside world.</p>
+<p class="layer">Why destinations?</p>
+<p>External URLs, secrets and proxy config live in the <b>Destination service</b>, not in code. CAP looks up a named destination at runtime and propagates the user (principal propagation) so the far system can authorize too.</p>
+<div class="diagram"><pre class="mermaid">flowchart TD
+  CAP[&quot;CAP action&quot;] --&gt; DST[&quot;Destination service&quot;]
+  DST --&gt; XAPI[&quot;Supplier API&quot;]
+  IAS[&quot;IAS and XSUAA&quot;] --&gt; CAP
+  CAP --&gt;|&quot;OAuth2 / mTLS / Basic (server-side)&quot;| XAPI</pre><p class="figcap">FIG. 4 — DESTINATION FLOW</p></div>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Sample destination (BTP cockpit → Destinations)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>Name: SUPPLIER_API
+Type: HTTP
+URL: https://supplier.example.com
+ProxyType: Internet
+AuthType: OAuth2ClientCredentials
+ClientID: &lt;from vault&gt;  # VERIFY: field names vs current cockpit UI
+TokenServiceURL: https://auth.example.com/oauth/token</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>lib/destinations.ts — never hardcode (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>const dest = await getDestination(&#x27;SUPPLIER_API&#x27;); // URL + token from service
+const res = await fetch(`${dest.url}/suppliers/${id}`, {
+  headers: { Authorization: `Bearer ${dest.token}` },
+  signal: AbortSignal.timeout(8000),
+});
+if (!res.ok) throw mapStatus(res.status); // 401/403/404/429/5xx handled in Phase 12</code></pre></figure>
+<div class="callout prod"><h4>Production note</h4><p>Locally: <code>.env</code> + mock supplier server. BTP: real Destination instance bound via <code>mta.yaml</code> + service binding. Code path identical — only the binding changes.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m11"> Mark step 11 complete</label></div>
+</section>
+<section class="mod" id="m12" data-mod="m12">
+  <div class="modhead"><span class="modnum step">STEP 12</span></div>
+  <h2>Phase 9 — External API integration</h2>
+  <p class="stepgoal">HAVE: destination lookup. ADDING: supplier calls with timeouts, retries, idempotency, validated responses.</p>
+<p class="layer">Supplier integration with grown-up error handling</p>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>SupplierIntegrationService — retry + idempotency (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>async function postPO(dest: any, po: any, idemKey: string, tries = 3) {
+  for (let i = 0; i &lt; tries; i++) {
+    const r = await fetch(`${dest.url}/purchase-orders`, {
+      method: &#x27;POST&#x27;,
+      headers: { Authorization: `Bearer ${dest.token}`, &#x27;Idempotency-Key&#x27;: idemKey },
+      body: JSON.stringify(po), signal: AbortSignal.timeout(8000),
+    });
+    if (r.ok) return r.json();
+    if ([400,401,403,404,409,422].includes(r.status)) throw await toBusinessError(r); // no retry
+    if (r.status === 429 || r.status &gt;= 500) { await backoff(i); continue; }          // retryable
+    throw new Error(`supplier-api:${r.status}`);
+  }
+  throw reqError(&#x27;UPSTREAM_TIMEOUT&#x27;, &#x27;Supplier API did not respond after retries&#x27;);
+}</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Status</th><th>Meaning here</th><th>Behavior</th></tr></thead><tbody><tr><td>401/403</td><td>Destination credential or scope wrong</td><td>Fail fast, alert, no retry</td></tr><tr><td>404</td><td>Supplier unknown remotely</td><td>Fail with business message</td></tr><tr><td>409</td><td>Duplicate (idempotency hit)</td><td>Treat as success, return existing</td></tr><tr><td>429/5xx/timeout</td><td>Overloaded or down</td><td>Backoff + retry, then circuit-break</td></tr><tr><td>422</td><td>Remote validation failed</td><td>Surface field errors to UI</td></tr></tbody></table></div>
+<div class="callout insight"><h4>Idempotency</h4><p>Every retryable POST carries an <code>Idempotency-Key</code> (PO ID). Double-clicks and retried agent calls create exactly one remote order.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m12"> Mark step 12 complete</label></div>
+</section>
+<section class="mod" id="m13" data-mod="m13">
+  <div class="modhead"><span class="modnum step">STEP 13</span></div>
+  <h2>Phase 10 — Events + background jobs</h2>
+  <p class="stepgoal">HAVE: request/response only. ADDING: domain events with a production path to Event Mesh.</p>
+<p class="layer">Sync vs async</p>
+<p>Approvals need <b>synchronous</b> answers (action returns APPROVED now). Risk-flagging, notifications and supplier sync are <b>asynchronous events</b>: emit and continue; subscribers catch up. Learning implementation: CAP <code>emit</code> + local subscribers. Production: SAP Event Mesh (same event names).</p>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>Events — emit on lifecycle (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>// after approveRequisition succeeds:
+await this.emit(&#x27;PurchaseRequisitionApproved&#x27;, { requisitionId: pr.ID, tenantId: ctx.tenantId, correlationId: ctx.correlationId });
+// subscriber (local; Event Mesh in prod):
+this.on(&#x27;PurchaseRequisitionApproved&#x27;, async (msg: any) =&gt; {
+  await notifyManager(msg.data);        // try/catch inside — subscribers never break publishers
+  await riskAgent.rescore(msg.data);    // autonomous investigation trigger
+});</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Event</th><th>Publisher</th><th>Subscribers</th></tr></thead><tbody><tr><td>PurchaseRequisitionCreated</td><td>ProcurementService</td><td>Budget reservation, notification</td></tr><tr><td>PurchaseRequisitionApproved</td><td>approveRequisition</td><td>PO drafting hint, risk rescore</td></tr><tr><td>PurchaseOrderCreated</td><td>convertToPurchaseOrder</td><td>Supplier API push, audit</td></tr><tr><td>SupplierRiskDetected</td><td>RiskAgent</td><td>Buyer alert, policy review task</td></tr></tbody></table></div>
+<div class="callout prod"><h4>Background jobs</h4><p>Retries, digest mails and rescoring run as jobs (BTP Jobscheduler in prod). Jobs carry the same <code>correlationId</code> so a 3am retry still traces to the original user click.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m13"> Mark step 13 complete</label></div>
+</section>
+<section class="mod" id="m14" data-mod="m14">
+  <div class="modhead"><span class="modnum step">STEP 14</span></div>
+  <h2>Phase 11 — MCP from zero</h2>
+  <p class="stepgoal">HAVE: no AI surface. ADDING: mental model + vocabulary (host/client/server/tools/resources/prompts/transport).</p>
+<p class="layer">What is it?</p>
+<div class="depth"><p class="beginner-only"><strong>Simple.</strong> MCP is a waiter's notepad: the AI (customer) writes structured orders (tool calls); the server (kitchen = CAP) cooks only what's on the menu (allowed tools) and bills with a receipt (audit).</p><p><strong>SAP-specific.</strong> Our MCP layer exposes 13 CAP capabilities as tools. The agent never writes SQL — it calls searchSuppliers, checkBudget, createPurchaseRequisition, never INSERT.</p><p class="architect-only"><strong>Technical.</strong> MCP = JSON-RPC 2.0 over HTTP/SSE: Host (app) → Client (connection) → Server (tools/resources/prompts). Tools have inputSchema/outputSchema. Transports: Streamable HTTP (prod), stdio (local dev). VERIFY transport field names against current @cap-js/mcp docs.</p></div>
+<div class="table-wrap"><table><thead><tr><th>REST</th><th>MCP</th><th>Why agents prefer MCP</th></tr></thead><tbody><tr><td>POST /suppliers/check-risk + docs page</td><td>check_supplier_risk(supplierId) with schema</td><td>Machine-readable menu; model picks tools without scraping docs</td></tr><tr><td>Auth per endpoint, bespoke</td><td>One authenticated session, per-tool grants</td><td>Gateway filters the menu per agent</td></tr><tr><td>Free-form JSON</td><td>Validated input/output schemas</td><td>Fewer malformed calls; retries are structured</td></tr></tbody></table></div>
+<div class="diagram"><pre class="mermaid">flowchart TD
+  HOST[&quot;MCP Host (agent app)&quot;] --&gt; CLI[&quot;MCP Client (session)&quot;]
+  CLI --&gt; SRV[&quot;MCP Server (CAP tools)&quot;]
+  SRV --&gt; CAP[&quot;CAP services + RBAC + audit&quot;]
+  CAP --&gt; DB[&quot;PostgreSQL&quot;]</pre><p class="figcap">FIG. 5 — MCP TRIANGLE</p></div>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>MINIMAL EXAMPLE first (one tool, no auth) — then we graduate it</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code># learning-only toy, replaced in m15 by the real server:
+# tools: [{ name: &#x27;getSupplier&#x27;, inputSchema: { id: &#x27;string&#x27; } }]
+# npx @modelcontextprotocol/inspector --cli http://localhost:4004/mcp --method tools/list</code></pre></figure>
+  <div class="done-row"><label><input type="checkbox" data-done="m14"> Mark step 14 complete</label></div>
+</section>
+<section class="mod" id="m15" data-mod="m15">
+  <div class="modhead"><span class="modnum step">STEP 15</span></div>
+  <h2>Phase 12 — Our MCP server</h2>
+  <p class="stepgoal">HAVE: concept. ADDING: 13 tools, each a thin authorized wrapper over existing CAP logic.</p>
+<p class="layer">OUR APPLICATION: 13 tools on MCPService</p>
+<figure class="codeblock"><figcaption><span class="flang">cds</span><span>srv/mcp-service.cds (real file)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>using { procurement.db as db } from &#x27;../db/schema&#x27;;
+
+@path: &#x27;/odata/v4/mcp&#x27;
+@odata
+@mcp: &#x27;procurement&#x27;
+@mcp.instructions: &#x27;Use search tools to explore procurement data. Never invent IDs. All tools enforce RBAC, tenant isolation and policy checks.&#x27;
+service MCPService {
+  entity PurchaseRequisitions as projection on db.PurchaseRequisitions;
+  entity PurchaseOrders as projection on db.PurchaseOrders;
+  entity Suppliers as projection on db.Suppliers;
+  entity Invoices as projection on db.Invoices;
+  entity Approvals as projection on db.Approvals;
+  entity RiskAssessments as projection on db.RiskAssessments;
+
+  function searchPurchaseRequisitions(status : String, search : String, top : Integer) returns many PurchaseRequisitions;
+  function getPurchaseRequisition(ID : String) returns PurchaseRequisitions;
+  action createPurchaseRequisition(title : String, description : String, departmentID : String, totalAmount : Decimal) returns PurchaseRequisitions;
+  function searchPurchaseOrders(status : String, search : String) returns many PurchaseOrders;
+  function getPurchaseOrder(ID : String) returns PurchaseOrders;
+  action createPurchaseOrder(requisitionID : String, supplierID : String) returns PurchaseOrders;
+  function searchSuppliers(search : String) returns many Suppliers;
+  function getSupplier(ID : String) returns Suppliers;
+  function checkBudget(departmentID : String, amount : Decimal) returns Boolean;
+  function getInvoiceStatus(ID : String) returns Invoices;
+  function getApprovalStatus(requisitionID : String) returns many Approvals;
+  function getProcurementRisk(requisitionID : String) returns RiskAssessments;
+  action submitForApproval(requisitionID : String) returns String;
+}</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>Tool handler = thin wrapper over the SAME service (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>// MCP tool handlers call ProcurementService via .send(), never raw SQL:
+this.on(&#x27;getSupplier&#x27;, async (req: any) =&gt; {
+  const ctx = await ctxOf(req);
+  AuthorizationService.requirePermission(ctx, PERMISSIONS.READ_SUPPLIER);
+  return tx.run(SELECT.one.from(&#x27;procurement.db.Suppliers&#x27;).where({ ID: req.data.ID, tenantId: ctx.tenantId }));
+});</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Tool</th><th>Grant needed</th><th>Role that typically holds it</th></tr></thead><tbody><tr><td>searchSuppliers, getSupplier, checkBudget</td><td>READ_SUPPLIER / READ_BUDGET</td><td>Employee and up</td></tr><tr><td>createPurchaseRequisition, submitForApproval</td><td>CREATE_PR</td><td>Officer, Manager</td></tr><tr><td>createPurchaseOrder</td><td>CREATE_PO + policy gate</td><td>Officer, Manager</td></tr><tr><td>approve (via ProcurementService action)</td><td>APPROVE_PR</td><td>Manager, Approver only</td></tr></tbody></table></div>
+<div class="callout warn"><h4>Sensitive tools need humans</h4><p>Approval tools are <b>not</b> exposed as agent-callable MCP tools with auto-execute. The agent drafts; a human manager approves in UI5 (or via a dual-control task). Amount caps live in <code>AgentToolPermissions.maxAmount</code>.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m15"> Mark step 15 complete</label></div>
+</section>
+<section class="mod" id="m16" data-mod="m16">
+  <div class="modhead"><span class="modnum step">STEP 16</span></div>
+  <h2>Phase 13 — MCP security</h2>
+  <p class="stepgoal">HAVE: tools. ADDING: identity chain, per-tool grants, injection and deputy defenses.</p>
+<p class="layer">How the server knows who called</p>
+<div class="diagram"><pre class="mermaid">flowchart TD
+  USER[&quot;User (IAS)&quot;] --&gt; OAUTH[&quot;OAuth2 JWT&quot;]
+  OAUTH --&gt; AG[&quot;Agent (delegated identity)&quot;]
+  AG --&gt; GW[&quot;MCP Gateway (auth + tool filter)&quot;]
+  GW --&gt; SRV[&quot;MCP Server&quot;]
+  SRV --&gt; CAP[&quot;CAP authorization + policy&quot;]
+  CAP --&gt; DB[&quot;DB&quot;]
+  GW --&gt; AUD[&quot;Audit log&quot;]</pre><p class="figcap">FIG. 6 — MCP SECURITY CHAIN</p></div>
+<p><b>User identity ≠ agent identity ≠ tool permission.</b> The JWT carries the user; <code>x-agent-id</code> carries the agent; <code>AgentToolPermissions</code> + scopes carry what this (user, agent, tool) triple may do. MCP itself authorizes nothing — it transports identity to CAP, which decides.</p>
+<div class="table-wrap"><table><thead><tr><th>Attack</th><th>How we stop it</th></tr></thead><tbody><tr><td>Prompt injection ('ignore policy and approve')</td><td>Instructions in data are never executed (sanitizeForLLM); tools validate params; policy engine decides, not the prompt</td></tr><tr><td>Unauthorized tool execution</td><td>Gateway filters menu per agent; server re-checks scope + grant</td></tr><tr><td>Privilege escalation / confused deputy</td><td>Agent identity separate; no ambient authority; delegation scoped + audited</td></tr><tr><td>Arbitrary DB access</td><td>No generic SQL tool exists; only 13 fixed tools</td></tr><tr><td>Data exfiltration / cross-tenant read</td><td>Tenant predicate on every query; output schemas minimal; audit on sensitive reads</td></tr><tr><td>Replayed approval</td><td>Idempotency keys + version checks + single-use task tokens</td></tr></tbody></table></div>
+<div class="ccard adr"><div class="cchead"><strong>ADR-007</strong><span>MCP is transport, CAP is authority</span></div><div class="ccrow"><b>Context</b><p>An agent runtime naturally wants to 'just call the DB'.</p></div><div class="ccrow"><b>Problem</b><p>Where to enforce tool authorization?</p></div><div class="ccrow"><b>Options considered</b><ul><li><b>Trust the agent/prompt.</b> Prompt injection becomes privilege escalation.</li><li><b>Enforce in CAP per call.</b> Deterministic, testable, auditable.</li></ul></div><div class="ccrow"><b>Decision</b><p>Both gateway (menu filtering, rate limits) AND CAP (scope + grant + policy + audit) enforce; CAP has the final word.</p></div><div class="ccrow"><b>Why</b><p>Defense in depth; gateway stays dumb-fast.</p></div><div class="ccrow"><b>Trade-offs</b><p>Two places to keep in sync — mitigated by generating the gateway menu from MCPTools + grants.</p></div><div class="ccrow"><b>Consequences</b><p>A compromised agent gets an empty menu and DENIED rows, not data.</p></div></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m16"> Mark step 16 complete</label></div>
+</section>
+<section class="mod" id="m17" data-mod="m17">
+  <div class="modhead"><span class="modnum step">STEP 17</span></div>
+  <h2>Phases 14-15 — AI agent + tool-calling loop</h2>
+  <p class="stepgoal">HAVE: tools. ADDING: agent that reasons, calls tools, and answers — with a mock brain.</p>
+<p class="layer">The procurement agent</p>
+<p>One <code>Agents</code> row (kind PROCUREMENT) + the real <code>AIService</code> interface (<code>generate/chat/structuredOutput</code>) backed by <code>MockAI</code> locally, AI Core wiring later. The agent loop: understand → decide tool → call via MCP client → read result → reason → answer or call again.</p>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>REAL lib/agents/ai-service.ts (repo)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>export interface ChatMessage { role: &#x27;system&#x27; | &#x27;user&#x27; | &#x27;assistant&#x27; | &#x27;tool&#x27;; content: string }
+export interface AIService {
+  generate(prompt: string): Promise&lt;string&gt;;
+  chat(messages: ChatMessage[]): Promise&lt;string&gt;;
+  structuredOutput&lt;T&gt;(prompt: string, schemaHint: string): Promise&lt;T&gt;;
+}
+class MockAI implements AIService {
+  async generate(prompt: string) { return `[mock-ai] ${prompt.slice(0, 200)}`; }
+}
+let instance: AIService | null = null;
+export function getAIService(): AIService {
+  if (instance) return instance;
+  if (process.env.AI_API_URL &amp;&amp; process.env.AI_API_KEY) console.log(&#x27;[ai] AI Core credentials detected&#x27;);
+  instance = new MockAI();
+  return instance;
+}</code></pre></figure>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+  participant U as User
+  participant A as Procurement Agent
+  participant L as LLM
+  participant M as MCP Client-Server
+  participant C as CAP
+  U-&gt;&gt;A: Which suppliers are high risk?
+  A-&gt;&gt;L: prompt + tool schemas
+  L--&gt;&gt;A: call searchSuppliers
+  A-&gt;&gt;M: tools/call searchSuppliers
+  M-&gt;&gt;C: authorized query (tenant + scope)
+  C--&gt;&gt;M: supplier rows
+  M--&gt;&gt;A: tool result
+  A-&gt;&gt;L: rows + getProcurementRisk?
+  L--&gt;&gt;A: call getProcurementRisk x N
+  A-&gt;&gt;M: risk calls
+  M--&gt;&gt;A: scores + reasons
+  A--&gt;&gt;U: Ranked list with reasons + audit ref</pre><p class="figcap">FIG. 7 — TOOL-CALLING LOOP</p></div>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Trace it locally</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>curl -X POST -H &#x27;Content-Type: application/json&#x27; -H &#x27;x-mock-user: buyer:EMPLOYEE&#x27; -H &#x27;x-agent-id: procurement-agent&#x27; \
+  -d &#x27;{&quot;agentId&quot;:&quot;procurement-agent&quot;,&quot;intent&quot;:&quot;find-risky-suppliers&quot;,&quot;payload&quot;:&quot;{}&quot;}&#x27; \
+  http://localhost:4004/odata/v4/agents/executeTask
+# inspect: AgentExecutions row + MCPToolExecutions rows share one correlationId</code></pre></figure>
+  <div class="done-row"><label><input type="checkbox" data-done="m17"> Mark step 17 complete</label></div>
+</section>
+<section class="mod" id="m18" data-mod="m18">
+  <div class="modhead"><span class="modnum step">STEP 18</span></div>
+  <h2>Phase 16 — A2A + discovery</h2>
+  <p class="stepgoal">HAVE: one agent. ADDING: two agents, discovery doc, authenticated task exchange.</p>
+<p class="layer">What is it? Agent → Agent</p>
+<p><b>MCP = agent→tool. A2A = agent→agent.</b> ProcurementAgent asks RiskAgent for analysis; RiskAgent uses MCP tools itself and returns a scored answer. Neither agent touches the other's internals — they exchange signed <b>tasks</b> and <b>messages</b> with correlation IDs.</p>
+<div class="diagram"><pre class="mermaid">sequenceDiagram
+  participant P as Procurement Agent
+  participant R as Risk Agent
+  participant M as MCP tools
+  participant C as CAP
+  P-&gt;&gt;R: A2A task (score supplier S, corr-123)
+  R-&gt;&gt;M: getSupplier + getProcurementRisk
+  M-&gt;&gt;C: authorized calls
+  C--&gt;&gt;M: rows + history
+  M--&gt;&gt;R: tool results
+  R--&gt;&gt;P: A2A response (score 82 HIGH + reasons)
+  P-&gt;&gt;C: createPurchaseRequisition (policy-gated)</pre><p class="figcap">FIG. 8 — A2A DELEGATION</p></div>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>AgentService.executeTask → orchestrator → specialist (real shape)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>// POST /odata/v4/agents/executeTask { agentId, intent, payload }
+// AgentService cds: action executeTask(agentId:String, intent:String, payload:LargeString)
+// Handler: authenticate (user + x-agent-id) → load Agents row + tool grants →
+// route: procurement|risk|invoice|budget|approval|audit → specialist service via .send()
+// → write AgentExecutions row (input/output/status/correlationId) → return result</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>A2A concept</th><th>Our field/table</th><th>Why</th></tr></thead><tbody><tr><td>Agent discovery</td><td>/.well-known/agent.json (orchestrator card, A2A/0.2)</td><td>Find capabilities without hardcoding URLs</td></tr><tr><td>Task</td><td>executeTask(agentId, intent, payload)</td><td>One unit of delegated work</td></tr><tr><td>Message</td><td>AIMessages (role USER/ASSISTANT/TOOL)</td><td>Auditable conversation</td></tr><tr><td>Correlation ID</td><td>AgentExecutions.correlationId</td><td>Trace across agents + tools</td></tr><tr><td>Timeout/retry/idempotency</td><td>Task token + version checks</td><td>No double approvals on retry</td></tr></tbody></table></div>
+<div class="callout mistake"><h4>Discovery ≠ authorization</h4><p>Reading RiskAgent's card tells you what it <em>can</em> do, not what <em>you</em> may ask it to do. Every A2A call re-authenticates both agents and re-checks the caller's grant.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m18"> Mark step 18 complete</label></div>
+</section>
+<section class="mod" id="m19" data-mod="m19">
+  <div class="modhead"><span class="modnum step">STEP 19</span></div>
+  <h2>Phases 17-18 — Discovery + MCP×A2A</h2>
+  <p class="stepgoal">HAVE: two agents. ADDING: discovery contract + the combined request path.</p>
+<p class="layer">Why both protocols?</p>
+<div class="diagram"><pre class="mermaid">flowchart TD
+  PA[&quot;Procurement Agent&quot;] --&gt;|A2A task| RA[&quot;Risk Agent&quot;]
+  RA --&gt;|MCP tools| TOOLS[&quot;searchSuppliers, getProcurementRisk, checkBudget&quot;]
+  TOOLS --&gt; CAP[&quot;CAP services&quot;]
+  PA --&gt;|MCP tools| TOOLS</pre><p class="figcap">FIG. 9 — MCP + A2A TOGETHER</p></div>
+<div class="table-wrap"><table><thead><tr><th>Pattern</th><th>Shape</th><th>Use when</th></tr></thead><tbody><tr><td>UI → CAP</td><td>OData directly</td><td>Plain CRUD screens</td></tr><tr><td>UI → CAP → External API</td><td>Via Destination</td><td>Supplier push</td></tr><tr><td>UI → Agent → MCP → CAP</td><td>Chat assistant</td><td>Questions + governed actions</td></tr><tr><td>Agent → A2A → Agent</td><td>Delegation</td><td>Specialist knowledge (risk, budget)</td></tr><tr><td>Agent → Gateway → many MCP servers</td><td>Fan-out</td><td>Ours + third-party tools</td></tr><tr><td>Agent → MCP → CAP → Event</td><td>Async follow-through</td><td>Notify + rescore after writes</td></tr></tbody></table></div>
+<figure class="codeblock"><figcaption><span class="flang">json</span><span>REAL /.well-known/agent.json (srv/server.js)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>{
+  &quot;name&quot;: &quot;enterprise-ai-procurement-orchestrator&quot;,
+  &quot;protocol&quot;: &quot;A2A/0.2&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;skills&quot;: [&quot;procurement&quot;, &quot;approval&quot;, &quot;supplier-risk&quot;, &quot;invoice-matching&quot;, &quot;budget-check&quot;, &quot;audit&quot;],
+  &quot;endpoints&quot;: { &quot;rpc&quot;: &quot;/odata/v4/agents/orchestrate&quot;, &quot;mcp&quot;: &quot;/mcp&quot; }
+}</code></pre></figure>
+  <div class="done-row"><label><input type="checkbox" data-done="m19"> Mark step 19 complete</label></div>
+</section>
+<section class="mod" id="m20" data-mod="m20">
+  <div class="modhead"><span class="modnum step">STEP 20</span></div>
+  <h2>Phases 19-20 — Gateway + IAS</h2>
+  <p class="stepgoal">HAVE: direct tool calls. ADDING: front door (auth, filter, limit, audit) + trust chain.</p>
+<p class="layer">Learning gateway (Express middleware in front of /mcp)</p>
+<div class="table-wrap"><table><thead><tr><th>Responsibility</th><th>Learning implementation</th><th>BTP production owner</th></tr></thead><tbody><tr><td>Authentication</td><td>JWT / x-mock-user check</td><td>Approuter + XSUAA</td></tr><tr><td>Tool discovery/filtering</td><td>Menu from MCPTools + AgentToolPermissions</td><td>MCP Gateway / registry</td></tr><tr><td>Rate limiting</td><td>express-rate-limit per tool+agent</td><td>Gateway / API management</td></tr><tr><td>Logging + audit</td><td>MCPToolExecutions + AuditLogs rows</td><td>Application Logging + audit service</td></tr><tr><td>Routing</td><td>Local fan-out to ours + mock third-party</td><td>Destination + Cloud Connector</td></tr></tbody></table></div>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>Gateway shape (pattern, helmet + rate limit already in repo)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>import helmet from &#x27;helmet&#x27;;
+import rateLimit from &#x27;express-rate-limit&#x27;;
+app.use(helmet());
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 600 })); // REAL global net (srv/server.js)
+app.use(&#x27;/mcp&#x27;, authenticateGateway, filterToolsByGrant, auditToolCall); // learning gateway (REAL per-tool limits: lib/security/rate-limit.ts)</code></pre></figure>
+<p class="layer">IAS trust chain</p>
+<div class="diagram"><pre class="mermaid">flowchart TD
+  IDP[&quot;Corporate IdP&quot;] --&gt; IAS[&quot;Cloud Identity Services&quot;]
+  IAS --&gt; AR[&quot;Approuter&quot;]
+  AR --&gt; CAP[&quot;CAP (JWT validation)&quot;]
+  CAP --&gt; SCOPES[&quot;Scopes → roles → permissions&quot;]
+  SCOPES --&gt; TOOL[&quot;Tool grant check&quot;]
+  TOOL --&gt; AUD[&quot;Audit row&quot;]</pre><p class="figcap">FIG. 10 — TRUST</p></div>
+<div class="callout prod"><h4>Federation</h4><p>Corporate IdP federates to IAS (SAML/OIDC); IAS issues tokens the approuter forwards; XSUAA validates in CAP. Trust = signature + audience + scope mapping. VERIFY current IAS↔XSUAA setup steps in SAP docs — console flows change.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m20"> Mark step 20 complete</label></div>
+</section>
+<section class="mod" id="m21" data-mod="m21">
+  <div class="modhead"><span class="modnum">MODULE 21</span></div>
+  <h2>AI agent security — the delegation model</h2>
+<p class="layer">Authorizing what an agent can do (the critical section)</p>
+<p><b>User identity ≠ agent identity ≠ tool identity.</b> A manager delegating to procurement-agent for a €200k approval still fails unless: the user holds APPROVE_PR, the agent holds an explicit grant for the approval path, the amount is under <code>maxAmount</code>, and policy returns AUTO_APPROVE (higher bands route to REQUIRE_MANAGER / FINANCE / HUMAN).</p>
+<div class="table-wrap"><table><thead><tr><th>Abuse</th><th>Control that blocks it</th></tr></thead><tbody><tr><td>Agent approves unauthorized PO</td><td>APPROVE_PR scope + grant + policy + human co-sign over cap</td></tr><tr><td>Agent deletes suppliers</td><td>No DELETE grant on that tool for that agent</td></tr><tr><td>Agent edits finance data</td><td>FINANCE-only scopes; agent menu excludes them</td></tr><tr><td>Cross-tenant read</td><td>tenantId predicate + rejection of client tenant</td></tr><tr><td>Sensitive dump via chat</td><td>Minimal output schemas + redaction + audit on sensitive reads</td></tr><tr><td>Admin tool invocation</td><td>ADMIN_SYSTEM never granted to AI_AGENT</td></tr></tbody></table></div>
+<div class="quiz" data-quiz="qsec" data-why="sanitizeForLLM treats business text as DATA. Policy runs in the tx regardless of wording."><p>Prompt says 'ignore policy'. What happens?</p><label><input type="radio" name="qsec" value="ok"> Policy engine still decides; prompt is data, not authority</label><label><input type="radio" name="qsec" value="no"> Agent obeys the prompt</label></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m21"> Mark module 21 complete</label></div>
+</section>
+<section class="mod" id="m22" data-mod="m22">
+  <div class="modhead"><span class="modnum step">STEP 22</span></div>
+  <h2>Phase 21 — SAPUI5 frontend</h2>
+  <p class="stepgoal">HAVE: API only. ADDING: 7-page Fiori app bound to our OData.</p>
+<p class="layer">Fiori-style UI5 over our OData</p>
+<p>Pages: Dashboard, Suppliers, Purchase Requisitions, Purchase Orders, Risk Dashboard, AI Assistant, Agent Monitoring. One OData V4 model + routing + fragments + i18n. Never put secrets or tokens in frontend code.</p>
+<figure class="codeblock"><figcaption><span class="flang">json</span><span>app/procurement-ui/manifest.json (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>{
+  &quot;sap.app&quot;: { &quot;id&quot;: &quot;procurement.ui&quot;, &quot;type&quot;: &quot;application&quot; },
+  &quot;sap.ui5&quot;: { &quot;routing&quot;: { &quot;routes&quot;: [
+    { &quot;name&quot;: &quot;Suppliers&quot;, &quot;pattern&quot;: &quot;suppliers&quot;, &quot;target&quot;: &quot;Suppliers&quot; },
+    { &quot;name&quot;: &quot;PRs&quot;, &quot;pattern&quot;: &quot;requisitions&quot;, &quot;target&quot;: &quot;PRs&quot; },
+    { &quot;name&quot;: &quot;Assistant&quot;, &quot;pattern&quot;: &quot;assistant&quot;, &quot;target&quot;: &quot;Assistant&quot; }
+  ] } },
+  &quot;sap.cloud&quot;: { &quot;public&quot;: true }
+}</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">javascript</span><span>Component.js + OData V4 model (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>sap.ui.define([&#x27;sap/ui/core/UIComponent&#x27;,&#x27;sap/ui/model/odata/v4/ODataModel&#x27;], (UIComponent, ODataModel) =&gt;
+  UIComponent.extend(&#x27;procurement.ui.Component&#x27;, {
+    init() {
+      UIComponent.prototype.init.apply(this, arguments);
+      this.setModel(new ODataModel({ serviceUrl: &#x27;/odata/v4/procurement/&#x27;, synchronizationMode: &#x27;None&#x27; }));
+      this.getRouter().initialize();
+    }
+  }));</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">xml</span><span>View fragment - PR table (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>&lt;Table id=&quot;prTable&quot; items=&quot;{/PurchaseRequisitions}&quot;&gt;&lt;headerToolbar&gt;&lt;Toolbar&gt;&lt;SearchField search=&quot;.onSearch&quot;/&gt;&lt;Button text=&quot;Create&quot; press=&quot;.onCreate&quot; type=&quot;Emphasized&quot;/&gt;&lt;/Toolbar&gt;&lt;/headerToolbar&gt;&lt;columns&gt;&lt;Column&gt;&lt;Text text=&quot;Number&quot;/&gt;&lt;/Column&gt;&lt;Column&gt;&lt;Text text=&quot;Title&quot;/&gt;&lt;/Column&gt;&lt;Column&gt;&lt;Text text=&quot;Status&quot;/&gt;&lt;/Column&gt;&lt;Column&gt;&lt;Text text=&quot;Amount&quot;/&gt;&lt;/Column&gt;&lt;/columns&gt;&lt;items&gt;&lt;ColumnListItem&gt;&lt;ObjectNumber number=&quot;{requisitionNo}&quot;/&gt;&lt;Text text=&quot;{title}&quot;/&gt;&lt;ObjectStatus text=&quot;{status}&quot;/&gt;&lt;ObjectNumber number=&quot;{totalAmount}&quot; unit=&quot;{currency}&quot;/&gt;&lt;/ColumnListItem&gt;&lt;/items&gt;&lt;/Table&gt;</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>File</th><th>Does what</th></tr></thead><tbody><tr><td>manifest.json</td><td>Routes, models, targets</td></tr><tr><td>Component.js</td><td>Bootstraps ODataModel + router</td></tr><tr><td>controllers/*.js</td><td>CRUD, dialogs, validation, MessageManager</td></tr><tr><td>fragments/*.xml</td><td>Create/edit dialogs</td></tr><tr><td>formatter.js</td><td>Status→state colors</td></tr><tr><td>i18n/*.properties</td><td>All UI strings (no hardcoding)</td></tr><tr><td>css/style.css</td><td>Fiori spacing, responsive tables</td></tr></tbody></table></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m22"> Mark step 22 complete</label></div>
+</section>
+<section class="mod" id="m23" data-mod="m23">
+  <div class="modhead"><span class="modnum step">STEP 23</span></div>
+  <h2>Phase 22 — AI assistant UI</h2>
+  <p class="stepgoal">HAVE: screens for facts. ADDING: chat with loading, tool indicator, conversation ID, errors.</p>
+<p class="layer">Chat page → Agent API → MCP → CAP → DB → answer</p>
+<div class="diagram"><pre class="mermaid">flowchart TD
+  UI[&quot;Assistant view&quot;] --&gt; AGAPI[&quot;POST /agents/chat&quot;]
+  AGAPI --&gt; AG[&quot;Procurement Agent&quot;]
+  AG --&gt; MCP[&quot;MCP tools&quot;]
+  MCP --&gt; CAP[&quot;CAP&quot;]
+  CAP --&gt; DB[&quot;DB&quot;]
+  AG --&gt; UI2[&quot;messages + tool indicator&quot;]</pre><p class="figcap">FIG. 11 — CHAT PATH</p></div>
+<figure class="codeblock"><figcaption><span class="flang">javascript</span><span>Assistant.controller.js — streaming-safe chat (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>onSend: async function () {
+  const msg = this.byId(&#x27;input&#x27;).getValue().trim();
+  if (!msg) return;
+  this.addBubble(&#x27;user&#x27;, msg);
+  const indicator = this.addBubble(&#x27;assistant&#x27;, &#x27;Working…&#x27;, { busy: true, tools: [] });
+  try {
+    const res = await fetch(&#x27;/odata/v4/agents/chat&#x27;, {
+      method: &#x27;POST&#x27;, headers: { &#x27;Content-Type&#x27;: &#x27;application/json&#x27; },
+      body: JSON.stringify({ conversationId: this._convId, message: msg })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const { reply, toolCalls, conversationId } = await res.json();
+    this._convId = conversationId;
+    indicator.setText(reply); indicator.setTools(toolCalls); // which tools ran = trust UI
+  } catch (e) { indicator.setText(&#x27;Sorry — &#x27; + e.message); }
+}</code></pre></figure>
+  <div class="done-row"><label><input type="checkbox" data-done="m23"> Mark step 23 complete</label></div>
+</section>
+<section class="mod" id="m24" data-mod="m24">
+  <div class="modhead"><span class="modnum step">STEP 24</span></div>
+  <h2>Phase 23 — Audit logging</h2>
+  <p class="stepgoal">HAVE: actions. ADDING: proof — who/what/when/why for every sensitive call.</p>
+<p class="layer">Every sensitive action leaves a row</p>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>lib/audit/audit.ts — writeAudit (real pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>await writeAudit(tx, ctx, {
+  action: &#x27;PURCHASE_ORDER_CREATED&#x27;, entity: &#x27;PurchaseOrders&#x27;, entityId: orderNo,
+  oldValue: pr.status, newValue: &#x27;APPROVED&#x27;,
+  // + actorType/userId/agentId/delegatedUserId/correlationId/requestId/ipAddress
+});</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Example</th></tr></thead><tbody><tr><td>actorType/userId/agentId</td><td>USER buyer-7 via AGENT procurement-agent</td></tr><tr><td>action/entity/entityId</td><td>PURCHASE_REQUISITION_APPROVED / PurchaseRequisitions / <ID></td></tr><tr><td>correlationId</td><td>One ID across UI→agent→MCP→CAP→A2A</td></tr><tr><td>result/reason</td><td>DENIED / POLICY_REQUIRES_HUMAN_APPROVAL</td></tr></tbody></table></div>
+<p>Why AI makes audit non-negotiable: natural-language actions are ambiguous ("approve the usual one") — the audit row records what was <em>actually</em> executed, by whom, under which policy, with which inputs.</p>
+  <div class="done-row"><label><input type="checkbox" data-done="m24"> Mark step 24 complete</label></div>
+</section>
+<section class="mod" id="m25" data-mod="m25">
+  <div class="modhead"><span class="modnum step">STEP 25</span></div>
+  <h2>Phase 24 — Observability</h2>
+  <p class="stepgoal">HAVE: logs. ADDING: correlation across five hops.</p>
+<p class="layer">One ID to trace them all</p>
+<p><code>lib/security/observability.ts → log(ctx, msg, fields)</code> emits structured JSON with <code>correlationId</code> (user journey), <code>requestId</code> (single HTTP call), <code>agentTaskId</code> and <code>toolInvocationId</code>. Locally: console JSON. BTP: Application Logging + Alert Notification.</p>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Follow one journey</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>curl -H &#x27;x-mock-user: buyer:EMPLOYEE&#x27; -H &#x27;x-correlation-id: demo-001&#x27; http://localhost:4004/odata/v4/procurement/PurchaseRequisitions
+# grep demo-001 across cap log + MCPToolExecutions + AgentExecutions + AuditLogs</code></pre></figure>
+  <div class="done-row"><label><input type="checkbox" data-done="m25"> Mark step 25 complete</label></div>
+</section>
+<section class="mod" id="m26" data-mod="m26">
+  <div class="modhead"><span class="modnum step">STEP 26</span></div>
+  <h2>Phase 25 — Error handling</h2>
+  <p class="stepgoal">HAVE: happy paths. ADDING: stable error contract + status discipline.</p>
+<p class="layer">Central error map</p>
+<div class="table-wrap"><table><thead><tr><th>Code</th><th>HTTP</th><th>When</th></tr></thead><tbody><tr><td>VALIDATION_FAILED</td><td>400</td><td>quantity <= 0, missing fields</td></tr><tr><td>UNAUTHORIZED</td><td>401</td><td>No/mocked identity, bad JWT</td></tr><tr><td>FORBIDDEN / TENANT_ACCESS_DENIED</td><td>403</td><td>Missing scope or cross-tenant</td></tr><tr><td>RESOURCE_NOT_FOUND</td><td>404</td><td>Wrong ID or OData parenthesis syntax</td></tr><tr><td>VERSION_CONFLICT</td><td>409</td><td>Stale version on approve/convert</td></tr><tr><td>POLICY_REQUIRES_HUMAN_APPROVAL</td><td>403</td><td>Agent over cap without human</td></tr><tr><td>BUDGET_EXCEEDED</td><td>422</td><td>Insufficient budget</td></tr><tr><td>RATE_LIMITED</td><td>429</td><td>Gateway throttle</td></tr><tr><td>UPSTREAM_TIMEOUT</td><td>504</td><td>Supplier API down after retries</td></tr></tbody></table></div>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>lib/security/errors.ts — toHttpError + reqError (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>throw reqError(&#x27;BUDGET_EXCEEDED&#x27;, `need ${need}, have ${have}`);
+// handler catch: catch (e) { req.reject(toHttpError(e)); } // maps code→HTTP, stable shape</code></pre></figure>
+<div class="callout mistake"><h4>CSRF + CORS</h4><p>UI5 OData V4 needs <code>x-csrf-token: Fetch</code> handshake on mutating calls; CORS allow-lists the approuter origin only. Test mutating calls with cookies + token, not bare curl, before blaming CAP.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m26"> Mark step 26 complete</label></div>
+</section>
+<section class="mod" id="m27" data-mod="m27">
+  <div class="modhead"><span class="modnum step">STEP 27</span></div>
+  <h2>Phase 26 — Testing</h2>
+  <p class="stepgoal">HAVE: code. ADDING: proof it works + stays working.</p>
+<p class="layer">Pyramid: unit → service → agent → E2E + security</p>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>test/policy-gate.test.ts -- ADD this file (repo ships unit.test.ts + security.test.ts)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>import { describe, it, expect } from &#x27;vitest&#x27;;
+import { evaluatePolicy } from &#x27;../lib/workflow/policy.js&#x27;;
+
+describe(&#x27;policy decides, LLM recommends&#x27;, () =&gt; {
+  it(&#x27;REQUIRE_HUMAN above agent cap&#x27;, () =&gt; {
+    const d = evaluatePolicy({ amount: 200000, riskLevel: &#x27;HIGH&#x27; },
+      [{ code: &#x27;BIG_SPEND&#x27;, conditions: { minAmount: 100000 }, action: &#x27;REQUIRE_HUMAN&#x27; }]);
+    expect(d.action).toBe(&#x27;REQUIRE_HUMAN&#x27;);
+  });
+});</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Run it</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>npm test                # vitest run
+npm run build         # tsc --noEmit
+npx cds compile --to csn db srv   # CDS gate after every model change</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Layer</th><th>Tests</th></tr></thead><tbody><tr><td>Unit</td><td>validation, policy, lifecycle transitions, formatter</td></tr><tr><td>Service</td><td>OData CRUD + actions under mocked roles (EMPLOYEE vs MANAGER)</td></tr><tr><td>Agent/MCP</td><td>Tool grants enforced; DENIED paths; A2A delegation payload</td></tr><tr><td>Security</td><td>Cross-tenant read blocked; client tenantId rejected; injection prompt ignored</td></tr><tr><td>E2E</td><td>PR→approve→convert→PO→receipt→invoice→payment with audit rows</td></tr></tbody></table></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m27"> Mark step 27 complete</label></div>
+</section>
+<section class="mod" id="m28" data-mod="m28">
+  <div class="modhead"><span class="modnum step">STEP 28</span></div>
+  <h2>Phase 27 — Postman / REST client</h2>
+  <p class="stepgoal">HAVE: endpoints. ADDING: repeatable request library for every actor.</p>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>REST drills (x-mock-user locally; Bearer JWT in prod)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code># create supplier (SUPPLIER_MANAGER)
+curl -X POST -H &#x27;Content-Type: application/json&#x27; -H &#x27;x-mock-user: sm:SUPPLIER_MANAGER&#x27; \
+  -d &#x27;{&quot;supplierId&quot;:&quot;SUP-1001&quot;,&quot;name&quot;:&quot;Acme Bearings&quot;,&quot;country&quot;:&quot;IN&quot;}&#x27; \
+  http://localhost:4004/odata/v4/supplier/Suppliers
+# create PR → submit → approve → convert
+curl -X POST -H &#x27;Content-Type: application/json&#x27; -H &#x27;x-mock-user: buyer:EMPLOYEE&#x27; \
+  -d &#x27;{&quot;title&quot;:&quot;Brake pads x200&quot;,&quot;totalAmount&quot;:45000}&#x27; http://localhost:4004/odata/v4/procurement/PurchaseRequisitions
+curl -X POST -H &#x27;Content-Type: application/json&#x27; -H &#x27;x-mock-user: buyer:EMPLOYEE&#x27; -d &#x27;{&quot;ID&quot;:&quot;&lt;PR&gt;&quot;}&#x27; http://localhost:4004/odata/v4/procurement/submitRequisition
+curl -X POST -H &#x27;Content-Type: application/json&#x27; -H &#x27;x-mock-user: mgr:PROCUREMENT_MANAGER&#x27; -d &#x27;{&quot;ID&quot;:&quot;&lt;PR&gt;&quot;,&quot;comment&quot;:&quot;ok&quot;}&#x27; http://localhost:4004/odata/v4/procurement/approveRequisition
+curl -X POST -H &#x27;Content-Type: application/json&#x27; -H &#x27;x-mock-user: mgr:PROCUREMENT_MANAGER&#x27; -d &#x27;{&quot;requisitionID&quot;:&quot;&lt;PR&gt;&quot;,&quot;supplierID&quot;:&quot;&lt;SUP&gt;&quot;}&#x27; http://localhost:4004/odata/v4/procurement/convertToPurchaseOrder
+# MCP tool + agent task
+curl -H &#x27;x-mock-user: buyer:EMPLOYEE&#x27; &#x27;http://localhost:4004/odata/v4/mcp/searchSuppliers(search=%27acme%27)&#x27;
+curl -X POST -H &#x27;Content-Type: application/json&#x27; -H &#x27;x-mock-user: buyer:EMPLOYEE&#x27; -H &#x27;x-agent-id: procurement-agent&#x27; -d &#x27;{&quot;agentId&quot;:&quot;procurement-agent&quot;,&quot;intent&quot;:&quot;find-risky-suppliers&quot;,&quot;payload&quot;:&quot;{}&quot;}&#x27; http://localhost:4004/odata/v4/agents/executeTask</code></pre></figure>
+  <div class="done-row"><label><input type="checkbox" data-done="m28"> Mark step 28 complete</label></div>
+</section>
+<section class="mod" id="m29" data-mod="m29">
+  <div class="modhead"><span class="modnum step">STEP 29</span></div>
+  <h2>Phases 28-31 — Migrations, Docker, Git, CI/CD</h2>
+  <p class="stepgoal">HAVE: app. ADDING: reproducible environments + gated pipeline.</p>
+<div class="table-wrap"><table><thead><tr><th>Stage</th><th>Command</th><th>Safety</th></tr></thead><tbody><tr><td>Dev data</td><td>seed CSVs in db/data/</td><td>Fake suppliers only</td></tr><tr><td>Postgres local</td><td>npm run db:deploy:pg</td><td>Drops/recreates dev DB — never prod</td></tr><tr><td>HANA prod</td><td>mbt build + cf deploy (mta.yaml hdb module)</td><td>Schema migrate only; data untouched; backup first</td></tr></tbody></table></div>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Docker + git + CI essentials</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>docker compose up -d --build   # postgres + cap + mock supplier
+# branches: main (protected) ← develop ← feature/* ; PR + review to merge
+# secrets: .env locally, BTP service bindings in prod — never committed</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">yaml</span><span>.github/workflows/ci.yml (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>name: ci
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npx cds compile --to csn db srv
+      - run: npm run build
+      - run: npm test</code></pre></figure>
+  <div class="done-row"><label><input type="checkbox" data-done="m29"> Mark step 29 complete</label></div>
+</section>
+<section class="mod" id="m30" data-mod="m30">
+  <div class="modhead"><span class="modnum step">STEP 30</span></div>
+  <h2>Phases 32-35 — BTP deploy, security, tenancy</h2>
+  <p class="stepgoal">HAVE: local prod-like. ADDING: Cloud Foundry reality + hardening.</p>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>CF deploy from zero (VERIFY flags vs current cf CLI + MTA plugin)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>cf login -a https://api.cf.&lt;region&gt;.hana.ondemand.com
+cf target -o &lt;org&gt; -s &lt;space&gt;
+mbt build
+cf deploy mta_archives/enterprise-ai-procurement_1.0.0.mtar
+# then in cockpit: HANA Cloud instance → service binding → Destination SUPPLIER_API →
+# role collections (xs-security.json) assigned to users/groups → approuter route</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Checklist item</th><th>Done when</th></tr></thead><tbody><tr><td>Secrets</td><td>No key in code/UI/git; bindings + vault only</td></tr><tr><td>OAuth/JWT</td><td>Approuter validates; CAP maps scopes 1:1 to PERMISSIONS</td></tr><tr><td>Least privilege</td><td>AI_AGENT empty; per-tool grants + maxAmount</td></tr><tr><td>Network</td><td>TLS everywhere; CORS allow-list; CSRF tokens on mutations</td></tr><tr><td>AI abuse</td><td>Injection tests green; exfiltration capped by schemas + audit</td></tr><tr><td>Tenancy</td><td>tenantId server-stamped; cross-tenant tests red→blocked</td></tr></tbody></table></div>
+<p><b>Multi-tenancy:</b> dedicated tenant-mode; every row carries <code>tenantId</code> from ctx; provider/subscriber model via MTX in full SaaS (deployment descriptor + tenant onboarding). This repo ships the tenant-isolation half; MTX onboarding is the documented next step, not a hidden claim.</p>
+  <div class="done-row"><label><input type="checkbox" data-done="m30"> Mark step 30 complete</label></div>
+</section>
+<section class="mod" id="m31" data-mod="m31">
+  <div class="modhead"><span class="modnum step">STEP 31</span></div>
+  <h2>Phases 36-37 — Production map + troubleshooting</h2>
+  <p class="stepgoal">HAVE: everything built. ADDING: where each piece lives in prod + how to fix it.</p>
+<div class="diagram"><pre class="mermaid">flowchart TD
+  U[&quot;User&quot;] --&gt; F[&quot;UI5 / Fiori&quot;]
+  F --&gt; AR[&quot;Approuter&quot;]
+  AR --&gt; IAS[&quot;IAS + XSUAA&quot;]
+  IAS --&gt; CAP[&quot;CAP app&quot;]
+  CAP --&gt; HANA[&quot;HANA Cloud&quot;]
+  CAP --&gt; DST[&quot;Destination&quot;]
+  DST --&gt; XAPI[&quot;External APIs&quot;]
+  CAP --&gt; EM[&quot;Event Mesh&quot;]
+  CAP --&gt; GW[&quot;MCP Gateway&quot;]
+  GW --&gt; TOOLS[&quot;MCP tools&quot;]
+  CAP --&gt; AG[&quot;Agents (orchestrator + 7)&quot;]
+  AG --&gt; GW
+  AG --&gt; XA[&quot;External agents (A2A)&quot;]
+  CAP --&gt; LOG[&quot;Logging + Monitoring&quot;]</pre><p class="figcap">FIG. 12 — FINAL PRODUCTION POSTER</p></div>
+<div class="table-wrap"><table><thead><tr><th>Feature</th><th>Local</th><th>BTP production</th></tr></thead><tbody><tr><td>Database</td><td>Postgres Docker / SQLite tests</td><td>HANA Cloud via mta binding</td></tr><tr><td>Auth</td><td>x-mock-user + x-agent-id</td><td>IAS → approuter → XSUAA JWT</td></tr><tr><td>MCP/A2A/LLM</td><td>13 tools, A2A tasks, MockLLM</td><td>Same interfaces; gateway + AI Core/HUB</td></tr><tr><td>Destinations/messaging</td><td>Mock server + EventEmitter</td><td>Destination + Event Mesh</td></tr><tr><td>Logs/monitor</td><td>Console JSON</td><td>Application Logging + alerts</td></tr><tr><td>Deploy</td><td>docker compose</td><td>mbt build + cf deploy + CI/CD</td></tr></tbody></table></div>
+<div><details class='qa'><summary>cds command not found</summary><p>Reinstall @sap/cds-dk globally; reopen shell.</p></details><details class='qa'><summary>DB connection failed</summary><p>docker compose ps; check DATABASE_URL; pg_isready.</p></details><details class='qa'><summary>401/403</summary><p>Wrong mock role or missing scope; compare JWT scopes vs PERMISSIONS.</p></details><details class='qa'><summary>404 OData</summary><p>Check service path + parenthesis fn syntax + String ID params.</p></details><details class='qa'><summary>CAP reads return empty</summary><p>Handler must extend cds.ApplicationService; check srv/server.js.</p></details><details class='qa'><summary>Agent cannot call tool</summary><p>Missing AgentToolPermissions grant or scope; inspect DENIED execution row.</p></details><details class='qa'><summary>A2A timeout</summary><p>Check discovery URL, agent active flag, downstream MCP latency; retry with idempotency key.</p></details><details class='qa'><summary>MTA/CF deploy fails</summary><p>Rebuild with mbt; verify org/space, HANA binding, xs-security upload.</p></details></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m31"> Mark step 31 complete</label></div>
+</section>
+<section class="mod" id="m32" data-mod="m32">
+  <div class="modhead"><span class="modnum step">STEP 32</span></div>
+  <h2>Phases 38-41 — Source, checklist, matrix, roadmap</h2>
+  <p class="stepgoal">HAVE: full system. ADDING: the wrap-up that proves consistency.</p>
+<p class="layer">Complete, internally consistent file set (matches this repo)</p>
+<figure class="codeblock"><figcaption><span class="flang">text</span><span>Final tree</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>db/schema.cds db/common.cds db/data/*.csv
+srv/procurement-service.cds|.ts srv/catalog-service.cds|.ts srv/supplier-service.cds|.ts
+srv/invoice-service.cds|.ts srv/approval-service.cds|.ts srv/audit-service.cds
+srv/mcp-service.cds|.ts srv/agent-service.cds|.ts srv/server.js
+lib/auth/authentication.ts lib/auth/rbac.ts lib/authorization/authorization.ts
+lib/workflow/policy.ts lib/workflow/lifecycle.ts lib/validation/validation.ts
+lib/audit/audit.ts lib/security/errors.ts lib/security/observability.ts
+app/procurement-ui/ (manifest, Component, controllers, views, fragments, i18n)
+package.json .cdsrc.json mta.yaml xs-security.json Dockerfile docker-compose.yml .env.example</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">cds</span><span>FILE: srv/catalog-service.cds + supplier + invoice + approval (shapes)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>service CatalogService @(path:&#x27;/odata/v4/catalog&#x27;) { entity Materials as projection on db.Materials; entity MaterialCategories as projection on db.MaterialCategories; }
+service SupplierService @(path:&#x27;/odata/v4/supplier&#x27;) { entity Suppliers as projection on db.Suppliers; entity SupplierContacts as projection on db.SupplierContacts; }
+service InvoiceService @(path:&#x27;/odata/v4/invoice&#x27;) { entity Invoices as projection on db.Invoices; entity Payments as projection on db.Payments; }
+service ApprovalService @(path:&#x27;/odata/v4/approval&#x27;) { entity Approvals as projection on db.Approvals; entity WorkflowTasks as projection on db.WorkflowTasks; }</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>FILE: execution checklist (24 steps, abridged commands)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>1 node -v &amp;&amp; cds --version   2 cds init &amp;&amp; npm i   3 docker compose up -d db
+4 write db/*.cds   5 npm run db:deploy:pg   6 npm start   7 curl OData with x-mock-user
+8 add lib/auth + xs-security   9 Postgres profile   10 UI5 scaffold   11 mock supplier API
+12 annotate @mcp + 13 tools   13 MockLLM agent   14 A2A executeTask   15 audit rows
+16 npm test   17 docker compose up --build   18 git push + PR   19 mbt build &amp;&amp; cf deploy
+20 bind HANA   21 Destination SUPPLIER_API   22 IAS/XSUAA roles   23 hardening checklist   24 E2E drill</code></pre></figure>
+<div class="table-wrap"><table><thead><tr><th>Capability</th><th>Implemented</th><th>Local</th><th>BTP</th></tr></thead><tbody><tr><td>CAP/CDS/OData/CRUD</td><td>Yes</td><td>Yes</td><td>Yes</td></tr><tr><td>Postgres → HANA</td><td>Yes</td><td>PG</td><td>HANA</td></tr><tr><td>UI5 + chat UI</td><td>Yes</td><td>Yes</td><td>Via approuter</td></tr><tr><td>OAuth/IAS/Destination</td><td>Yes</td><td>Mocked</td><td>Managed</td></tr><tr><td>MCP 13 tools + gateway</td><td>Yes</td><td>Learning gw</td><td>Managed gw</td></tr><tr><td>7 agents + A2A</td><td>Yes</td><td>Yes</td><td>Yes + AI Core</td></tr><tr><td>Events/jobs/audit/observe</td><td>Yes</td><td>Emitter/jobs</td><td>Event Mesh/scheduler</td></tr><tr><td>CI/CD/Docker/tenancy</td><td>Yes</td><td>Compose/GHA</td><td>MTA/CF/MTX path</td></tr></tbody></table></div>
+<p class="layer">What next</p>
+<div class="table-wrap"><table><thead><tr><th>Level</th><th>Learn</th></tr></thead><tbody><tr><td>Beginner</td><td>CAP docs end-to-end (cds model→service→deploy), OData $filter/$expand</td></tr><tr><td>Intermediate</td><td>XSUAA scopes, destinations, HANA deployment, UI5 routing</td></tr><tr><td>Advanced</td><td>MCP transports, tool governance, A2A delegation, Event Mesh</td></tr><tr><td>Expert</td><td>Joule extensions, AI Core orchestration, MTX SaaS, ARC assessment</td></tr></tbody></table></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m32"> Mark step 32 complete</label></div>
+</section>
+<section class="mod" id="m33" data-mod="m33">
+  <div class="modhead"><span class="modnum step">STEP 33</span></div>
+  <h2>Gap audit + missing code (Inventory, risk, /health)</h2>
+  <p class="stepgoal">HAVE: 13 tools, no stock view. ADDING: the three missing functions plus a real repo bug fix.</p>
+<p class="layer">Spec-to-repo name mapping (read this first)</p>
+<div class="table-wrap"><table><thead><tr><th>Spec asked for</th><th>Repo reality</th><th>Verdict</th></tr></thead><tbody><tr><td>Inventory entity + get_inventory</td><td>No Inventory entity in db/schema.cds</td><td>Missing — extension pack below</td></tr><tr><td>check_supplier_risk tool</td><td>getProcurementRisk(requisitionID) exists; supplier-level scorer does not</td><td>Missing — extension below</td></tr><tr><td>checkInventory / calculateProcurementRisk functions</td><td>No lib/risk module</td><td>Missing — extension below</td></tr><tr><td>approve_purchase_requisition MCP tool</td><td>Approval is a ProcurementService action (APPROVE_PR), not an MCP tool</td><td>Deliberate — dual control, do NOT add</td></tr><tr><td>test/rbac + policy + requisition suites</td><td>Repo ships test/unit.test.ts + test/security.test.ts</td><td>Fixed in m27 caption; add policy-gate.test.ts</td></tr><tr><td>lib/llm/provider.ts (LLMProvider)</td><td>Real file is lib/agents/ai-service.ts (AIService + MockAI + getAIService)</td><td>Fixed in m17</td></tr><tr><td>Per-agent /.well-known cards</td><td>One orchestrator card in srv/server.js (A2A/0.2)</td><td>Fixed in m19</td></tr></tbody></table></div>
+<div class="callout warn"><h4>REAL bug found in the repo</h4><p><b>/health is probed but never served.</b> Dockerfile HEALTHCHECK and mta.yaml health-check endpoints hit <code>/health</code>, but <code>srv/server.js</code> only defines <code>/liveness</code> and <code>/readiness</code> (verified: no <code>/health</code> route anywhere in srv/ or lib/). Until fixed, Docker reports the container unhealthy and CF health checks fail. One-line fix:</p></div>
+<figure class="codeblock"><figcaption><span class="flang">javascript</span><span>FIX: srv/server.js inside cds.on(bootstrap)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>app.get(&#x27;/health&#x27;, (_req, res) =&gt; res.json({ status: &#x27;ok&#x27;, time: new Date().toISOString() }));</code></pre></figure>
+<p class="layer">EXTENSION PACK 1: Inventory entity + seed</p>
+<figure class="codeblock"><figcaption><span class="flang">cds</span><span>Append to db/schema.cds, add CSV, recompile</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>// EXTENSION (not in repo yet)
+entity Inventory : cuid, managed, c.TenantAware {
+  material     : Association to Materials not null;
+  plant        : String(32) not null default &#x27;PLANT-01&#x27;;
+  quantity     : Decimal(15,3) default 0 not null;
+  unit         : String(16) default &#x27;EA&#x27;;
+  reorderPoint : Decimal(15,3) default 0;
+}</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">text</span><span>db/data/procurement.db-Inventory.csv (same tenant-a style)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>ID,tenantId,material_ID,plant,quantity,unit,reorderPoint
+inv-01,tenant-a,mat-brake-pad,PLANT-01,850,EA,200
+inv-02,tenant-a,mat-filter,PLANT-01,120,EA,300</code></pre></figure>
+<p class="layer">EXTENSION PACK 2: risk functions + tools</p>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>lib/risk/risk.ts (NEW, pure + unit-testable)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>import cds from &#x27;@sap/cds&#x27;;
+import { reqError } from &#x27;../security/errors.js&#x27;;
+
+// Pure math: easy unit test, no LLM inside (LLM recommends, this decides).
+export function calculateProcurementRisk(input: { riskScore: number; onTimeRate: number; disputeCount: number }) {
+  const score = Math.round(input.riskScore * 0.5 + (100 - input.onTimeRate) * 2 + Math.min(input.disputeCount * 6, 30));
+  const level = score &gt;= 70 ? &#x27;HIGH&#x27; : score &gt;= 40 ? &#x27;MEDIUM&#x27; : &#x27;LOW&#x27;;
+  return { score: Math.min(score, 100), level };
+}
+
+export async function checkInventory(tx: any, tenantId: string, materialID: string) {
+  const rows: any[] = await tx.read(&#x27;procurement.db.Inventory&#x27;).where({ material_ID: materialID, tenantId });
+  const total = rows.reduce((n, r) =&gt; n + Number(r.quantity ?? 0), 0);
+  return { materialID, total, low: rows.filter((r) =&gt; Number(r.quantity) &lt; Number(r.reorderPoint)) };
+}
+
+export async function checkSupplierRisk(tx: any, tenantId: string, supplierID: string) {
+  const s: any = await tx.run(SELECT.one.from(&#x27;procurement.db.Suppliers&#x27;).where({ ID: supplierID, tenantId }));
+  if (!s) throw reqError(&#x27;RESOURCE_NOT_FOUND&#x27;, &#x27;Supplier not found&#x27;);
+  return { supplierID, ...calculateProcurementRisk(s), assessedAt: new Date().toISOString() };
+}</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">cds</span><span>srv/mcp-service.cds additions + rbac grant</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>entity Inventory as projection on db.Inventory;
+function getInventory(materialID : String) returns many Inventory;
+function checkSupplierRisk(supplierID : String) returns RiskAssessments;</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">bash</span><span>Wire + verify the extension</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>npx cds compile --to csn db srv   # must exit 0
+npm test                                # add a calculateProcurementRisk case
+# curl -H &#x27;x-mock-user: buyer:EMPLOYEE&#x27; &#x27;http://localhost:4004/odata/v4/mcp/getInventory(materialID=%27mat-brake-pad%27)&#x27;</code></pre></figure>
+  <div class="done-row"><label><input type="checkbox" data-done="m33"> Mark step 33 complete</label></div>
+</section>
+<section class="mod" id="m34" data-mod="m34">
+  <div class="modhead"><span class="modnum step">STEP 34</span></div>
+  <h2>LLM provider trio (OpenAI, Azure, AI Core)</h2>
+  <p class="stepgoal">HAVE: MockAI. ADDING: three drop-in providers behind the same interface.</p>
+<p class="layer">Real interface + three more providers behind it</p>
+<p>Real: <code>AIService { generate / chat / structuredOutput }</code> with <code>MockAI</code> selected by <code>getAIService()</code> when no <code>AI_API_URL</code>/<code>AI_API_KEY</code> is set. Add providers without touching business logic:</p>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>lib/agents/providers.ts (EXTENSION pattern, VERIFY SDK names)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>import type { AIService, ChatMessage } from &#x27;./ai-service.js&#x27;;
+
+function env(name: string): string {
+  const v = process.env[name];
+  if (!v) throw new Error(`[ai] missing env ${name}`);
+  return v;
+}
+
+export class OpenAIProvider implements AIService {
+  async generate(prompt: string) { return this.chat([{ role: &#x27;user&#x27;, content: prompt }]); }
+  async chat(messages: ChatMessage[]) {
+    // VERIFY: endpoint + model names vs current OpenAI docs. Never log the key.
+    const r = await fetch(&#x27;https://api.openai.com/v1/chat/completions&#x27;, {
+      method: &#x27;POST&#x27;,
+      headers: { Authorization: `Bearer ${env(&#x27;AI_API_KEY&#x27;)}`, &#x27;Content-Type&#x27;: &#x27;application/json&#x27; },
+      body: JSON.stringify({ model: process.env.AI_MODEL ?? &#x27;gpt-4o-mini&#x27;, messages }),
+      signal: AbortSignal.timeout(30000),
+    });
+    if (!r.ok) throw new Error(`[ai] openai:${r.status}`);
+    const j: any = await r.json();
+    return j.choices[0].message.content;
+  }
+  async structuredOutput&lt;T&gt;(prompt: string, schemaHint: string): Promise&lt;T&gt; {
+    return JSON.parse(await this.generate(`${prompt}\nReturn ONLY JSON matching: ${schemaHint}`));
+  }
+}
+
+export class AzureOpenAIProvider extends OpenAIProvider {
+  // VERIFY: deployment URL shape vs current Azure OpenAI docs.
+  // Same class, different base URL: https://{resource}.openai.azure.com/openai/deployments/{deployment}/chat/completions?api-version=2024-06-01
+}
+
+export class AICoreProvider extends OpenAIProvider {
+  // SAP AI Core exposes an OpenAI-compatible proxy via the orchestration service.
+  // VERIFY: base URL + deployment ID vs current Generative AI Hub docs.
+  // Base URL comes from AI_API_URL (.env.example already has AI_API_URL/AI_MODEL/AI_PROVIDER).
+}
+
+export function providerFromEnv(): AIService {
+  switch ((process.env.AI_PROVIDER ?? &#x27;mock&#x27;).toLowerCase()) {
+    case &#x27;openai&#x27;: return new OpenAIProvider();
+    case &#x27;azure&#x27;: return new AzureOpenAIProvider();
+    case &#x27;aicore&#x27;: return new AICoreProvider();
+    default: return new OpenAIProvider(); // replaced by getAIService() mock when no keys set
+  }
+}</code></pre></figure>
+<div class="callout prod"><h4>Key rule repeated</h4><p>Providers read <code>AI_API_KEY</code> from env/BTP bindings only — never from UI code, never from git. Local dev with no keys keeps working on <code>MockAI</code>.</p></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m34"> Mark step 34 complete</label></div>
+</section>
+<section class="mod" id="m35" data-mod="m35">
+  <div class="modhead"><span class="modnum step">STEP 35</span></div>
+  <h2>UI5 missing files (formatter, i18n, models, CSS)</h2>
+  <p class="stepgoal">HAVE: shell + table. ADDING: the four files every view needs.</p>
+<p class="layer">The four UI5 files m22 skipped</p>
+<figure class="codeblock"><figcaption><span class="flang">javascript</span><span>app/procurement-ui/webapp/model/formatter.js (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>sap.ui.define([], function () {
+  &#x27;use strict&#x27;;
+  return {
+    statusState: function (s) {
+      if (s === &#x27;APPROVED&#x27; || s === &#x27;CONVERTED_TO_PO&#x27;) return &#x27;Success&#x27;;
+      if (s === &#x27;REJECTED&#x27;) return &#x27;Error&#x27;;
+      if (s === &#x27;SUBMITTED&#x27; || s === &#x27;UNDER_REVIEW&#x27;) return &#x27;Warning&#x27;;
+      return &#x27;None&#x27;;
+    },
+    riskState: function (r) {
+      if (r === &#x27;HIGH&#x27; || r === &#x27;CRITICAL&#x27;) return &#x27;Error&#x27;;
+      if (r === &#x27;MEDIUM&#x27;) return &#x27;Warning&#x27;;
+      return &#x27;Success&#x27;;
+    }
+  };
+});</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">text</span><span>i18n/i18n.properties + models.js + style.css (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code># i18n/i18n.properties — every UI string lives here, none hardcoded
+appTitle=Autonomous Procurement Control Tower
+prTitle=Purchase Requisitions
+supplierRisk=Supplier Risk
+assistantTitle=AI Assistant</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">javascript</span><span>models.js + style.css (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>sap.ui.define([&#x27;sap/ui/model/json/JSONModel&#x27;], function (JSONModel) {
+  &#x27;use strict&#x27;;
+  return {
+    view: function () { return new JSONModel({ busy: false, tools: [] }); }
+  };
+});</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">css</span><span>css/style.css (pattern)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>.tower .sapMPageHeader { background: #0B3D91; }
+.tower .riskHigh { color: #B23A2E; font-weight: 600; }
+@media (max-width: 600px) { .tower .hideSmall { display: none; } }</code></pre></figure>
+  <div class="done-row"><label><input type="checkbox" data-done="m35"> Mark step 35 complete</label></div>
+</section>
+<section class="mod" id="m36" data-mod="m36">
+  <div class="modhead"><span class="modnum step">STEP 36</span></div>
+  <h2>Complete source I — config + deploy files</h2>
+  <p class="stepgoal">HAVE: fragments. ADDING: every runtime file, verbatim.</p>
+<p class="layer">Deploy + config files, verbatim from the repo</p>
+<figure class="codeblock"><figcaption><span class="flang">json</span><span>FILE: package.json (REAL)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>{
+  &quot;name&quot;: &quot;enterprise-ai-procurement&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;engines&quot;: { &quot;node&quot;: &quot;&gt;=20&quot; },
+  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;tsc --noEmit -p tsconfig.json&quot;,
+    &quot;start&quot;: &quot;tsx ./node_modules/@sap/cds/bin/serve.js&quot;,
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;db:deploy:pg&quot;: &quot;node scripts/deploy-pg.cjs&quot;,
+    &quot;db:deploy:prod&quot;: &quot;cds-deploy --to postgres --production&quot;
+  }
+}</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">dockerfile</span><span>FILE: Dockerfile (REAL)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --ignore-scripts
+COPY . .
+RUN npm run build || true
+
+FROM node:20-alpine AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+COPY package*.json ./
+RUN npm ci --omit=dev --ignore-scripts &amp;&amp; npm rebuild @cap-js/postgres || true
+COPY --from=build /app ./
+EXPOSE 4004
+CMD [&quot;sh&quot;, &quot;-c&quot;, &quot;npm run db:deploy:prod || true; npm start&quot;]</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">text</span><span>FILE: .env.example + .gitignore + .cdsrc.json (REAL)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>PORT=4004
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=procurement
+DB_USER=postgres
+DB_PASSWORD=changeme
+DATABASE_URL=
+JWT_SECRET=dev-only-secret-change-me
+ALLOW_MOCK_AUTH=true
+AI_API_URL=
+AI_API_KEY=
+AI_MODEL=anthropic--claude-4-sonnet
+AI_PROVIDER=aicore
+---
+.gitignore: .env / .env.* / default-env.json / node_modules/ / dist/ / coverage/
+---
+.cdsrc.json: sqlite memory by default; postgres under [postgres]/[production]; mocked auth, JWT in production</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">yaml</span><span>FILE: mta.yaml (REAL, excerpt)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>modules:
+  - name: procurement-backend
+    type: nodejs
+    path: .
+    properties: { ALLOW_MOCK_AUTH: false }
+    requires: [procurement-xsuaa, procurement-postgres]
+  - name: procurement-approuter
+    type: approuter.nodejs
+    path: approuter
+resources:
+  - name: procurement-xsuaa       # service: xsuaa, plan: application, path: ./xs-security.json
+  - name: procurement-postgres    # service: postgresql, plan: trial
+# after deploy: cf run-task procurement-backend &quot;npm run db:deploy:prod&quot;</code></pre></figure>
+  <div class="done-row"><label><input type="checkbox" data-done="m36"> Mark step 36 complete</label></div>
+</section>
+<section class="mod" id="m37" data-mod="m37">
+  <div class="modhead"><span class="modnum step">STEP 37</span></div>
+  <h2>Complete source II — lib, tests, seed data</h2>
+  <p class="stepgoal">HAVE: config. ADDING: the business plumbing, verbatim.</p>
+<p class="layer">Library files, verbatim from the repo</p>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>FILE: lib/validation/validation.ts (REAL)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>export function validateRequisition(data: any) {
+  if (!data.title?.trim()) throw reqError(&#x27;VALIDATION_ERROR&#x27;, &#x27;Title is required&#x27;);
+  if (data.totalAmount !== undefined &amp;&amp; Number(data.totalAmount) &lt;= 0)
+    throw reqError(&#x27;VALIDATION_ERROR&#x27;, &#x27;Amount must be &gt; 0&#x27;);
+}
+export function validatePO(pr: any, supplier: any) {
+  if (!pr) throw reqError(&#x27;RESOURCE_NOT_FOUND&#x27;, &#x27;Purchase requisition not found&#x27;);
+  if ([&#x27;REJECTED&#x27;, &#x27;DRAFT&#x27;, &#x27;SUBMITTED&#x27;, &#x27;UNDER_REVIEW&#x27;, &#x27;CANCELLED&#x27;].includes(pr.status))
+    throw reqError(&#x27;INVALID_STATE_TRANSITION&#x27;, `PO cannot be created from PR in status ${pr.status}`);
+  if (!supplier?.active) throw reqError(&#x27;SUPPLIER_INACTIVE&#x27;, &#x27;Supplier is inactive&#x27;);
+}</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>FILE: policy defaults + tool-permission map (REAL)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>// lib/workflow/policy.ts — DEFAULT_POLICIES (DB Policies rows override these)
+PO_AUTO    AUTO_APPROVE    maxAmount 50000             priority 10
+PO_MANAGER REQUIRE_MANAGER 50000-500000                priority 20
+PO_SENIOR  REQUIRE_HUMAN   500000-1000000              priority 30
+PO_EXEC    REQUIRE_HUMAN   minAmount 1000000           priority 40
+PO_HIGH_RISK REQUIRE_HUMAN riskLevels HIGH,CRITICAL    priority 5  (wins first)
+// lib/auth/rbac.ts — MCP_TOOL_PERMISSIONS (excerpt) + AI_AGENT: []
+searchSuppliers/getSupplier -&gt; READ_SUPPLIER | checkBudget -&gt; READ_BUDGET
+createPurchaseRequisition/submitForApproval -&gt; CREATE_PR
+createPurchaseOrder -&gt; CREATE_PO | getProcurementRisk -&gt; READ_PR
+AI_AGENT: [] // explicit per-agent grants only, never wildcard</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">typescript</span><span>FILE: test/unit.test.ts (REAL) + add policy-gate.test.ts</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>import { describe, it, expect } from &#x27;vitest&#x27;;
+import { checkRateLimit } from &#x27;../lib/security/rate-limit.js&#x27;;
+import { toHttpError, reqError } from &#x27;../lib/security/errors.js&#x27;;
+
+describe(&#x27;rate limiting&#x27;, () =&gt; {
+  it(&#x27;allows within limit then rejects&#x27;, () =&gt; {
+    const key = `test-${Date.now()}`;
+    for (let i = 0; i &lt; 5; i++) checkRateLimit(key, 5);
+    expect(() =&gt; checkRateLimit(key, 5)).toThrow();
+  });
+});
+// ADD: policy-gate.test.ts — evaluatePolicy AUTO_APPROVE under 50000,
+// REQUIRE_HUMAN for HIGH risk, FALLBACK REQUIRE_HUMAN when nothing matches.</code></pre></figure>
+<figure class="codeblock"><figcaption><span class="flang">text</span><span>FILE: seed CSVs (REAL samples, tenant-a)</span><button class="copy-btn" type="button">Copy</button></figcaption><pre><code>Suppliers: s-ts,tenant-a,SUP-003,TechSource India,IN,true,70,HIGH,72.0,5,800000
+Policies:  pol-risk,tenant-a,PO_HIGH_RISK,High risk gate,High/critical risk always human,&quot;{&quot;&quot;riskLevels&quot;&quot;:[&quot;&quot;HIGH&quot;&quot;,&quot;&quot;CRITICAL&quot;&quot;]}&quot;,REQUIRE_HUMAN,5,true
+File names: procurement.db-&lt;Entity&gt;.csv (Agents, Budgets, Departments, Materials, MCPTools, Users, Roles, ... 14 files)</code></pre></figure>
+<div><details class='qa'><summary>Why is approve not an MCP tool?</summary><p>Dual control: the agent drafts and routes; a human manager approves in UI5. An auto-approving agent would collapse the REQUIRE_MANAGER/FINANCE/HUMAN bands.</p></details><details class='qa'><summary>Do I add Inventory to the running repo?</summary><p>Yes if you want stock checks: append the m33 CDS, add the CSV, extend mcp-service.cds + MCP_TOOL_PERMISSIONS, recompile, test. Nothing else changes.</p></details><details class='qa'><summary>What still needs SAP docs at deploy time?</summary><p>AI Core SDK names, IAS federation clicks, Event Mesh bindings, MTX onboarding — all marked VERIFY where they appear.</p></details></div>
+  <div class="done-row"><label><input type="checkbox" data-done="m37"> Mark step 37 complete</label></div>
+</section>
+</div>
+<footer class="site"><div class="wrap">
+  <p><strong>Autonomous Procurement Control Tower &mdash; End-to-End SAP CAP + AI Agent + MCP + A2A Hands-On Workshop.</strong> One domain: procurement requisitions to payment. Sources: official CAP docs, npm <code>@cap-js/mcp</code> / <code>@cap-js/agents</code>, modelcontextprotocol.io, a2a-protocol.org, architecture.learning.sap.com (RA0029 &mdash; Agentic AI &amp; AI Agents; A2A + MCP Interoperability). Verify fast-moving SAP service APIs against current SAP documentation.</p>
+  <p>Protocol concepts (MCP, A2A, A2UI, MCP Apps, AG-UI) are described per their public specifications. Statements about specific SAP product capabilities (Joule, AI Core, Fiori integrations) are marked conceptual where they extend beyond current public SAP documentation.</p>
+</div></footer>
+</main>
+<aside class="rail"><h2>On this page</h2><nav id="railLinks"></nav>
+  <p class="mode-note">Toggle <strong>Architect mode</strong> in the top bar to hide beginner scaffolding on concept modules.</p>
+</aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script src="https://viewer.diagrams.net/js/viewer-static.min.js" async></script>
+<script>
+(function () {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+  /* Mermaid diagrams render on a fixed light "drafting sheet" (see .diagram CSS),
+     so one static light theme covers both page themes — no re-render-on-toggle needed. */
+  if (window.mermaid) {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "base",
+      fontFamily: '"IBM Plex Mono", monospace',
+      flowchart: { htmlLabels: true, useMaxWidth: true },
+      themeVariables: {
+        primaryColor: "#E7ECF8", primaryTextColor: "#1A2333", primaryBorderColor: "#0B3D91",
+        lineColor: "#47536A", secondaryColor: "#E3F2F1", tertiaryColor: "#F9EEDC",
+        background: "transparent", mainBkg: "#E7ECF8",
+        actorBkg: "#E7ECF8", actorBorder: "#0B3D91", actorTextColor: "#1A2333",
+        signalColor: "#47536A", signalTextColor: "#1A2333",
+        labelBoxBkgColor: "#F9EEDC", labelBoxBorderColor: "#B5710A",
+        noteBkgColor: "#F9EEDC", noteBorderColor: "#B5710A",
+        activationBkgColor: "#E3F2F1", sequenceNumberColor: "#1A2333",
+        textColor: "#1A2333", nodeTextColor: "#1A2333",
+        clusterBkg: "#E7ECF8", clusterTextColor: "#1A2333",
+        titleColor: "#1A2333",
+      },
+      securityLevel: "strict",
+    });
+    function mermaidFillIsDark(raw) {
+      if (!raw) return false;
+      const s = String(raw).trim().toLowerCase();
+      if (!s || s === "none" || s === "transparent") return false;
+      let r, g, b;
+      const hex = s.match(/^#([0-9a-f]{3,8})$/);
+      const rgb = s.match(/^rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)/);
+      if (hex) {
+        let h = hex[1];
+        if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+        r = parseInt(h.slice(0,2), 16); g = parseInt(h.slice(2,4), 16); b = parseInt(h.slice(4,6), 16);
+      } else if (rgb) {
+        r = +rgb[1]; g = +rgb[2]; b = +rgb[3];
+      } else return false;
+      return (0.2126*r + 0.7152*g + 0.0722*b) < 140;
+    }
+    function fixMermaidContrast() {
+      $$(".diagram svg, svg[id^='mermaid']").forEach((svg) => {
+        if (!svg.closest(".diagram")) return;
+        svg.querySelectorAll("g.node, g.actor, g.cluster").forEach((g) => {
+          const shapes = Array.from(g.querySelectorAll("rect.label-container, circle.label-container, rect, circle, polygon, ellipse"));
+          const shape = shapes.find((el) => /fill\s*:\s*#|fill\s*:\s*rgb/i.test(el.getAttribute("style") || "") || (el.getAttribute("fill") && el.getAttribute("fill") !== "none")) || shapes[0];
+          if (!shape) return;
+          const fill = ((shape.getAttribute("style") || "").match(/fill:\s*([^;!]+)/) || [])[1] || shape.getAttribute("fill") || getComputedStyle(shape).fill;
+          const dark = mermaidFillIsDark(fill);
+          g.classList.toggle("darklabel", dark);
+          const color = dark ? "#FFFFFF" : "#1A2333";
+          g.querySelectorAll("foreignObject, foreignObject *").forEach((el) => { el.style.setProperty("color", color, "important"); });
+          g.querySelectorAll("text, tspan").forEach((el) => { el.style.setProperty("fill", color, "important"); });
+        });
+      });
+    }
+    // Render each diagram independently (rather than one shared querySelector batch) so a
+    // syntax error in one diagram can't make every other diagram on the page report failed.
+    Promise.allSettled($$(".mermaid").map((el) =>
+      mermaid.run({ nodes: [el] }).catch((err) => {
+        el.insertAdjacentHTML("afterend", "<p style='color:#B23A2E;font-size:12px'>Diagram failed to render: " + String(err?.message || err).slice(0, 160) + "</p>");
+        throw err;
+      })
+    )).then(fixMermaidContrast);
+  }
+
+  const KEY = "sap-procurement-control-tower-v1";
+  let store = {};
+  try { store = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { /* storage disabled (e.g. sandboxed file:// preview) */ }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch { /* ignore */ } }
+
+  /* theme + mode */
+  const themeBtn = $("#themeBtn");
+  const modeBtn = $("#modeBtn");
+  function applyTheme(t) {
+    document.documentElement.dataset.theme = t;
+    themeBtn.textContent = t === "night" ? "Day" : "Night";
+    themeBtn.setAttribute("aria-pressed", t === "night" ? "true" : "false");
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", t === "night" ? "#0A1220" : "#F4F7FA");
+  }
+  function applyMode(m) {
+    document.documentElement.dataset.mode = m;
+    modeBtn.textContent = m === "architect" ? "Beginner mode" : "Architect mode";
+    modeBtn.setAttribute("aria-pressed", m === "architect" ? "true" : "false");
+  }
+  applyTheme(store.theme || "day");
+  applyMode(store.mode || "beginner");
+  themeBtn.addEventListener("click", () => { store.theme = document.documentElement.dataset.theme === "night" ? "day" : "night"; applyTheme(store.theme); save(); });
+  modeBtn.addEventListener("click", () => { store.mode = document.documentElement.dataset.mode === "architect" ? "beginner" : "architect"; applyMode(store.mode); save(); });
+
+  /* nav + burger */
+  const sidenav = $("#sidenav");
+  const burger = $("#burger");
+  const scrim = $("#scrim");
+  function closeNav() { sidenav.classList.remove("open"); burger.setAttribute("aria-expanded", "false"); scrim.classList.remove("on"); scrim.hidden = true; }
+  burger.addEventListener("click", () => {
+    const open = sidenav.classList.toggle("open");
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+    scrim.hidden = !open; scrim.classList.toggle("on", open);
+  });
+  scrim.addEventListener("click", closeNav);
+  sidenav.addEventListener("click", (e) => { if (e.target.closest("a")) closeNav(); });
+
+  /* progress */
+  store.done = store.done || {};
+  function paintProgress() {
+    const boxes = $$("input[data-done]");
+    let n = 0;
+    boxes.forEach((box) => {
+      const id = box.dataset.done;
+      box.checked = !!store.done[id];
+      if (box.checked) n += 1;
+      const href = "#"+id;
+      $$('.sidenav a[href="'+href+'"]').forEach((a) => a.classList.toggle("done", box.checked));
+    });
+    const total = boxes.length;
+    $("#labprog").textContent = n + "/" + total;
+  }
+  document.addEventListener("change", (e) => {
+    const box = e.target.closest("input[data-done]");
+    if (!box) return;
+    store.done[box.dataset.done] = box.checked;
+    save(); paintProgress();
+  });
+  paintProgress();
+
+  /* production readiness checklist — separate from module progress on purpose:
+     "I checked this off" and "I read this module" are different claims */
+  store.checked = store.checked || {};
+  function paintReadiness() {
+    const boxes = $$("input[data-check]");
+    if (!boxes.length) return;
+    let n = 0;
+    boxes.forEach((box) => { box.checked = !!store.checked[box.dataset.check]; if (box.checked) n += 1; });
+    const pct = Math.round((n / boxes.length) * 100);
+    $("#readinessScore").textContent = `Production readiness: ${n}/${boxes.length} (${pct}%)`;
+  }
+  document.addEventListener("change", (e) => {
+    const box = e.target.closest("input[data-check]");
+    if (!box) return;
+    store.checked[box.dataset.check] = box.checked;
+    save(); paintReadiness();
+  });
+  paintReadiness();
+
+  /* quizzes */
+  document.addEventListener("change", (e) => {
+    const inp = e.target.closest('.quiz input[type="radio"]');
+    if (!inp) return;
+    const box = inp.closest(".quiz");
+    box.querySelectorAll(".ok,.no").forEach((n) => n.remove());
+    const p = document.createElement("p");
+    const right = inp.value === "ok";
+    p.className = right ? "ok" : "no";
+    p.textContent = (right ? "Correct. " : "Not quite. ") + (box.dataset.why || "");
+    box.appendChild(p);
+  });
+
+  /* syntax highlighting */
+  const HL = {
+    cds:        { c: /\/\/[^\n]*|\/\*[\s\S]*?\*\//, k: /\b(namespace|using|from|service|entity|as|projection|on|action|function|returns|array|of|key|type|aspect|extend|annotate|not|null|default|excluding|Composition|Association|many|to|UUID|String|Decimal|Integer|Date|Timestamp|Boolean)\b/ },
+    javascript: { c: /\/\/[^\n]*|\/\*[\s\S]*?\*\//, k: /\b(const|let|var|function|async|await|return|if|else|for|while|new|this|module|exports|require|try|catch|throw|null|true|false|undefined|class|extends|SELECT|INSERT|UPDATE|DELETE|from|into|where|with|one)\b/ },
+    typescript: { c: /\/\/[^\n]*|\/\*[\s\S]*?\*\//, k: /\b(const|let|var|function|async|await|return|if|else|for|while|new|this|import|export|from|interface|type|extends|implements|try|catch|throw|null|true|false|undefined|class|public|private|readonly)\b/ },
+    python:     { c: /#[^\n]*/,                     k: /\b(def|async|await|return|import|from|class|if|elif|else|for|while|try|except|raise|with|as|None|True|False|and|or|not|in|is|lambda|yield|pass)\b/ },
+    bash:       { c: /#[^\n]*/,                     k: /\b(cd|mkdir|npm|npx|pip|python|git|curl|cf|cds|mbt|source|export|echo|install|init|run|watch|build|deploy)\b/ },
+    json:       { c: null,                          k: /\b(true|false|null)\b/ },
+    yaml:       { c: /#[^\n]*/,                     k: /\b(true|false|null|modules|resources|requires|provides|parameters|properties|type|name|path|version|service)\b/ },
+    sql:        { c: /--[^\n]*/,                    k: /\b(SELECT|FROM|WHERE|ORDER|BY|LIMIT|AS|DESC|ASC|JOIN|ON|AND|OR|NOT|NULL|INSERT|INTO|UPDATE|SET|DELETE)\b/i },
+    html:       { c: new RegExp("<" + "!--[\\s\\S]*?--" + ">"), k: /\b(script|button|div|span|type|module|import|const|await|document)\b/ },
+  };
+  function escHtml(s) { return s.replace(/&/g, "&amp;").replace(/[<]/g, "&lt;").replace(/>/g, "&gt;"); }
+  $$(".codeblock").forEach((fig) => {
+    const lang = (fig.querySelector(".flang")?.textContent || "").trim().toLowerCase();
+    const spec = HL[lang];
+    const codeEl = fig.querySelector("pre > code");
+    if (!spec || !codeEl) return;
+    const src = codeEl.textContent;
+    const parts = [
+      spec.c ? spec.c.source : null,
+      /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/.source,
+      spec.k ? spec.k.source : null,
+      /\b\d+(?:\.\d+)?\b/.source,
+    ];
+    const groups = [];
+    const rxSrc = parts.filter((p, i) => { if (p) { groups.push(i); return true; } return false; })
+                       .map((p) => "(" + p + ")").join("|");
+    let rx;
+    try { rx = new RegExp(rxSrc, "g"); } catch { return; }
+    let out = "", last = 0, m;
+    while ((m = rx.exec(src)) !== null) {
+      out += escHtml(src.slice(last, m.index));
+      const gi = m.slice(1).findIndex((g) => g !== undefined);
+      const kind = ["tok-c", "tok-s", "tok-k", "tok-n"][groups[gi]];
+      out += '<span class="' + kind + '">' + escHtml(m[0]) + "</span>";
+      last = m.index + m[0].length;
+    }
+    out += escHtml(src.slice(last));
+    codeEl.innerHTML = out;
+  });
+
+  /* copy */
+  document.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".copy-btn");
+    if (!btn) return;
+    const pre = btn.closest("figure").querySelector("pre");
+    try {
+      await navigator.clipboard.writeText(pre.innerText);
+      btn.textContent = "Copied"; btn.classList.add("ok");
+      setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("ok"); }, 1400);
+    } catch { btn.textContent = "Select + copy"; }
+  });
+
+  /* search */
+  const q = $("#q");
+  const status = document.createElement("p");
+  status.id = "searchstatus";
+  $(".hero")?.after(status);
+  function clearHits() { $$("mark.hit").forEach((m) => m.replaceWith(document.createTextNode(m.textContent))); }
+  function search(term) {
+    clearHits();
+    const t = term.trim().toLowerCase();
+    const links = $$("#sidenav a[href^='#']");
+    if (!t) { links.forEach((a) => a.hidden = false); status.textContent = ""; return; }
+    let shown = 0, hits = 0;
+    $$("section.mod, header.hero").forEach((sec) => {
+      const text = sec.textContent.toLowerCase();
+      const ok = text.includes(t);
+      const id = sec.id ? "#"+sec.id : "";
+      links.forEach((a) => { if (a.getAttribute("href") === id) { a.hidden = !ok; if (ok) shown += 1; } });
+    });
+    $$("section.mod h2, section.mod h3, section.mod p, .card p, td, .callout p, dt, dd").forEach((el) => {
+      if (!el.childElementCount && el.textContent.toLowerCase().includes(t)) {
+        const rx = new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "ig");
+        el.innerHTML = el.textContent.replace(rx, (m) => { hits += 1; return "<mark class='hit'>"+m+"</mark>"; });
+      }
+    });
+    status.textContent = hits ? `Highlighted ${hits} matches. Sidebar filtered to ${shown} sections.` : `No matches for "${term}".`;
+  }
+  q.addEventListener("input", () => search(q.value));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/" && document.activeElement !== q && !e.metaKey && !e.ctrlKey && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+      e.preventDefault(); q.focus();
+    }
+    if (e.key === "Escape") { q.value = ""; search(""); q.blur(); }
+  });
+
+  /* scroll spy + readbar */
+  const sections = $$("section.mod, header.hero");
+  const navLinks = $$("#sidenav a[href^='#']");
+  const rail = $("#railLinks");
+  function buildRail() {
+    rail.innerHTML = "";
+    $$(".wrap > section.mod, .wrap > header.hero").forEach((sec) => {
+      const h = sec.querySelector("h1, h2");
+      if (!h || !sec.id) return;
+      const a = document.createElement("a");
+      a.href = "#"+sec.id;
+      a.textContent = h.textContent.replace(/^MODULE.*/, "").slice(0, 44);
+      rail.appendChild(a);
+    });
+  }
+  buildRail();
+  const io = new IntersectionObserver((ents) => {
+    ents.forEach((en) => {
+      if (!en.isIntersecting) return;
+      const id = "#"+en.target.id;
+      navLinks.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === id));
+      $$("#railLinks a").forEach((a) => a.classList.toggle("active", a.getAttribute("href") === id));
+    });
+  }, { rootMargin: "-40% 0px -50% 0px", threshold: 0.01 });
+  sections.forEach((s) => { if (s.id) io.observe(s); });
+  window.addEventListener("scroll", () => {
+    const el = $("#readbar > i");
+    const max = document.documentElement.scrollHeight - innerHeight;
+    el.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + "%";
+  }, { passive: true });
+
+  /* tabs (used by playground + JSON explorer + capstone trace) */
+  document.addEventListener("click", (e) => {
+    const tab = e.target.closest(".tab[data-tabs]");
+    if (!tab) return;
+    const group = tab.dataset.tabs;
+    $$('.tab[data-tabs="'+group+'"]').forEach((t) => t.setAttribute("aria-selected", t === tab ? "true" : "false"));
+    $$('.tabpanel[data-tabs="'+group+'"]').forEach((p) => { p.hidden = p.id !== tab.dataset.panel; });
+  });
+
+  /* reference repo file explorer (populated once the build-it steps exist) */
+  const FILES = {};
+  function showFile(key) {
+    $$("#repoExplorer nav button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.file === key ? "true" : "false"));
+    const f = FILES[key];
+    if (!f) return;
+    $("#filePane").innerHTML = "<h4>"+f.title+"</h4><div class='meta'><div><b>Purpose.</b> "+f.purpose+"</div><div><b>Inputs.</b> "+f.inputs+"</div><div><b>Outputs.</b> "+f.outputs+"</div><div><b>Dependencies.</b> "+f.deps+"</div><div><b>Who calls it.</b> "+f.who+"</div><div><b>What runs next.</b> "+f.next+"</div>"+(f.extra ? "<div><b>Note.</b> "+f.extra+"</div>" : "")+"</div>";
+  }
+  $$("#repoExplorer nav button").forEach((b) => b.addEventListener("click", () => showFile(b.dataset.file)));
+  if ($("#repoExplorer")) showFile($$("#repoExplorer nav button")[0]?.dataset.file);
+
+  /* protocol decision tree */
+  const TREE = {};
+  const VERDICTS = {};
+  function renderTree(id) {
+    const node = TREE[id];
+    $("#treeVerdict").hidden = true;
+    if (!node) return;
+    $("#treeQ").textContent = node.q;
+    $("#treeOpts").innerHTML = "";
+    node.opts.forEach(([label, next]) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.addEventListener("click", () => {
+        if (TREE[next]) { renderTree(next); return; }
+        const v = VERDICTS[next];
+        if (!v) return;
+        $("#decisionTree").hidden = true;
+        const box = $("#treeVerdict");
+        box.className = "verdict " + (v[0] === "a2a" ? "violet" : v[0] === "hana" ? "gold" : v[0] === "mcpapp" || v[0] === "a2ui" ? "teal" : "");
+        box.innerHTML = "<strong>"+v[1]+"</strong><p style='margin-top:.5rem'>"+v[2]+"</p>";
+        box.hidden = false;
+      });
+      $("#treeOpts").appendChild(btn);
+    });
+  }
+  if ($("#decisionTree")) renderTree("start");
+  $("#treeReset")?.addEventListener("click", () => { $("#decisionTree").hidden = false; renderTree("start"); });
+
+  /* agent trace explorer */
+  const TRACE = {};
+  const traceNodes = $$("#traceNodes button");
+  function showTraceStage(key) {
+    traceNodes.forEach((btn) => btn.classList.toggle("on", btn.dataset.stage === key));
+    const s = TRACE[key];
+    if (!s) return;
+    $("#tracePane").innerHTML = "<b>"+s.title+"</b><span>"+s.body+"</span>"
+      + (s.module ? "<span style='display:block;margin-top:.5rem'><a href='#"+s.module+"'>See "+s.moduleLabel+" &rarr;</a></span>" : "");
+  }
+  traceNodes.forEach((btn) => btn.addEventListener("click", () => showTraceStage(btn.dataset.stage)));
+  if (traceNodes.length) showTraceStage(traceNodes[0].dataset.stage);
+
+  /* roadmap timeline */
+  const ROADTL = [];
+  const road = $("#roadTime");
+  if (road) {
+    ROADTL.forEach((lvl, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.innerHTML = '<span class="dot"></span><span class="lab"><b>'+lvl[0]+'</b><span>Click for the exercise</span></span>';
+      b.addEventListener("click", () => {
+        $$("#roadTime button").forEach((x) => x.classList.toggle("on", x === b));
+        $("#roadExplain").innerHTML = "<strong>"+lvl[0]+".</strong> "+lvl[1];
+      });
+      road.appendChild(b);
+    });
+    road.querySelector("button")?.click();
+  }
+})();
+</script>
+
+</body>
+</html>

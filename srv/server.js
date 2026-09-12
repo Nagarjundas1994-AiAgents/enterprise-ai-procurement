@@ -12,6 +12,19 @@ import rateLimit from 'express-rate-limit';
 // Health / readiness / REST bootstrap. Business logic stays in CAP services.
 cds.on('bootstrap', (app) => {
   app.use(helmet());
+  // The @cap-js/agents preview chat (GET /a2a/<svc>/preview/) ships an inline
+  // <script> that drives Send/message rendering. Helmet's default CSP
+  // (script-src 'self') silently kills it: page skeleton renders but Send is
+  // dead and no messages ever appear. Relax scripts ONLY under /a2a (dev-time
+  // chat UI + JSON-RPC); the rest of the app keeps the strict default.
+  // Must be registered AFTER helmet so it overwrites the header.
+  app.use('/a2a', (_req, res, next) => {
+    res.setHeader(
+      'Content-Security-Policy',
+      "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data:; font-src 'self' https: data:; connect-src 'self'; form-action 'self'; frame-ancestors 'self'; object-src 'none'",
+    );
+    next();
+  });
   // Global safety net against runaway clients/agents (per-tool limits live in lib/security/rate-limit.ts).
   app.use(
     rateLimit({

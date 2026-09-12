@@ -5,7 +5,7 @@
       "type": "remote",
       "url": "http://localhost:4004/mcp/procurement",
       "headers": {
-        "x-mock-user": "procurement@example.com"
+        "x-mock-user": "admin@example.com"
       },
       "enabled": true
     },
@@ -13,7 +13,7 @@
       "type": "remote",
       "url": "http://localhost:4004/mcp/catalog",
       "headers": {
-        "x-mock-user": "procurement@example.com"
+        "x-mock-user": "admin@example.com"
       },
       "enabled": true
     },
@@ -21,7 +21,7 @@
       "type": "remote",
       "url": "http://localhost:4004/mcp/procurement-ops",
       "headers": {
-        "x-mock-user": "procurement@example.com"
+        "x-mock-user": "admin@example.com"
       },
       "enabled": true
     },
@@ -29,7 +29,7 @@
       "type": "remote",
       "url": "http://localhost:4004/mcp/suppliers",
       "headers": {
-        "x-mock-user": "procurement@example.com"
+        "x-mock-user": "admin@example.com"
       },
       "enabled": true
     },
@@ -37,7 +37,7 @@
       "type": "remote",
       "url": "http://localhost:4004/mcp/approvals",
       "headers": {
-        "x-mock-user": "procurement@example.com"
+        "x-mock-user": "admin@example.com"
       },
       "enabled": true
     },
@@ -45,7 +45,7 @@
       "type": "remote",
       "url": "http://localhost:4004/mcp/invoices",
       "headers": {
-        "x-mock-user": "procurement@example.com"
+        "x-mock-user": "admin@example.com"
       },
       "enabled": true
     }

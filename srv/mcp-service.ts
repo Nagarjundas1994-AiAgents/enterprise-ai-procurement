@@ -4,6 +4,8 @@ import { authenticateRequest } from '../lib/auth/authentication.js';
 import { AuthorizationService } from '../lib/authorization/authorization.js';
 import { MCP_TOOL_PERMISSIONS, PERMISSIONS } from '../lib/auth/rbac.js';
 import { authorizeAgentTool } from '../lib/agents/agent-auth.js';
+import { sendA2AMessage } from '../lib/agents/a2a-client.js';
+import { sanitizeForLLM } from '../lib/validation/validation.js';
 import { writeAudit } from '../lib/audit/audit.js';
 import { checkRateLimit, rateKey } from '../lib/security/rate-limit.js';
 import { toHttpError } from '../lib/security/errors.js';
@@ -165,6 +167,20 @@ export default class MCPService extends (cds.ApplicationService as any) {
     wrap('submitForApproval', async (req, ctx) => {
       const svc = await cds.connect.to('ProcurementService');
       return await (svc as any).tx(req).send('submitRequisition', { ID: req.data.requisitionID });
+    });
+
+    // A2A-via-MCP: these tools call the REMOTE agents on :4007 over A2A JSON-RPC
+    // and return their (sanitized, advisory-only) JSON as a string. They never
+    // bypass authZ/policy: guardTool already enforced EXECUTE_MCP_TOOL + READ_*.
+    const remoteBase = () => (process.env.REMOTE_SUPPLIER_AGENT_URL || 'http://localhost:4007').replace(/\/+$/, '');
+    wrap('getRemoteSuppliers', async (req) => {
+      const reply = await sendA2AMessage(`${remoteBase()}/`, String(req.data.query ?? 'list suppliers'), 15000);
+      return sanitizeForLLM(reply.text);
+    });
+
+    wrap('getRemoteLogisticsIntel', async (req) => {
+      const reply = await sendA2AMessage(`${remoteBase()}/logistics/`, String(req.data.query ?? 'list shipments'), 15000);
+      return sanitizeForLLM(reply.text);
     });
 
     return super.init();

@@ -53,4 +53,10 @@ service MCPService {
 
   @mcp.description: 'Submit a requisition for approval'
   action submitForApproval(requisitionID : String) returns String;
+
+  @mcp.description: 'Ask the REMOTE supplier-network agent via A2A (live availability, lead-time, MOQ, quote hints)'
+  action getRemoteSuppliers(query : String) returns String;
+
+  @mcp.description: 'Ask the REMOTE logistics agent via A2A (shipment tracking, ETAs, freight hints)'
+  action getRemoteLogisticsIntel(query : String) returns String;
 }

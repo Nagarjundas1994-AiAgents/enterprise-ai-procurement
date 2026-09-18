@@ -3,3 +3,9 @@ d-it,tenant-a,IT,Information Technology,org-a
 d-proc,tenant-a,PROC,Procurement,org-a
 d-fin,tenant-a,FIN,Finance,org-a
 d-ops,tenant-b,OPS,Operations,org-b
+d-hr,tenant-a,HR,Human Resources,org-a
+d-mkt,tenant-a,MKT,Marketing,org-a
+d-log,tenant-a,LOG,Logistics,org-a
+d-qa,tenant-a,QA,Quality Assurance,org-a
+d-rnd,tenant-a,RND,Research and Development,org-a
+d-adm,tenant-a,ADM,Administration,org-a

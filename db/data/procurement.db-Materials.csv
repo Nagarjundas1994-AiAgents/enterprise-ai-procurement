@@ -5,3 +5,13 @@ m-srv,tenant-a,MAT-003,Server,mc-it,EA,450000,INR,true
 m-chr,tenant-a,MAT-004,Office Chair,mc-furn,EA,12000,INR,true
 m-pmp,tenant-a,MAT-005,Industrial Pump,mc-ind,EA,180000,INR,true
 m-saf,tenant-a,MAT-006,Safety Equipment,mc-ind,SET,9500,INR,true
+m-kbd,tenant-a,MAT-006,Keyboard,mc-it,EA,4500,INR,true
+m-mou,tenant-a,MAT-007,Mouse,mc-it,EA,1200,INR,true
+m-desk,tenant-a,MAT-008,Standing Desk,mc-furn,EA,35000,INR,true
+m-cab,tenant-a,MAT-009,Filing Cabinet,mc-furn,EA,9500,INR,true
+m-brg,tenant-a,MAT-010,Bearing Set,mc-mro,EA,8200,INR,true
+m-blt,tenant-a,MAT-011,Bolt Kit M12,mc-mro,BOX,1500,INR,true
+m-flt,tenant-a,MAT-012,Oil Filter,mc-mro,EA,2300,INR,true
+m-hlm,tenant-a,MAT-013,Safety Helmet,mc-ind,EA,900,INR,true
+m-glv,tenant-a,MAT-014,Safety Gloves,mc-ind,PAIR,350,INR,true
+m-cln,tenant-a,MAT-015,Cleaning Service,mc-svc,LOT,25000,INR,true

@@ -3,8 +3,13 @@
 !.env.example
 default-env.json
 node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
 dist/
 @cds-models/
 coverage/
 *.log
+__pycache__/
+*.pyc
 .vscode/settings.json

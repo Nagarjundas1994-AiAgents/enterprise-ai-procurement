@@ -1,0 +1,7 @@
+ID,tenantId,orderNo,requisition_ID,supplier_ID,status,totalAmount,currency,version,orderedAt,expectedAt,createdByUser_ID
+po-5001,tenant-a,PO-5001,pr-1001,s-abc,SENT_TO_SUPPLIER,1275000,INR,1,2026-08-10T10:00:00Z,2026-09-15,u-proc
+po-5002,tenant-a,PO-5002,pr-1009,s-ap,PARTIALLY_RECEIVED,180000,INR,1,2026-09-02T10:00:00Z,2026-09-20,u-proc
+po-5003,tenant-a,PO-5003,pr-1014,s-ap,FULLY_RECEIVED,220000,INR,1,2026-09-05T10:00:00Z,2026-09-18,u-proc
+po-5004,tenant-a,PO-5004,pr-1007,s-koyo,SENT_TO_SUPPLIER,280000,INR,1,2026-09-08T10:00:00Z,2026-09-30,u-buy
+po-5005,tenant-a,PO-5005,pr-1012,s-gp,INVOICED,230000,INR,1,2026-09-09T10:00:00Z,2026-09-25,u-log
+po-5006,tenant-a,PO-5006,pr-1017,s-koyo,SENT_TO_SUPPLIER,300000,INR,1,2026-09-12T10:00:00Z,2026-10-05,u-log

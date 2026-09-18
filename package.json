@@ -10,6 +10,7 @@
     "@cap-js/agents": "^0.9.4",
     "@cap-js/mcp": "^1.4.3",
     "@cap-js/postgres": "^3",
+    "@langchain/openai": "^1.5.13",
     "@sap/cds": "^10",
     "@sap/xssec": "^4.15.0",
     "dotenv": "^16.4.5",
@@ -64,13 +65,33 @@
         },
         "[postgres]": {
           "kind": "postgres",
-          "pool": { "min": 0, "max": 5, "testOnBorrow": true, "acquireTimeoutMillis": 60000 }
+          "pool": {
+            "min": 0,
+            "max": 5,
+            "testOnBorrow": true,
+            "acquireTimeoutMillis": 60000
+          }
         }
       },
       "auth": {
         "kind": "mocked",
         "[production]": {
           "kind": "jwt"
+        }
+      },
+      "llm": {
+        "kind": "deepseek",
+        "model": "deepseek-flash"
+      },
+      "kinds": {
+        "deepseek": {
+          "impl": "./srv/llm/deepseek-llm.js"
+        }
+      },
+      "[development]": {
+        "llm": {
+          "kind": "deepseek",
+          "model": "deepseek-flash"
         }
       }
     }

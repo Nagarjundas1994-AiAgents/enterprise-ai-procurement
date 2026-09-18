@@ -1,0 +1,109 @@
+<mvc:View
+  controllerName="procure.chat.controller.Main"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:layout="sap.ui.layout">
+  <App id="app">
+    <Page title="ProcureChat — AI Procurement Assistant" showHeader="true">
+      <headerContent>
+        <Label text="User" />
+        <Select id="userSelect" selectedKey="admin@example.com" change="onUserChange" width="220px">
+          <core:Item xmlns:core="sap.ui.core" key="admin@example.com" text="Admin (full access)" />
+          <core:Item xmlns:core="sap.ui.core" key="manager@example.com" text="Manager" />
+          <core:Item xmlns:core="sap.ui.core" key="procurement@example.com" text="Procurement officer" />
+          <core:Item xmlns:core="sap.ui.core" key="employee@example.com" text="Employee" />
+          <core:Item xmlns:core="sap.ui.core" key="approver@example.com" text="Approver" />
+          <core:Item xmlns:core="sap.ui.core" key="auditor@example.com" text="Auditor" />
+        </Select>
+        <Button text="Refresh" icon="sap-icon://refresh" press="onRefresh" />
+      </headerContent>
+      <content>
+        <layout:Splitter height="100%">
+          <layout:contentAreas>
+            <!-- Worklist -->
+            <Panel width="auto" headerText="Procurement worklist">
+              <content>
+                <IconTabBar id="worklistTabs" select="onTabSelect" stretchContentHeight="true">
+                  <items>
+                    <IconTabFilter text="Requisitions" key="prs" count="{app>/prs/length}">
+                      <Table id="prTable" items="{app>/prs}" mode="SingleSelectMaster" selectionChange="onPrSelect" growing="true" growingThreshold="20">
+                        <columns>
+                          <Column><Text text="No." /></Column>
+                          <Column><Text text="Title" /></Column>
+                          <Column><Text text="Status" /></Column>
+                          <Column><Text text="Total" /></Column>
+                          <Column><Text text="Actions" /></Column>
+                        </columns>
+                        <items>
+                          <ColumnListItem>
+                            <cells>
+                              <Text text="{app>requisitionNo}" />
+                              <Text text="{app>title}" />
+                              <ObjectStatus text="{app>status}" state="{path: 'app>status', formatter: '.fmtStatus'}" />
+                              <ObjectNumber number="{app>totalAmount}" unit="{app>currency}" />
+                              <HBox>
+                                <Button text="Budget" press="onCheckBudget" class="sapUiTinyMarginEnd" />
+                                <Button text="Submit" press="onSubmitPr" class="sapUiTinyMarginEnd" />
+                                <Button text="Ask AI" press="onAskAi" />
+                              </HBox>
+                            </cells>
+                          </ColumnListItem>
+                        </items>
+                      </Table>
+                    </IconTabFilter>
+                    <IconTabFilter text="Orders" key="pos" count="{app>/pos/length}">
+                      <Table items="{app>/pos}" growing="true" growingThreshold="20">
+                        <columns>
+                          <Column><Text text="Order No." /></Column>
+                          <Column><Text text="Status" /></Column>
+                          <Column><Text text="Total" /></Column>
+                          <Column><Text text="Supplier" /></Column>
+                        </columns>
+                        <items>
+                          <ColumnListItem>
+                            <cells>
+                              <Text text="{app>orderNo}" />
+                              <ObjectStatus text="{app>status}" state="{path: 'app>status', formatter: '.fmtStatus'}" />
+                              <ObjectNumber number="{app>totalAmount}" unit="{app>currency}" />
+                              <Text text="{app>supplier_ID}" />
+                            </cells>
+                          </ColumnListItem>
+                        </items>
+                      </Table>
+                    </IconTabFilter>
+                    <IconTabFilter text="Suppliers" key="suppliers" count="{app>/suppliers/length}">
+                      <Table items="{app>/suppliers}" growing="true" growingThreshold="20">
+                        <columns>
+                          <Column><Text text="Name" /></Column>
+                          <Column><Text text="Country" /></Column>
+                          <Column><Text text="On-time" /></Column>
+                          <Column><Text text="Risk" /></Column>
+                        </columns>
+                        <items>
+                          <ColumnListItem>
+                            <cells>
+                              <Text text="{app>name}" />
+                              <Text text="{app>country}" />
+                              <Text text="{app>onTimeRate} %" />
+                              <ObjectStatus text="{app>riskLevel}" state="{path: 'app>riskLevel', formatter: '.fmtRisk'}" />
+                            </cells>
+                          </ColumnListItem>
+                        </items>
+                      </Table>
+                    </IconTabFilter>
+                  </items>
+                </IconTabBar>
+              </content>
+            </Panel>
+            <!-- Chat assistant -->
+            <mvc:View id="chatView" viewName="procure.chat.view.Chat" type="XML" async="true">
+              <mvc:layoutData>
+                <layout:SplitterLayoutData size="400px" minSize="320px" />
+              </mvc:layoutData>
+            </mvc:View>
+          </layout:contentAreas>
+        </layout:Splitter>
+      </content>
+    </Page>
+  </App>
+</mvc:View>

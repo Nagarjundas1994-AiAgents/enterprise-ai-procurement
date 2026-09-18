@@ -2,3 +2,5 @@ ID,code,name,description
 mc-it,ELEC,Electronics,Electronic goods
 mc-furn,FURN,Furniture,Office furniture
 mc-ind,IND,Industrial,Industrial equipment
+mc-mro,MRO,Maintenance Repair Operations,Spare parts and consumables
+mc-svc,SVC,Services,Service contracts and labor

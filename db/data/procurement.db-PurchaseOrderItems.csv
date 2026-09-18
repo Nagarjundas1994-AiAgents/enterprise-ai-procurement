@@ -1,0 +1,9 @@
+ID,purchaseOrder_ID,lineNo,material_ID,description,quantity,unit,unitPrice,currency,lineAmount,receivedQty,invoicedQty
+poi-5001-1,po-5001,1,m-lap,Lenovo ThinkPad T14,15,EA,85000,INR,1275000,15,15
+poi-5002-1,po-5002,1,m-hlm,Safety Helmet white,200,EA,900,INR,180000,100,100
+poi-5003-1,po-5003,1,m-glv,Safety Gloves,500,PAIR,350,INR,175000,500,500
+poi-5003-2,po-5003,2,m-hlm,Safety Helmet white,50,EA,900,INR,45000,50,50
+poi-5004-1,po-5004,1,m-brg,Bearing Set 6204,25,EA,8200,INR,205000,25,25
+poi-5004-2,po-5004,2,m-blt,Bolt Kit M12,50,BOX,1500,INR,75000,50,50
+poi-5005-1,po-5005,1,m-flt,Oil Filter OF-77,100,EA,2300,INR,230000,100,100
+poi-5006-1,po-5006,1,m-blt,Bolt Kit M12,200,BOX,1500,INR,300000,0,0

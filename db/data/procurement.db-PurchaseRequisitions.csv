@@ -3,3 +3,16 @@ pr-1001,tenant-a,PR-1001,Laptops for engineering,15 laptops for new hires,u-emp,
 pr-1002,tenant-a,PR-1002,Office chairs Ph1,50 chairs for floor 3,u-emp,d-it,REJECTED,600000,INR,NORMAL,1
 pr-1003,tenant-a,PR-1003,Safety equipment refill,Quarterly safety refill,u-proc,d-proc,SUBMITTED,95000,INR,NORMAL,1
 pr-1004,tenant-a,PR-1004,Industrial pump spare,Urgent maintenance spare,u-proc,d-proc,DRAFT,180000,INR,URGENT,1
+pr-1005,tenant-a,PR-1005,Keyboards for support,20 keyboards for support desk,u-emp,d-it,SUBMITTED,90000,INR,NORMAL,1
+pr-1006,tenant-a,PR-1006,Standing desks Ph2,10 standing desks for floor 4,u-emp,d-it,DRAFT,350000,INR,NORMAL,1
+pr-1007,tenant-a,PR-1007,Bearing sets plant 2,Bearings and bolts for plant 2 maintenance,u-log,d-log,APPROVED,280000,INR,HIGH,1
+pr-1008,tenant-a,PR-1008,Cleaning contract Q4,Office cleaning contract for Q4,u-hr,d-hr,SUBMITTED,100000,INR,NORMAL,1
+pr-1009,tenant-a,PR-1009,Safety helmets batch,200 helmets for site crew,u-proc,d-proc,CONVERTED_TO_PO,180000,INR,URGENT,1
+pr-1010,tenant-a,PR-1010,Monitors for marketing,5 monitors for design team,u-mkt,d-mkt,DRAFT,110000,INR,NORMAL,1
+pr-1011,tenant-a,PR-1011,Server upgrade,2 servers for datacenter refresh,u-admin,d-it,UNDER_REVIEW,900000,INR,HIGH,1
+pr-1012,tenant-a,PR-1012,Oil filters stock,100 oil filters for fleet,u-log,d-log,APPROVED,230000,INR,NORMAL,1
+pr-1013,tenant-a,PR-1013,Filing cabinets,8 cabinets for finance archive,u-fin2,d-fin,REJECTED,76000,INR,NORMAL,1
+pr-1014,tenant-a,PR-1014,Gloves monthly,Monthly gloves and helmets top-up,u-proc,d-proc,CONVERTED_TO_PO,220000,INR,NORMAL,1
+pr-1015,tenant-a,PR-1015,R and D workstation,Workstation for R and D lab,u-emp,d-rnd,CANCELLED,214000,INR,HIGH,1
+pr-1016,tenant-a,PR-1016,Chairs for QA lab,12 chairs for QA lab,u-qa,d-qa,SUBMITTED,144000,INR,NORMAL,1
+pr-1017,tenant-a,PR-1017,Bolt kits replenish,200 bolt kits for MRO store,u-log,d-log,CONVERTED_TO_PO,300000,INR,NORMAL,1

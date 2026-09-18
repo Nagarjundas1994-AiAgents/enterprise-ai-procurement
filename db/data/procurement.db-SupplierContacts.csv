@@ -1,0 +1,13 @@
+ID,supplier_ID,name,email,phone,role
+sc-01,s-abc,Rajesh Kumar,sales@abcindustrial.in,+91-98200-11101,Sales Manager
+sc-02,s-abc,Priya Nair,support@abcindustrial.in,+91-98200-11102,Support Lead
+sc-03,s-gc,Hans Müller,hans@globalcomponents.in,+91-98300-22201,Account Manager
+sc-04,s-ts,Anil Verma,anil@techsource.in,+91-98400-33301,Regional Sales
+sc-05,s-pl,Sneha Iyer,dispatch@primelogistics.in,+91-98500-44401,Dispatch Head
+sc-06,s-vs,Vikram Rao,vikram@vertexsystems.in,+91-98600-55501,Enterprise Sales
+sc-07,s-no,Claudia Braun,claudia@nordwerk.de,+49-170-66601,Export Manager
+sc-08,s-ap,Manoj Tiwari,manoj@apextraders.in,+91-98700-77701,Proprietor
+sc-09,s-qs,Kavita Rao,contracts@qserve.in,+91-98800-88801,Contracts Manager
+sc-10,s-gp,Omar Sheikh,omar@gulfparts.ae,+971-50-99901,Gulf Sales
+sc-11,s-sn,Li Wei,liwei@singatech.sg,+65-8111-0001,APAC Sales
+sc-12,s-koyo,Suresh Pillai,suresh@koyobearings.in,+91-98900-12121,Distributor

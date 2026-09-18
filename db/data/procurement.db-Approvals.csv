@@ -1,0 +1,7 @@
+ID,tenantId,requisition_ID,stepNo,approver_ID,status,comment
+ap-01,tenant-a,pr-1003,1,u-appr,PENDING,
+ap-02,tenant-a,pr-1005,1,u-mgr,PENDING,
+ap-03,tenant-a,pr-1008,1,u-appr,APPROVED,Budget verified for Q4
+ap-04,tenant-a,pr-1011,1,u-mgr,PENDING,
+ap-05,tenant-a,pr-1011,2,u-appr,PENDING,
+ap-06,tenant-a,pr-1016,1,u-appr,PENDING,

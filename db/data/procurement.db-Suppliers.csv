@@ -3,3 +3,13 @@ s-abc,tenant-a,SUP-001,ABC Industrial Supplies,IN,true,15,LOW,96.5,0,1250000
 s-gc,tenant-a,SUP-002,Global Components,IN,true,35,MEDIUM,89.0,2,3400000
 s-ts,tenant-a,SUP-003,TechSource India,IN,true,70,HIGH,72.0,5,800000
 s-pl,tenant-a,SUP-004,Prime Logistics,IN,true,10,LOW,98.0,0,450000
+s-vs,tenant-a,SUP-005,Vertex Systems,IN,true,20,LOW,94.5,1,2100000
+s-no,tenant-a,SUP-006,Nordwerk GmbH,DE,true,30,MEDIUM,91.0,1,1750000
+s-ap,tenant-a,SUP-007,Apex Traders,IN,true,55,MEDIUM,84.5,3,960000
+s-qs,tenant-a,SUP-008,QServe Facilities,IN,true,12,LOW,97.2,0,620000
+s-gp,tenant-a,SUP-009,Gulf Parts LLC,AE,true,45,MEDIUM,88.0,2,1430000
+s-sn,tenant-a,SUP-010,SingaTech,SG,true,25,LOW,93.8,1,1980000
+s-bm,tenant-a,SUP-011,BudgetMart Wholesale,US,true,78,HIGH,68.5,6,540000
+s-koyo,tenant-a,SUP-012,Koyo Bearings IN,IN,true,18,LOW,95.9,0,870000
+s-fx,tenant-a,SUP-013,FlexiOffice,IN,true,40,MEDIUM,86.0,2,730000
+s-rx,tenant-a,SUP-014,RiskyDeals Co,IN,true,92,CRITICAL,61.0,9,120000

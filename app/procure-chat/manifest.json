@@ -1,0 +1,26 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "procure.chat",
+    "type": "application",
+    "title": "ProcureChat — AI Procurement Assistant",
+    "description": "Worklist for requisitions, orders and suppliers with an AI chat assistant (DeepSeek).",
+    "applicationVersion": { "version": "1.0.0" }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "procure.chat.view.Main",
+      "type": "XML",
+      "async": true,
+      "id": "main"
+    },
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": { "sap.m": {}, "sap.ui.layout": {} }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": { "desktop": true, "tablet": true, "phone": true }
+  }
+}

@@ -1,0 +1,19 @@
+ID,requisition_ID,lineNo,material_ID,description,quantity,unit,unitPrice,currency,lineAmount
+pri-1001-1,pr-1001,1,m-lap,Lenovo ThinkPad T14,15,EA,85000,INR,1275000
+pri-1002-1,pr-1002,1,m-chr,Ergo Chair Model X,50,EA,12000,INR,600000
+pri-1005-1,pr-1005,1,m-kbd,USB Keyboard,20,EA,4500,INR,90000
+pri-1006-1,pr-1006,1,m-desk,Standing Desk 140cm,10,EA,35000,INR,350000
+pri-1007-1,pr-1007,1,m-brg,Bearing Set 6204,25,EA,8200,INR,205000
+pri-1007-2,pr-1007,2,m-blt,Bolt Kit M12,50,BOX,1500,INR,75000
+pri-1008-1,pr-1008,1,m-cln,Office cleaning monthly,4,LOT,25000,INR,100000
+pri-1009-1,pr-1009,1,m-hlm,Safety Helmet white,200,EA,900,INR,180000
+pri-1010-1,pr-1010,1,m-mon,24 inch Monitor,5,EA,22000,INR,110000
+pri-1011-1,pr-1011,1,m-srv,Rack Server 2U,2,EA,450000,INR,900000
+pri-1012-1,pr-1012,1,m-flt,Oil Filter OF-77,100,EA,2300,INR,230000
+pri-1013-1,pr-1013,1,m-cab,Filing Cabinet 4 drawer,8,EA,9500,INR,76000
+pri-1014-1,pr-1014,1,m-glv,Safety Gloves,500,PAIR,350,INR,175000
+pri-1014-2,pr-1014,2,m-hlm,Safety Helmet white,50,EA,900,INR,45000
+pri-1015-1,pr-1015,1,m-lap,Lenovo ThinkPad T14,2,EA,85000,INR,170000
+pri-1015-2,pr-1015,2,m-mon,24 inch Monitor,2,EA,22000,INR,44000
+pri-1016-1,pr-1016,1,m-chr,Ergo Chair Model X,12,EA,12000,INR,144000
+pri-1017-1,pr-1017,1,m-blt,Bolt Kit M12,200,BOX,1500,INR,300000

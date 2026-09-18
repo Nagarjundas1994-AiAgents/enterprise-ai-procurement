@@ -7,3 +7,9 @@ ur5,u-mgr,r-mgr
 ur6,u-fin,r-fin
 ur7,u-aud,r-aud
 ur8,u-other,r-emp
+ur9,u-buy,r-off
+ur10,u-log,r-off
+ur11,u-hr,r-emp
+ur12,u-mkt,r-emp
+ur13,u-fin2,r-fin
+ur14,u-qa,r-emp

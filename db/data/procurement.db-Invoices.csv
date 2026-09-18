@@ -1,0 +1,7 @@
+ID,tenantId,invoiceNo,purchaseOrder_ID,supplier_ID,status,totalAmount,currency,invoiceDate,dueDate,matchResult,matchDetails
+inv-9001,tenant-a,INV-9001,po-5003,s-ap,PAID,220000,INR,2026-09-18,2026-10-18,MATCHED,All lines matched within tolerance
+inv-9002,tenant-a,INV-9002,po-5005,s-gp,APPROVED,230000,INR,2026-09-20,2026-10-20,MATCHED,All lines matched within tolerance
+inv-9003,tenant-a,INV-9003,po-5001,s-abc,SUBMITTED,1275000,INR,2026-09-22,2026-10-22,,
+inv-9004,tenant-a,INV-9004,po-5002,s-ap,MISMATCH,90000,INR,2026-09-23,2026-10-23,MISMATCH,Billed quantity below received quantity
+inv-9005,tenant-a,INV-9005,po-5004,s-koyo,PAID,280000,INR,2026-09-24,2026-10-24,MATCHED,All lines matched
+inv-9006,tenant-a,INV-9006,po-5006,s-koyo,DRAFT,300000,INR,2026-09-26,2026-10-26,,

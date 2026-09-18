@@ -1,0 +1,9 @@
+ID,invoice_ID,lineNo,poItem_ID,description,quantity,unitPrice,lineAmount
+ii-9001-1,inv-9001,1,poi-5003-1,Safety Gloves,500,350,175000
+ii-9001-2,inv-9001,2,poi-5003-2,Safety Helmet white,50,900,45000
+ii-9002-1,inv-9002,1,poi-5005-1,Oil Filter OF-77,100,2300,230000
+ii-9003-1,inv-9003,1,poi-5001-1,Lenovo ThinkPad T14,15,85000,1275000
+ii-9004-1,inv-9004,1,poi-5002-1,Safety Helmet white,100,900,90000
+ii-9005-1,inv-9005,1,poi-5004-1,Bearing Set 6204,25,8200,205000
+ii-9005-2,inv-9005,2,poi-5004-2,Bolt Kit M12,50,1500,75000
+ii-9006-1,inv-9006,1,poi-5006-1,Bolt Kit M12,200,1500,300000

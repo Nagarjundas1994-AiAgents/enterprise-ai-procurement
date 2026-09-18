@@ -42,6 +42,110 @@ async function fetchRemoteSupplierIntel(query: string): Promise<any> {
     return { unavailable: true, reason: String(e?.message || e).slice(0, 200) };
   }
 }
+const CHAT_SYSTEM_PROMPT = [
+  'You are ProcureChat, the AI procurement assistant for this tenant.',
+  'Answer concisely using ONLY the live snapshot below. Never invent IDs, amounts, or records.',
+  '"Open" requisitions = status DRAFT or SUBMITTED. On-time ranking = highest Suppliers.onTimeRate first.',
+  'If the snapshot lacks what is asked, say so and name the missing data.',
+  'Format: short markdown, tables for lists, no SQL unless explicitly requested.',
+].join(' ');
+
+/**
+ * Compact live snapshot for chat grounding. Tenant-filtered, read-only,
+ * capped in size. Returns a JSON string (already sanitized scalars).
+ */
+async function buildChatSnapshot(tx: any, ctx: any): Promise<string> {
+  const statusCounts = async (entity: string) => {
+    const rows: any[] = await tx.run(
+      SELECT.from(entity).where({ tenantId: ctx.tenantId }).columns([{ ref: ['status'] }, { func: 'count', args: [{ ref: ['ID'] }], as: 'n' }]).groupBy('status'),
+    );
+    return Object.fromEntries(rows.map((r: any) => [String(r.status), Number(r.n)]));
+  };
+  const prs: any[] = await tx.run(
+    SELECT.from('procurement.db.PurchaseRequisitions')
+      .where({ tenantId: ctx.tenantId })
+      .columns(['requisitionNo', 'title', 'status', 'totalAmount', 'currency', 'department_ID'])
+      .orderBy({ createdAt: 'desc' })
+      .limit(15),
+  );
+  const depts: any[] = await tx.run(
+    SELECT.from('procurement.db.Departments').where({ tenantId: ctx.tenantId }).columns(['ID', 'code', 'name']),
+  );
+  const deptName = Object.fromEntries(depts.map((d: any) => [d.ID, `${d.code} (${d.name})`]));
+  const suppliers: any[] = await tx.run(
+    SELECT.from('procurement.db.Suppliers')
+      .where({ tenantId: ctx.tenantId })
+      .columns(['supplierId', 'name', 'country', 'onTimeRate', 'riskLevel', 'disputeCount'])
+      .orderBy({ onTimeRate: 'desc' })
+      .limit(12),
+  );
+  const supName = Object.fromEntries(
+    (await tx.run(SELECT.from('procurement.db.Suppliers').where({ tenantId: ctx.tenantId }).columns(['ID', 'name']))).map((s: any) => [s.ID, s.name]),
+  );
+  const budgets: any[] = await tx.run(
+    SELECT.from('procurement.db.Budgets')
+      .where({ tenantId: ctx.tenantId })
+      .columns(['code', 'department_ID', 'fiscalYear', 'totalAmount', 'committed', 'consumed', 'currency'])
+      .orderBy({ fiscalYear: 'desc' })
+      .limit(8),
+  );
+  const pos: any[] = await tx.run(
+    SELECT.from('procurement.db.PurchaseOrders')
+      .where({ tenantId: ctx.tenantId })
+      .columns(['orderNo', 'status', 'totalAmount', 'currency', 'supplier_ID'])
+      .orderBy({ createdAt: 'desc' })
+      .limit(8),
+  );
+  const invs: any[] = await tx.run(
+    SELECT.from('procurement.db.Invoices')
+      .where({ tenantId: ctx.tenantId })
+      .columns(['invoiceNo', 'status', 'totalAmount', 'currency', 'supplier_ID'])
+      .orderBy({ createdAt: 'desc' })
+      .limit(8),
+  );
+  const pays: any[] = await tx.run(
+    SELECT.from('procurement.db.Payments')
+      .where({ tenantId: ctx.tenantId })
+      .columns(['paymentNo', 'status', 'amount', 'currency'])
+      .orderBy({ createdAt: 'desc' })
+      .limit(6),
+  );
+  const snap = {
+    requisitionStatusCounts: await statusCounts('procurement.db.PurchaseRequisitions'),
+    purchaseOrderStatusCounts: await statusCounts('procurement.db.PurchaseOrders'),
+    invoiceStatusCounts: await statusCounts('procurement.db.Invoices'),
+    paymentStatusCounts: await statusCounts('procurement.db.Payments'),
+    requisitions: prs.map((p: any) => ({
+      no: p.requisitionNo, title: p.title, status: String(p.status),
+      amount: Number(p.totalAmount), currency: p.currency,
+      department: deptName[p.department_ID] ?? p.department_ID,
+    })),
+    suppliers: suppliers.map((s: any) => ({
+      id: s.supplierId, name: s.name, country: s.country,
+      onTimeRate: Number(s.onTimeRate), risk: String(s.riskLevel), disputes: s.disputeCount,
+    })),
+    budgets: budgets.map((b: any) => ({
+      code: b.code, department: deptName[b.department_ID] ?? b.department_ID,
+      year: b.fiscalYear, total: Number(b.totalAmount),
+      committed: Number(b.committed), consumed: Number(b.consumed), currency: b.currency,
+    })),
+    purchaseOrders: pos.map((o: any) => ({
+      no: o.orderNo, status: String(o.status), amount: Number(o.totalAmount),
+      currency: o.currency, supplier: supName[o.supplier_ID] ?? o.supplier_ID,
+    })),
+    invoices: invs.map((v: any) => ({
+      no: v.invoiceNo, status: String(v.status), amount: Number(v.totalAmount),
+      currency: v.currency, supplier: supName[v.supplier_ID] ?? v.supplier_ID,
+    })),
+    payments: pays.map((m: any) => ({
+      no: m.paymentNo, status: String(m.status), amount: Number(m.amount), currency: m.currency,
+    })),
+  };
+  const json = JSON.stringify(snap);
+  // Cap context size; counts + head of lists survive truncation.
+  return json.length > 7000 ? json.slice(0, 7000) + '...[truncated]' : json;
+}
+
 const specialists: Record<string, (tx: any, ctx: any, payload: any) => Promise<any>> = {
   'agent-procurement': async (tx, ctx, p) => {
     const prs = await tx.run(SELECT.from('procurement.db.PurchaseRequisitions').where({ tenantId: ctx.tenantId }).limit(10));
@@ -186,7 +290,15 @@ agent_ID: null, tenantId: ctx.tenantId, toolName: intent,
       try {
         AuthorizationService.requirePermission(ctx, 'EXECUTE_AGENT');
         const ai = getAIService();
-        const reply = await ai.chat([{ role: 'user', content: sanitizeForLLM(req.data.message) }]);
+        // Data grounding: the LLM has no tools on this path, so attach a
+        // live tenant-filtered snapshot. Without it the model honestly
+        // answers "I don't have your data".
+        const tx = cds.tx(req);
+        const snapshot = await buildChatSnapshot(tx, ctx);
+        const reply = await ai.chat([
+          { role: 'system', content: CHAT_SYSTEM_PROMPT + '\n\nLIVE DATA SNAPSHOT (tenant ' + ctx.tenantId + '):\n' + snapshot },
+          { role: 'user', content: sanitizeForLLM(req.data.message) },
+        ]);
         return reply;
       } catch (e) { req.reject(toHttpError(e)); }
     });

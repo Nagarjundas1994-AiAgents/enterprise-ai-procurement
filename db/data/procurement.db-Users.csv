@@ -7,3 +7,9 @@ u-mgr,manager,manager@example.com,Sana Manager,true,tenant-a,org-a,d-proc
 u-fin,finance,finance@example.com,Arjun Finance,true,tenant-a,org-a,d-fin
 u-aud,auditor,auditor@example.com,Nina Auditor,true,tenant-a,org-a,d-fin
 u-other,other,other-tenant@example.com,Other Tenant,true,tenant-b,org-b,d-ops
+u-buy,buyer,buyer@example.com,Arjun Buyer,true,tenant-a,org-a,d-proc
+u-log,logistics,logistics@example.com,Divya Logistics,true,tenant-a,org-a,d-log
+u-hr,hr,hr@example.com,Farah HR,true,tenant-a,org-a,d-hr
+u-mkt,marketing,marketing@example.com,Kabir Marketing,true,tenant-a,org-a,d-mkt
+u-fin2,finance2,finance2@example.com,Gita Finance,true,tenant-a,org-a,d-fin
+u-qa,quality,quality@example.com,Hina Quality,true,tenant-a,org-a,d-qa

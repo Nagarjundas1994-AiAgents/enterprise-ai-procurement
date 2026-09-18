@@ -1,0 +1,12 @@
+ID,tenantId,employeeId,user_ID,organization_ID,department_ID,manager_ID,jobTitle,active
+e-admin,tenant-a,E-1001,u-admin,org-a,d-it,,System Administrator,true
+e-sana,tenant-a,E-1002,u-mgr,org-a,d-proc,,Procurement Manager,true
+e-kiran,tenant-a,E-1003,u-proc,org-a,d-proc,e-sana,Procurement Officer,true
+e-buy,tenant-a,E-1004,u-buy,org-a,d-proc,e-sana,Buyer,true
+e-log,tenant-a,E-1005,u-log,org-a,d-log,e-sana,Logistics Coordinator,true
+e-ravi,tenant-a,E-1006,u-emp,org-a,d-it,,IT Requester,true
+e-meera,tenant-a,E-1007,u-appr,org-a,d-it,,Approver,true
+e-arjun,tenant-a,E-1008,u-fin,org-a,d-fin,,Finance Controller,true
+e-nina,tenant-a,E-1009,u-aud,org-a,d-fin,,Auditor,true
+e-hr,tenant-a,E-1010,u-hr,org-a,d-hr,,HR Executive,true
+e-mkt,tenant-a,E-1011,u-mkt,org-a,d-mkt,,Marketing Executive,true

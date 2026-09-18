@@ -2,3 +2,10 @@ ID,tenantId,code,department_ID,fiscalYear,totalAmount,committed,consumed,currenc
 b-it,tenant-a,BUD-IT-2026,d-it,2026,5000000,1500000,800000,INR
 b-proc,tenant-a,BUD-PROC-2026,d-proc,2026,8000000,1000000,500000,INR
 b-fin,tenant-a,BUD-FIN-2026,d-fin,2026,3000000,200000,100000,INR
+b-hr,tenant-a,BUD-HR-2026,d-hr,2026,2000000,100000,50000,INR
+b-mkt,tenant-a,BUD-MKT-2026,d-mkt,2026,2500000,300000,150000,INR
+b-log,tenant-a,BUD-LOG-2026,d-log,2026,4000000,1200000,600000,INR
+b-qa,tenant-a,BUD-QA-2026,d-qa,2026,1500000,200000,80000,INR
+b-rnd,tenant-a,BUD-RND-2026,d-rnd,2026,6000000,500000,200000,INR
+b-adm,tenant-a,BUD-ADM-2026,d-adm,2026,1200000,100000,50000,INR
+b-proc25,tenant-a,BUD-PROC-2025,d-proc,2025,7500000,7400000,7300000,INR

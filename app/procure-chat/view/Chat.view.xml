@@ -1,0 +1,54 @@
+<mvc:View
+  controllerName="procure.chat.controller.Chat"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:layout="sap.ui.layout"
+  xmlns="sap.m">
+  <VBox height="100%">
+    <items>
+      <Panel headerText="AI assistant (DeepSeek)" expandable="false">
+        <headerToolbar>
+          <OverflowToolbar>
+            <Title text="AI assistant (DeepSeek)" />
+            <ToolbarSpacer />
+            <Button text="Clear" icon="sap-icon://delete" press="onClearChat" />
+          </OverflowToolbar>
+        </headerToolbar>
+      </Panel>
+      <ScrollContainer vertical="true" height="100%" class="sapUiSmallMarginTopBottom">
+        <List id="chatList" items="{app>/messages}" showSeparators="Inner" growing="false" width="100%">
+          <CustomListItem>
+            <HBox alignItems="Start" justifyContent="{path: 'app>role', formatter: '.fmtAlign'}" class="sapUiSmallMargin">
+              <Avatar
+                displaySize="XS"
+                initials="{path: 'app>role', formatter: '.fmtInitials'}"
+                class="sapUiTinyMarginEnd" />
+              <VBox>
+                <Label text="{path: 'app>role', formatter: '.fmtRole'}" class="sapUiTinyMarginBottom" />
+                <FormattedText htmlText="{path: 'app>text', formatter: '.fmtText'}" />
+                <Label text="{app>time}" class="sapUiTinyMarginTop" />
+              </VBox>
+            </HBox>
+          </CustomListItem>
+        </List>
+      </ScrollContainer>
+      <HBox alignItems="Center" class="sapUiSmallMarginTop">
+        <Input
+          id="chatInput"
+          placeholder="Ask about requisitions, budgets, suppliers…"
+          submit="onSend"
+          enabled="{= !${app>/busy} }">
+          <layoutData>
+            <layout:FlexItemData growFactor="1" />
+          </layoutData>
+        </Input>
+        <Button
+          text="Send"
+          type="Emphasized"
+          icon="sap-icon://paper-plane"
+          press="onSend"
+          busy="{app>/busy}"
+          enabled="{= !${app>/busy} }" />
+      </HBox>
+    </items>
+  </VBox>
+</mvc:View>

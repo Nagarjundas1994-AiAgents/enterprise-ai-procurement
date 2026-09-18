@@ -96,8 +96,8 @@ export default class ProcurementService extends (cds.ApplicationService as any) 
         // SUBMITTED -> UNDER_REVIEW -> APPROVED in one manager action
         await tx.update(PurchaseRequisitions).set({ status: 'APPROVED', version: pr.version + 1 }).where({ ID: pr.ID, version: pr.version });
         await tx.run(INSERT.into('procurement.db.Approvals').entries({
-                    ID: randomUUID(),
-requisition_ID: pr.ID, tenantId: ctx.tenantId, stepNo: 1,
+          ID: randomUUID(),
+          requisition_ID: pr.ID, tenantId: ctx.tenantId, stepNo: 1,
           approver_ID: null, status: 'APPROVED', comment: req.data.comment ?? 'Approved', decidedAt: new Date().toISOString(),
         }));
         await writeAudit(tx, ctx, { action: 'PURCHASE_REQUISITION_APPROVED', entity: 'PurchaseRequisitions', entityId: pr.ID, oldValue: pr.status, newValue: 'APPROVED' });
@@ -156,8 +156,8 @@ requisition_ID: pr.ID, tenantId: ctx.tenantId, stepNo: 1,
         const items: any[] = await tx.read('procurement.db.PurchaseRequisitionItems').where({ requisition_ID: pr.ID });
         for (const [i, it] of (items.length ? items : [{ description: pr.title, quantity: 1, unitPrice: pr.totalAmount }]).entries()) {
           await tx.run(INSERT.into('procurement.db.PurchaseOrderItems').entries({
-                        ID: randomUUID(),
-purchaseOrder_ID: po.ID, lineNo: i + 1,
+            ID: randomUUID(),
+            purchaseOrder_ID: po.ID, lineNo: i + 1,
             description: it.description, quantity: it.quantity ?? 1, unitPrice: it.unitPrice ?? pr.totalAmount,
             lineAmount: Number(it.quantity ?? 1) * Number(it.unitPrice ?? pr.totalAmount),
           }));

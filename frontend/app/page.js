@@ -20,6 +20,28 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
   const [askQ, setAskQ] = useState(null);
+  const [theme, setTheme] = useState("dark");
+
+  // Theme: the blocking script in layout.js already applied the persisted
+  // (or OS) theme to <html data-theme> before hydration. Here we only sync
+  // React state to it — post-hydration, so server and client first render
+  // always agree ("dark") and hydration can never mismatch.
+  useEffect(() => {
+    try {
+      const applied = document.documentElement.dataset.theme;
+      if (applied === "light" || applied === "dark") setTheme(applied);
+    } catch { /* non-critical */ }
+  }, []);
+
+  function toggleTheme() {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try {
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem("pc-theme", next);
+    } catch { /* non-critical */ }
+    window.dispatchEvent(new Event("pc-theme-change"));
+  }
 
   const notify = useCallback((text) => {
     setToast(text);
@@ -90,6 +112,15 @@ export default function Home() {
                 <option key={u.email} value={u.email}>{u.label} — {u.role}</option>
               ))}
             </select>
+            <span className="user-chip-divider" />
+            <button
+              className="theme-toggle-icon"
+              onClick={toggleTheme}
+              suppressHydrationWarning
+              aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+              title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}>
+              {theme === "dark" ? "☀" : "◐"}
+            </button>
           </div>
         </div>
 
@@ -113,7 +144,7 @@ export default function Home() {
         )}
 
         {nav === "chat" && (
-          <ChatPanel user={user} externalAsk={askQ} onConsumedAsk={() => setAskQ(null)} />
+          <ChatPanel full user={user} externalAsk={askQ} onConsumedAsk={() => setAskQ(null)} />
         )}
 
         {toast && <div className="toast">{toast}</div>}

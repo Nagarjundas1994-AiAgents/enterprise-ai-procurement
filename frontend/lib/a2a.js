@@ -22,7 +22,7 @@ function rid(prefix) {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-export async function a2aSend(agent, { text, contextId, user }) {
+export async function a2aSend(agent, { text, contextId, taskId, user }) {
   // No trailing slash: Next.js 308-redirects ".../catalog/" to ".../catalog",
   // which would drop the POST on non-followed requests.
   const res = await fetch(`/backend/a2a/${agent}`, {
@@ -40,6 +40,9 @@ export async function a2aSend(agent, { text, contextId, user }) {
           messageId: rid("m"),
           role: "user",
           ...(contextId ? { contextId } : {}),
+          // HITL resume: continuing an input-required task requires its taskId
+          // (mirrors the SAP agent preview client).
+          ...(taskId ? { taskId } : {}),
           parts: [{ kind: "text", text }]
         }
       }
@@ -63,6 +66,8 @@ export async function a2aSend(agent, { text, contextId, user }) {
 
   const state = task.status && task.status.state;
   const nextContext = task.contextId || contextId || null;
+  // HITL pause: the task id is needed to resume (approve/reject).
+  const nextTaskId = task.id || task.taskId || taskId || null;
   const reply =
     partsText(task.status && task.status.message && task.status.message.parts) ||
     (task.artifacts || []).map((a) => partsText(a.parts)).join("\n").trim();
@@ -71,7 +76,7 @@ export async function a2aSend(agent, { text, contextId, user }) {
     throw new Error(reply || "Agent execution failed");
   }
   // completed | input-required (HITL pause) | working — surface text either way.
-  return { text: reply || `(agent state: ${state || "unknown"})`, contextId: nextContext, state };
+  return { text: reply || `(agent state: ${state || "unknown"})`, contextId: nextContext, taskId: nextTaskId, state };
 }
 
 export const A2A_AGENTS = [

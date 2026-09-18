@@ -97,12 +97,24 @@ export default class MCPService extends (cds.ApplicationService as any) {
       const d = req.data;
       if (!d.title) throw Object.assign(new Error('Title required'), { code: 'VALIDATION_ERROR', status: 400 });
       if (Number(d.totalAmount ?? 0) <= 0) throw Object.assign(new Error('Amount must be > 0'), { code: 'VALIDATION_ERROR', status: 400 });
+      if (!d.departmentID) throw Object.assign(new Error('departmentID required'), { code: 'VALIDATION_ERROR', status: 400 });
+      // requester is mandatory (Association to Users not null) — derive from
+      // session context, never from client input (tenant comes from auth only).
+      const requesterId = (ctx as any).delegatedUserId ?? (ctx as any).userId;
+      if (!requesterId || requesterId === 'anonymous')
+        throw Object.assign(new Error('No authenticated requester in session'), { code: 'VALIDATION_ERROR', status: 401 });
+      const requester: any = await tx.run(SELECT.one.from('procurement.db.Users').where({ ID: requesterId, tenantId: ctx.tenantId }));
+      if (!requester) throw Object.assign(new Error(`Requester ${requesterId} not found in tenant ${ctx.tenantId}`), { code: 'VALIDATION_ERROR', status: 400 });
+      const dept: any = await tx.run(SELECT.one.from('procurement.db.Departments').where({ ID: d.departmentID, tenantId: ctx.tenantId }));
+      if (!dept) throw Object.assign(new Error(`Department ${d.departmentID} not found in tenant ${ctx.tenantId}`), { code: 'VALIDATION_ERROR', status: 400 });
       const prId = randomUUID();
       await tx.run(INSERT.into('procurement.db.PurchaseRequisitions').entries({
         ID: prId,
         requisitionNo: `PR-${Date.now().toString().slice(-6)}`,
         title: d.title, description: d.description, department_ID: d.departmentID,
+        requester_ID: requesterId,
         tenantId: ctx.tenantId, status: 'DRAFT', totalAmount: d.totalAmount ?? 0,
+        currency: 'INR', version: 1,
       }));
       // INSERT returns the row on SQLite but [] on PostgreSQL — re-read by known ID.
       return await tx.run(SELECT.one.from('procurement.db.PurchaseRequisitions').where({ ID: prId }));

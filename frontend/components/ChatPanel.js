@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { chat } from "../lib/backend";
 import { a2aSend, A2A_AGENTS } from "../lib/a2a";
+import MermaidDiagram from "./MermaidDiagram";
 
 const SUGGESTIONS = [
   "How many open requisitions are there?",
@@ -43,10 +44,12 @@ function renderRich(text) {
       if (rows.length) {
         const [head, ...rest] = rows;
         blocks.push(
-          <table key={key++} className="md-table">
-            <thead><tr>{head.map((c, j) => <th key={j}>{inlineRich(c, `h${key}-${j}`)}</th>)}</tr></thead>
-            <tbody>{rest.map((r, ri) => <tr key={ri}>{r.map((c, j) => <td key={j}>{inlineRich(c, `r${ri}-${j}`)}</td>)}</tr>)}</tbody>
-          </table>
+          <div key={key++} className="md-table-wrap">
+            <table className="md-table">
+              <thead><tr>{head.map((c, j) => <th key={j}>{inlineRich(c, `h${key}-${j}`)}</th>)}</tr></thead>
+              <tbody>{rest.map((r, ri) => <tr key={ri}>{r.map((c, j) => <td key={j}>{inlineRich(c, `r${ri}-${j}`)}</td>)}</tr>)}</tbody>
+            </table>
+          </div>
         );
         continue;
       }
@@ -57,13 +60,19 @@ function renderRich(text) {
       i++;
       continue;
     }
-    // Fenced code — render as plain preformatted text (no code execution)
+    // Fenced code — ```mermaid renders as a live diagram, everything else as plain pre
     if (/^\s*```/.test(line)) {
+      const lang = (line.match(/^\s*```(\w*)/) || [])[1] || "";
       const buf = [];
       i++;
       while (i < lines.length && !/^\s*```/.test(lines[i])) { buf.push(lines[i]); i++; }
       i++;
-      blocks.push(<pre key={key++} className="md-pre">{buf.join("\n")}</pre>);
+      const src = buf.join("\n");
+      if (lang.toLowerCase() === "mermaid" && src.trim()) {
+        blocks.push(<MermaidDiagram key={key++} code={src} />);
+      } else {
+        blocks.push(<pre key={key++} className="md-pre">{src}</pre>);
+      }
       continue;
     }
     blocks.push(<div key={key++} className="md-line">{inlineRich(line || " ", `l${key}`)}</div>);
@@ -72,12 +81,15 @@ function renderRich(text) {
   return blocks;
 }
 
-export default function ChatPanel({ user, externalAsk, onConsumedAsk }) {
+export default function ChatPanel({ user, externalAsk, onConsumedAsk, full = false }) {
+  // NOTE: greeting timestamp starts empty and is stamped on mount (see below).
+  // Rendering `new Date().toLocaleTimeString()` here would break hydration:
+  // the server and the client render at different seconds/locales.
   const [messages, setMessages] = useState([
     {
       role: "assistant",
       text: "Hi! I am your procurement assistant, powered by **DeepSeek**. Ask about requisitions, budgets or suppliers — or use **Ask AI** on any requisition row.",
-      time: new Date().toLocaleTimeString()
+      time: ""
     }
   ]);
   const [input, setInput] = useState("");
@@ -87,6 +99,15 @@ export default function ChatPanel({ user, externalAsk, onConsumedAsk }) {
   // A2A conversation continuity: one contextId per agent.
   const ctxRef = useRef({});
   const convRef = useRef(`ui-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`);
+
+  // Client-only: stamp the greeting time after hydration (SSR renders "").
+  useEffect(() => {
+    setMessages((prev) =>
+      prev.length === 1 && prev[0].role === "assistant" && !prev[0].time
+        ? [{ ...prev[0], time: new Date().toLocaleTimeString() }]
+        : prev
+    );
+  }, []);
 
   useEffect(() => {
     const el = feedRef.current;
@@ -113,10 +134,18 @@ export default function ChatPanel({ user, externalAsk, onConsumedAsk }) {
       // Primary path: A2A protocol to the selected agent (tool-grounded, DeepSeek).
       const r = await a2aSend(agent, { text: q, contextId: ctxRef.current[agent] || null, user });
       if (r.contextId) ctxRef.current[agent] = r.contextId;
-      setMessages([
-        ...withUser,
-        { role: "assistant", text: r.text, time: new Date().toLocaleTimeString() }
-      ]);
+      if (r.state === "input-required" && r.taskId) {
+        // HITL pause: same card as the SAP agent preview — Approve/Reject resumes the task.
+        setMessages([
+          ...withUser,
+          { role: "approval", text: r.text, taskId: r.taskId, decided: null, time: new Date().toLocaleTimeString() }
+        ]);
+      } else {
+        setMessages([
+          ...withUser,
+          { role: "assistant", text: r.text, time: new Date().toLocaleTimeString() }
+        ]);
+      }
     } catch (a2aErr) {
       // Transparent fallback: direct chat action (data-grounded snapshot).
       try {
@@ -145,10 +174,41 @@ export default function ChatPanel({ user, externalAsk, onConsumedAsk }) {
     ctxRef.current = {};
   }
 
+  // HITL resume: approve/reject continues the paused task (same contextId + taskId).
+  async function decide(msgIndex, decision) {
+    const msg = messages[msgIndex];
+    if (!msg || msg.decided || busy) return;
+    setBusy(true);
+    setMessages((prev) => prev.map((m, i) => (i === msgIndex ? { ...m, decided: decision } : m)));
+    try {
+      const r = await a2aSend(agent, {
+        text: decision,
+        contextId: ctxRef.current[agent] || null,
+        taskId: msg.taskId,
+        user
+      });
+      if (r.contextId) ctxRef.current[agent] = r.contextId;
+      const followUp =
+        r.state === "input-required" && r.taskId
+          ? { role: "approval", text: r.text, taskId: r.taskId, decided: null, time: new Date().toLocaleTimeString() }
+          : { role: "assistant", text: r.text, time: new Date().toLocaleTimeString() };
+      setMessages((prev) => [...prev, followUp]);
+    } catch (e) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "error", text: `Approval ${decision} failed: ${e.message}`, time: new Date().toLocaleTimeString() }
+      ]);
+      // Allow retry on transport failure.
+      setMessages((prev) => prev.map((m, i) => (i === msgIndex ? { ...m, decided: null } : m)));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const agentHint = (A2A_AGENTS.find((a) => a.id === agent) || {}).hint || "";
 
   return (
-    <div className="panel">
+    <div className={full ? "panel chat-full" : "panel"}>
       <div className="panel-head">
         <h3>✨ AI assistant</h3>
         <span className="pill success">A2A · DeepSeek live</span>
@@ -169,9 +229,26 @@ export default function ChatPanel({ user, externalAsk, onConsumedAsk }) {
         <div className="chat-feed" ref={feedRef}>
           {messages.length === 0 && <div className="empty">No messages yet — say hi below.</div>}
           {messages.map((m, i) => (
-            <div key={i} className={`msg ${m.role}`}>
+            <div key={i} className={`msg ${m.role === "approval" ? "assistant approval" : m.role}`}>
               <div className="mini-avatar">{m.role === "user" ? "YOU" : m.role === "error" ? "!" : "AI"}</div>
-              <div className="bubble">{renderRich(m.text)}</div>
+              {m.role === "approval" ? (
+                <div className="bubble approval-card">
+                  <div className="approval-label">ACTION REQUIRED</div>
+                  <div className="approval-text">{renderRich(m.text)}</div>
+                  {m.decided ? (
+                    <div className="approval-decided">
+                      {m.decided === "approve" ? "✓ Approved — continuing…" : "✕ Rejected."}
+                    </div>
+                  ) : (
+                    <div className="approval-actions">
+                      <button className="btn gold" disabled={busy} onClick={() => decide(i, "approve")}>Approve</button>
+                      <button className="btn" disabled={busy} onClick={() => decide(i, "reject")}>Reject</button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="bubble">{renderRich(m.text)}</div>
+              )}
             </div>
           ))}
           {busy && (

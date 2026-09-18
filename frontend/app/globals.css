@@ -147,8 +147,11 @@ a {
 
 .main {
   flex: 1;
-  padding: 28px 32px 60px;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 32px 32px;
   max-width: 1460px;
+  min-height: 100vh;
 }
 
 /* ---------- topbar ---------- */
@@ -361,11 +364,86 @@ table.tbl {
   line-height: 1.5;
 }
 
-table.md-table {
-  width: 100%;
-  border-collapse: collapse;
+/* ---------- mermaid diagrams inside chat bubbles ---------- */
+.mermaid-diagram-wrap {
+  margin: 10px 0;
+  min-width: 0;
+}
+
+.mermaid-diagram {
+  background: #0a1122;
+  border: 1px solid rgba(212, 175, 105, 0.3);
+  border-radius: 12px;
+  padding: 14px 10px;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.mermaid-diagram svg text {
+  fill: #eef2fa !important;
+  font-family: "Segoe UI", system-ui, sans-serif !important;
+}
+
+.mermaid-source {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.mermaid-source summary {
+  cursor: pointer;
+  padding: 4px 2px;
+}
+
+.mermaid-source summary:hover {
+  color: var(--gold-2);
+}
+
+.mermaid-error {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--red);
+}
+
+.mermaid-fallback {
   margin: 8px 0;
+}
+
+table.md-table {
+  min-width: 640px;
+  border-collapse: collapse;
+  margin: 0;
   font-size: 12.8px;
+}
+
+/* Horizontal scroller for wide markdown tables inside a bubble */
+.md-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 8px 0;
+  padding-bottom: 4px;
+  scrollbar-gutter: stable;
+}
+
+.md-table-wrap::-webkit-scrollbar {
+  height: 8px;
+}
+
+.md-table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 105, 0.25);
+  border-radius: 8px;
+}
+
+.md-table-wrap::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
 }
 
 .md-table th {
@@ -497,11 +575,37 @@ table.md-table {
   display: flex;
   flex-direction: column;
   height: 560px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Full-height mode used by the standalone AI Assistant tab.
+   The card itself is viewport-bound so the page never scrolls —
+   only .chat-feed scrolls internally. */
+.chat-full {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 150px);
+  min-height: 0;
+  max-height: calc(100vh - 150px);
+  overflow: hidden;
+}
+
+.chat-full .chat-wrap {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .chat-feed {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -517,11 +621,22 @@ table.md-table {
   border-radius: 8px;
 }
 
+.chat-feed::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+}
+
 .msg {
   display: flex;
   gap: 10px;
   max-width: 78%;
+  min-width: 0;
   animation: rise 0.3s ease both;
+}
+
+/* Assistant messages carry tables — let them use the card width */
+.msg.assistant {
+  max-width: 92%;
 }
 
 .msg.user {
@@ -536,6 +651,10 @@ table.md-table {
   line-height: 1.55;
   white-space: pre-wrap;
   word-break: break-word;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
 }
 
 .msg.assistant .bubble {
@@ -600,6 +719,37 @@ table.md-table {
   40% {
     opacity: 1;
   }
+}
+
+/* HITL approval card (mirrors the SAP agent preview: ACTION REQUIRED + Approve/Reject) */
+.msg.approval .bubble.approval-card {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  border-top-left-radius: 4px;
+  min-width: 240px;
+}
+
+.approval-label {
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  font-weight: 800;
+  color: #7fb0ff;
+  margin-bottom: 8px;
+}
+
+.approval-text {
+  margin-bottom: 12px;
+}
+
+.approval-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.approval-decided {
+  font-size: 12.5px;
+  color: var(--muted);
+  font-style: italic;
 }
 
 .chat-input-row {
@@ -685,4 +835,743 @@ table.md-table {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
   z-index: 50;
   animation: rise 0.25s ease both;
+}
+
+.user-chip-divider {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 0;
+  background: rgba(255, 255, 255, 0.14);
+  flex-shrink: 0;
+}
+
+/* Icon-only theme toggle living inside the profile card */
+.theme-toggle-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 1px solid rgba(212, 175, 105, 0.45);
+  background: rgba(212, 175, 105, 0.12);
+  color: var(--gold-2);
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.theme-toggle-icon:hover {
+  transform: rotate(20deg) scale(1.07);
+  background: rgba(212, 175, 105, 0.24);
+  box-shadow: 0 4px 14px rgba(212, 175, 105, 0.35);
+}
+
+[data-theme="light"] .user-chip-divider {
+  background: rgba(20, 45, 95, 0.14);
+}
+
+[data-theme="light"] .theme-toggle-icon {
+  background: linear-gradient(135deg, #fffdf6, #f3e8cd);
+  border-color: rgba(169, 126, 47, 0.55);
+  color: #7c5f14;
+  box-shadow: 0 2px 8px rgba(169, 126, 47, 0.25);
+}
+
+[data-theme="light"] .theme-toggle-icon:hover {
+  background: linear-gradient(135deg, #fff, #f0dfae);
+  box-shadow: 0 4px 14px rgba(169, 126, 47, 0.4);
+}
+
+/* ============================================================
+   LIGHT THEME — SAP Horizon-inspired, warm gold accents.
+   Dark remains the default; this block only applies when
+   <html data-theme="light"> (toggled from the topbar).
+   ============================================================ */
+[data-theme="light"] {
+  --bg: #eef1f7;
+  --bg-2: #e2e8f3;
+  --card: rgba(255, 255, 255, 0.94);
+  --card-border: rgba(20, 45, 95, 0.12);
+  --ink: #16233a;
+  --muted: #5b6b85;
+  --gold: #a97e2f;
+  --gold-2: #7c5f14;
+  --blue: #0a6ed1;
+  --green: #107e3e;
+  --red: #bb0000;
+  --amber: #b25e09;
+}
+
+[data-theme="light"] html,
+[data-theme="light"] body,
+html[data-theme="light"] body {
+  background:
+    radial-gradient(1100px 500px at 85% -10%, rgba(169, 126, 47, 0.14), transparent 60%),
+    radial-gradient(900px 600px at -10% 20%, rgba(10, 110, 209, 0.1), transparent 60%),
+    var(--bg);
+}
+
+/* sidebar */
+[data-theme="light"] .sidebar {
+  background: rgba(255, 255, 255, 0.9);
+  border-right: 1px solid rgba(20, 45, 95, 0.1);
+}
+
+[data-theme="light"] .nav-item {
+  color: var(--ink);
+}
+
+[data-theme="light"] .nav-item .ico {
+  background: rgba(10, 110, 209, 0.08);
+}
+
+[data-theme="light"] .nav-item:hover {
+  background: rgba(10, 110, 209, 0.06);
+}
+
+[data-theme="light"] .nav-item.active {
+  background: linear-gradient(135deg, rgba(169, 126, 47, 0.2), rgba(169, 126, 47, 0.08));
+  border-color: rgba(169, 126, 47, 0.45);
+}
+
+[data-theme="light"] .side-foot {
+  border-top: 1px solid rgba(20, 45, 95, 0.1);
+}
+
+/* topbar controls */
+[data-theme="light"] .user-chip {
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 4px 16px rgba(20, 45, 95, 0.08);
+}
+
+[data-theme="light"] .user-chip select,
+[data-theme="light"] .agent-select {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid rgba(20, 45, 95, 0.2);
+}
+
+[data-theme="light"] .agent-select {
+  color: var(--gold-2);
+  border-color: rgba(169, 126, 47, 0.5);
+}
+
+/* cards + KPI */
+[data-theme="light"] .card,
+[data-theme="light"] .panel {
+  box-shadow: 0 8px 26px rgba(20, 45, 95, 0.09);
+}
+
+[data-theme="light"] .kpi-value {
+  background: linear-gradient(180deg, #33415c, #16233a);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+[data-theme="light"] .kpi-value.gold {
+  background: linear-gradient(180deg, #c49a3f, #7c5f14);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* panels + tables */
+[data-theme="light"] .panel-head {
+  border-bottom: 1px solid rgba(20, 45, 95, 0.1);
+}
+
+[data-theme="light"] .tbl th {
+  border-bottom: 1px solid rgba(20, 45, 95, 0.12);
+}
+
+[data-theme="light"] .tbl td {
+  border-bottom: 1px solid rgba(20, 45, 95, 0.07);
+}
+
+[data-theme="light"] .tbl tbody tr:hover {
+  background: rgba(169, 126, 47, 0.07);
+}
+
+/* pills + buttons */
+[data-theme="light"] .pill.success {
+  background: rgba(16, 126, 62, 0.1);
+  border-color: rgba(16, 126, 62, 0.35);
+}
+
+[data-theme="light"] .pill.info {
+  background: rgba(10, 110, 209, 0.09);
+  border-color: rgba(10, 110, 209, 0.3);
+}
+
+[data-theme="light"] .pill.warn {
+  background: rgba(178, 94, 9, 0.1);
+  border-color: rgba(178, 94, 9, 0.35);
+}
+
+[data-theme="light"] .pill.error {
+  background: rgba(187, 0, 0, 0.07);
+  border-color: rgba(187, 0, 0, 0.3);
+}
+
+[data-theme="light"] .pill.neutral {
+  background: rgba(20, 45, 95, 0.06);
+  border-color: rgba(20, 45, 95, 0.14);
+}
+
+[data-theme="light"] .btn {
+  border-color: rgba(20, 45, 95, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="light"] .btn:hover:not(:disabled) {
+  background: rgba(20, 45, 95, 0.06);
+}
+
+[data-theme="light"] .btn.gold {
+  background: linear-gradient(135deg, #d9b45c, #a97e2f);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(169, 126, 47, 0.4);
+}
+
+/* chat */
+[data-theme="light"] .msg.assistant .bubble {
+  background: #fff;
+  border: 1px solid rgba(20, 45, 95, 0.12);
+  box-shadow: 0 4px 14px rgba(20, 45, 95, 0.06);
+}
+
+[data-theme="light"] .msg.user .bubble {
+  background: linear-gradient(135deg, rgba(169, 126, 47, 0.22), rgba(169, 126, 47, 0.1));
+  border: 1px solid rgba(169, 126, 47, 0.5);
+}
+
+[data-theme="light"] .msg.error .bubble {
+  background: rgba(187, 0, 0, 0.06);
+}
+
+[data-theme="light"] .chat-input-row {
+  border-top: 1px solid rgba(20, 45, 95, 0.1);
+}
+
+[data-theme="light"] .chat-input-row input {
+  background: #fff;
+  border: 1px solid rgba(20, 45, 95, 0.2);
+  color: var(--ink);
+}
+
+[data-theme="light"] .chat-input-row input::placeholder {
+  color: #8a97ad;
+}
+
+[data-theme="light"] .chat-feed::-webkit-scrollbar-track {
+  background: rgba(20, 45, 95, 0.06);
+}
+
+[data-theme="light"] .chat-feed::-webkit-scrollbar-thumb {
+  background: rgba(169, 126, 47, 0.35);
+}
+
+[data-theme="light"] .md-quote {
+  background: rgba(169, 126, 47, 0.09);
+}
+
+[data-theme="light"] .md-table-wrap::-webkit-scrollbar-track {
+  background: rgba(20, 45, 95, 0.06);
+}
+
+[data-theme="light"] .md-table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(169, 126, 47, 0.35);
+}
+
+[data-theme="light"] .md-table th {
+  color: var(--gold-2);
+  border-bottom: 1px solid rgba(169, 126, 47, 0.45);
+}
+
+[data-theme="light"] .md-table td {
+  border-bottom: 1px solid rgba(20, 45, 95, 0.09);
+}
+
+/* code blocks stay dark in light mode for contrast — like SAP docs */
+[data-theme="light"] .md-pre {
+  background: #0f1b33;
+  color: #e2e8f0;
+  border-color: rgba(20, 45, 95, 0.2);
+}
+
+/* mermaid diagrams render light */
+[data-theme="light"] .mermaid-diagram {
+  background: #fff;
+  border-color: rgba(169, 126, 47, 0.45);
+  box-shadow: 0 4px 14px rgba(20, 45, 95, 0.07);
+}
+
+[data-theme="light"] .mermaid-diagram svg text {
+  fill: #16233a !important;
+}
+
+[data-theme="light"] .chip {
+  background: rgba(169, 126, 47, 0.09);
+  border-color: rgba(169, 126, 47, 0.4);
+  color: var(--gold-2);
+}
+
+[data-theme="light"] .chip:hover {
+  background: rgba(169, 126, 47, 0.18);
+}
+
+[data-theme="light"] .msg.approval .bubble.approval-card {
+  background: rgba(10, 110, 209, 0.06);
+}
+
+[data-theme="light"] .approval-label {
+  color: var(--blue);
+}
+
+[data-theme="light"] .toast {
+  background: #fff;
+  box-shadow: 0 12px 34px rgba(20, 45, 95, 0.2);
+}
+
+[data-theme="light"] .empty {
+  color: var(--muted);
+}
+
+/* ============================================================
+   LIGHT THEME — polish pass (attractiveness).
+   Layered gradients, gold accents, soft depth, smooth switching.
+   ============================================================ */
+
+/* smooth theme switching */
+[data-theme="light"] body,
+[data-theme="light"] .sidebar,
+[data-theme="light"] .card,
+[data-theme="light"] .panel,
+[data-theme="light"] .nav-item,
+[data-theme="light"] .btn,
+[data-theme="light"] .chip,
+[data-theme="light"] .msg .bubble,
+[data-theme="light"] .chat-input-row input,
+[data-theme="light"] .user-chip select,
+[data-theme="light"] .agent-select {
+  transition: background-color 0.25s ease, border-color 0.25s ease,
+    box-shadow 0.25s ease, color 0.25s ease;
+}
+
+/* richer canvas: gold + SAP-blue washes over a faint dot texture */
+html[data-theme="light"] body {
+  background:
+    radial-gradient(1000px 420px at 90% -8%, rgba(169, 126, 47, 0.16), transparent 60%),
+    radial-gradient(880px 560px at -12% 18%, rgba(10, 110, 209, 0.12), transparent 60%),
+    radial-gradient(700px 500px at 50% 115%, rgba(169, 126, 47, 0.08), transparent 60%),
+    var(--bg);
+}
+
+html[data-theme="light"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(rgba(20, 45, 95, 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(180deg, black 0%, transparent 46%);
+}
+
+[data-theme="light"] .shell,
+[data-theme="light"] .main {
+  position: relative;
+  z-index: 1;
+}
+
+/* title with gold accent bar */
+[data-theme="light"] .topbar h2 {
+  position: relative;
+  padding-bottom: 8px;
+  color: #101d33;
+}
+
+[data-theme="light"] .topbar h2::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  bottom: 0;
+  width: 54px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #d9b45c, #a97e2f);
+}
+
+[data-theme="light"] .topbar p {
+  color: #66748e;
+}
+
+/* sidebar: bright gradient, glowing brand, hero active item */
+[data-theme="light"] .sidebar {
+  background: linear-gradient(180deg, #ffffff 0%, #f6f8fc 100%);
+  box-shadow: 4px 0 24px rgba(20, 45, 95, 0.06);
+}
+
+[data-theme="light"] .brand-mark {
+  background: linear-gradient(135deg, #f0d48a, #c49a3f 60%, #8a6a1f);
+  box-shadow: 0 6px 18px rgba(169, 126, 47, 0.45);
+}
+
+[data-theme="light"] .brand h1 {
+  color: #101d33;
+}
+
+[data-theme="light"] .nav-label {
+  color: #8a97ad;
+}
+
+[data-theme="light"] .nav-item {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .nav-item .ico {
+  background: linear-gradient(135deg, rgba(10, 110, 209, 0.12), rgba(10, 110, 209, 0.05));
+  color: #0a6ed1;
+}
+
+[data-theme="light"] .nav-item.active {
+  background: linear-gradient(135deg, rgba(217, 180, 92, 0.32), rgba(217, 180, 92, 0.1));
+  border-color: rgba(169, 126, 47, 0.55);
+  box-shadow: 0 6px 16px rgba(169, 126, 47, 0.18);
+  color: #101d33;
+}
+
+[data-theme="light"] .nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #d9b45c, #8a6a1f);
+}
+
+[data-theme="light"] .nav-item.active .ico {
+  background: linear-gradient(135deg, #e9c96f, #a97e2f);
+  color: #fff;
+}
+
+/* cards: sheen + lift */
+[data-theme="light"] .card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0)),
+    var(--card);
+  border-top: 2px solid rgba(217, 180, 92, 0.55);
+  box-shadow: 0 10px 28px rgba(20, 45, 95, 0.1);
+}
+
+[data-theme="light"] .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(20, 45, 95, 0.14);
+}
+
+[data-theme="light"] .kpi-label {
+  color: #7c879c;
+}
+
+[data-theme="light"] .kpi-label::before {
+  content: "◆ ";
+  color: #c49a3f;
+  font-size: 9px;
+  vertical-align: 1px;
+}
+
+[data-theme="light"] .kpi-value {
+  background: linear-gradient(180deg, #3b4c6e, #101d33);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+[data-theme="light"] .kpi-value.gold {
+  background: linear-gradient(180deg, #d9a92f, #8a6a1f);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+[data-theme="light"] .kpi-sub {
+  color: #7c879c;
+}
+
+/* panels: tinted header */
+[data-theme="light"] .panel {
+  border-top: 2px solid rgba(217, 180, 92, 0.45);
+  box-shadow: 0 10px 30px rgba(20, 45, 95, 0.1);
+}
+
+[data-theme="light"] .panel-head {
+  background: linear-gradient(180deg, rgba(217, 180, 92, 0.12), rgba(255, 255, 255, 0));
+}
+
+[data-theme="light"] .panel-head h3 {
+  color: #101d33;
+}
+
+/* chat bubbles: gold-edged assistant, rich cream user */
+[data-theme="light"] .msg.assistant .bubble {
+  border-left: 3px solid rgba(196, 154, 63, 0.7);
+  box-shadow: 0 6px 18px rgba(20, 45, 95, 0.08);
+}
+
+[data-theme="light"] .msg.user .bubble {
+  background: linear-gradient(135deg, #f7ecd2, #f0dfb6);
+  border: 1px solid rgba(169, 126, 47, 0.55);
+  box-shadow: 0 6px 16px rgba(169, 126, 47, 0.2);
+  color: #3d2f0e;
+}
+
+[data-theme="light"] .mini-avatar,
+[data-theme="light"] .msg .mini-avatar {
+  box-shadow: 0 3px 10px rgba(169, 126, 47, 0.4);
+}
+
+/* markdown tables: tinted header, zebra rows, framed wrap */
+[data-theme="light"] .md-table-wrap {
+  border: 1px solid rgba(20, 45, 95, 0.12);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(20, 45, 95, 0.06);
+}
+
+[data-theme="light"] .md-table th {
+  background: rgba(217, 180, 92, 0.16);
+}
+
+[data-theme="light"] .md-table tbody tr:nth-child(even) td {
+  background: rgba(20, 45, 95, 0.025);
+}
+
+[data-theme="light"] .md-table tbody tr:hover td {
+  background: rgba(217, 180, 92, 0.12);
+}
+
+/* chips + buttons: glow */
+[data-theme="light"] .chip {
+  background: linear-gradient(180deg, #fffdf6, #f7ecd2);
+  box-shadow: 0 2px 8px rgba(169, 126, 47, 0.16);
+}
+
+[data-theme="light"] .chip:hover:not(:disabled) {
+  background: linear-gradient(180deg, #fff, #f3dd9f);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(169, 126, 47, 0.28);
+}
+
+[data-theme="light"] .btn.gold {
+  background: linear-gradient(135deg, #a8842c, #6f5510);
+  border: 1px solid rgba(111, 85, 16, 0.65);
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 6px 18px rgba(111, 85, 16, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+[data-theme="light"] .btn.gold:hover:not(:disabled) {
+  background: linear-gradient(135deg, #96742a, #5f480d);
+  box-shadow: 0 8px 24px rgba(111, 85, 16, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+[data-theme="light"] .btn.gold:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(111, 85, 16, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="light"] .btn.gold:disabled {
+  opacity: 0.6;
+}
+
+/* Chunkier Send button in the chat input row */
+[data-theme="light"] .chat-input-row .btn.gold {
+  padding: 12px 24px;
+  font-size: 13.5px;
+  letter-spacing: 0.3px;
+  border-radius: 12px;
+}
+
+/* inputs + selects: depth + gold focus */
+[data-theme="light"] .chat-input-row input,
+[data-theme="light"] .user-chip,
+[data-theme="light"] .user-chip select,
+[data-theme="light"] .agent-select {
+  box-shadow: 0 3px 12px rgba(20, 45, 95, 0.07);
+}
+
+[data-theme="light"] .chat-input-row input:focus {
+  border-color: rgba(169, 126, 47, 0.7);
+  box-shadow: 0 0 0 3px rgba(217, 180, 92, 0.22);
+}
+
+[data-theme="light"] .avatar {
+  background: linear-gradient(135deg, #e9c96f, #a97e2f);
+  box-shadow: 0 3px 10px rgba(169, 126, 47, 0.45);
+}
+
+/* approval card + mermaid: soft tinted depth */
+[data-theme="light"] .msg.approval .bubble.approval-card {
+  background: linear-gradient(180deg, rgba(10, 110, 209, 0.09), rgba(10, 110, 209, 0.03));
+  box-shadow: 0 6px 18px rgba(10, 110, 209, 0.12);
+}
+
+[data-theme="light"] .mermaid-diagram {
+  box-shadow: 0 8px 22px rgba(20, 45, 95, 0.1);
+}
+
+[data-theme="light"] .mermaid-source summary {
+  color: #7c879c;
+}
+
+[data-theme="light"] .mermaid-source summary:hover {
+  color: var(--gold-2);
+}
+
+/* ============================================================
+   LIGHT THEME — overall contrast & finish pass.
+   Pure CSS: no markup changes, no hydration impact.
+   ============================================================ */
+
+[data-theme="light"] ::selection {
+  background: rgba(217, 180, 92, 0.45);
+}
+
+/* accessible keyboard focus everywhere */
+[data-theme="light"] :focus-visible {
+  outline: 2px solid #0a6ed1;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* secondary buttons (Clear, Approve-secondary): crisper text + edge */
+[data-theme="light"] .btn {
+  border-color: rgba(20, 45, 95, 0.24);
+  color: #2b3a55;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(20, 45, 95, 0.07);
+}
+
+[data-theme="light"] .btn:hover:not(:disabled) {
+  background: rgba(20, 45, 95, 0.07);
+  border-color: rgba(20, 45, 95, 0.34);
+}
+
+/* dropdowns: stronger text, clearer affordance */
+[data-theme="light"] .agent-select {
+  font-weight: 700;
+  color: #6f5510;
+  box-shadow: 0 2px 8px rgba(169, 126, 47, 0.16);
+}
+
+[data-theme="light"] .user-chip select {
+  font-weight: 600;
+  color: #16233a;
+}
+
+/* chat input row: grounded, input with real edge */
+[data-theme="light"] .chat-input-row {
+  background: linear-gradient(180deg, rgba(20, 45, 95, 0.025), rgba(255, 255, 255, 0));
+}
+
+[data-theme="light"] .chat-input-row input {
+  border: 1px solid rgba(20, 45, 95, 0.24);
+  box-shadow: inset 0 1px 3px rgba(20, 45, 95, 0.06), 0 2px 8px rgba(20, 45, 95, 0.05);
+}
+
+[data-theme="light"] .chat-input-row input::placeholder {
+  color: #8f9bb0;
+}
+
+/* suggestion chips: readable bronze text */
+[data-theme="light"] .chip {
+  color: #6f5510;
+  font-weight: 600;
+}
+
+[data-theme="light"] .chip:disabled {
+  opacity: 0.5;
+}
+
+/* suggestions strip separation */
+[data-theme="light"] .suggestions {
+  border-top: 1px dashed rgba(20, 45, 95, 0.1);
+  padding-top: 12px;
+}
+
+/* chat scrollbars: visible gold */
+[data-theme="light"] .chat-feed::-webkit-scrollbar-thumb,
+[data-theme="light"] .md-table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(169, 126, 47, 0.45);
+}
+
+/* message text + markdown contrast */
+[data-theme="light"] .msg .bubble {
+  color: #1b2942;
+}
+
+[data-theme="light"] .md-line {
+  color: #2b3a55;
+}
+
+[data-theme="light"] .md-table th {
+  color: #6f5510;
+}
+
+[data-theme="light"] .md-table td {
+  color: #2b3a55;
+}
+
+[data-theme="light"] .md-quote {
+  color: #4a5872;
+  border-left-color: #c49a3f;
+}
+
+/* panel header: stronger title + live pill */
+[data-theme="light"] .panel-head h3 {
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+[data-theme="light"] .pill.success {
+  color: #0b6b38;
+  font-weight: 700;
+}
+
+/* sidebar footer + labels: calm but legible */
+[data-theme="light"] .side-foot {
+  color: #7c879c;
+}
+
+[data-theme="light"] .avatar {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+/* toast: dark-on-light readable */
+[data-theme="light"] .toast {
+  color: #16233a;
+  font-weight: 600;
+}
+
+/* approval card actions spacing */
+[data-theme="light"] .approval-decided {
+  color: #4a5872;
+}
+
+/* chat feed breathing room + message rhythm */
+[data-theme="light"] .chat-feed {
+  gap: 16px;
+}
+
+[data-theme="light"] .msg .bubble {
+  padding: 13px 18px;
+  box-shadow: 0 6px 18px rgba(20, 45, 95, 0.08);
 }

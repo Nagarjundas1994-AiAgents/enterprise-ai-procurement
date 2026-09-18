@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Department-wise Budget FY 2026 - Enterprise AI Procurement</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  body { font-family: Inter, Arial, sans-serif; background:#0f172a; color:#e2e8f0; margin:0; padding:24px; }
+  .wrap { max-width:1100px; margin:0 auto; }
+  .card { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:20px; }
+  h1 { font-size:20px; margin:0 0 4px; } p.sub { color:#94a3b8; margin:0 0 16px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:16px 0; }
+  .kpi { background:#0f172a; border:1px solid #334155; border-radius:8px; padding:10px 12px; }
+  .kpi b { display:block; font-size:18px; } .kpi span { font-size:12px; color:#94a3b8; }
+  table { width:100%; border-collapse:collapse; margin-top:16px; font-size:13px; }
+  th,td { border-bottom:1px solid #334155; padding:8px; text-align:right; }
+  th:first-child,td:first-child { text-align:left; }
+  .warn { color:#fbbf24; } .ok { color:#34d399; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+<h1>Department-wise Budget — FY 2026 (INR)</h1>
+<p class="sub">Source: CatalogService.Budgets live query • 9 departments • currency INR • Remaining = Total − Committed − Consumed</p>
+<div class="grid">
+<div class="kpi"><span>Total Allocated</span><b>₹ 31.7M</b></div>
+<div class="kpi"><span>Total Committed</span><b>₹ 4.10M</b></div>
+<div class="kpi"><span>Total Consumed</span><b>₹ 1.83M</b></div>
+<div class="kpi"><span>Total Remaining</span><b>₹ 25.77M</b></div>
+<div class="kpi"><span>Highest / Lowest</span><b>PROC ₹8M / ADM ₹1.2M</b></div>
+</div>
+<canvas id="budgetChart" height="120"></canvas>
+<table>
+<thead><tr><th>Department</th><th>Total</th><th>Committed</th><th>Consumed</th><th>Remaining</th><th>Util %</th></tr></thead>
+<tbody>
+<tr><td>Administration</td><td>1,200,000</td><td>100,000</td><td>50,000</td><td>1,050,000</td><td>12.5%</td></tr>
+<tr><td>Finance</td><td>3,000,000</td><td>200,000</td><td>100,000</td><td>2,700,000</td><td>10.0%</td></tr>
+<tr><td>Human Resources</td><td>2,000,000</td><td>100,000</td><td>50,000</td><td>1,850,000</td><td>7.5%</td></tr>
+<tr><td>Information Technology</td><td>5,000,000</td><td>1,500,000</td><td>800,000</td><td>2,700,000</td><td class="warn">46.0%</td></tr>
+<tr><td>Logistics</td><td>4,000,000</td><td>1,200,000</td><td>600,000</td><td>2,200,000</td><td class="warn">45.0%</td></tr>
+<tr><td>Marketing</td><td>2,500,000</td><td>300,000</td><td>150,000</td><td>2,050,000</td><td>18.0%</td></tr>
+<tr><td>Procurement</td><td>8,000,000</td><td>1,000,000</td><td>500,000</td><td>6,500,000</td><td>18.8%</td></tr>
+<tr><td>Quality Assurance</td><td>1,500,000</td><td>200,000</td><td>80,000</td><td>1,220,000</td><td>18.7%</td></tr>
+<tr><td>Research & Development</td><td>6,000,000</td><td>500,000</td><td>200,000</td><td>5,300,000</td><td>11.7%</td></tr>
+</tbody>
+</table>
+<p class="sub" style="margin-top:12px">Note: BUD-PROC-2025 (₹7.5M total, ₹7.4M committed, ₹7.3M consumed) excluded — 98.7% utilized, essentially exhausted. IT + Logistics are highest utilization in FY26.</p>
+</div>
+</div>
+<script>
+const ctx = document.getElementById('budgetChart');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Admin','Finance','HR','IT','Logistics','Marketing','Procurement','QA','R&D'],
+    datasets: [
+      { label: 'Committed', data: [100000,200000,100000,1500000,1200000,300000,1000000,200000,500000], backgroundColor: '#f59e0b' },
+      { label: 'Consumed', data: [50000,100000,50000,800000,600000,150000,500000,80000,200000], backgroundColor: '#ef4444' },
+      { label: 'Remaining', data: [1050000,2700000,1850000,2700000,2200000,2050000,6500000,1220000,5300000], backgroundColor: '#22c55e' }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#e2e8f0' } } },
+    scales: {
+      x: { stacked: true, ticks: { color: '#e2e8f0' }, grid: { color: '#334155' } },
+      y: { stacked: true, ticks: { color: '#e2e8f0', callback: v => '₹'+(v/1000000)+'M' }, grid: { color: '#334155' } }
+    }
+  }
+});
+</script>
+</body>
+</html>
